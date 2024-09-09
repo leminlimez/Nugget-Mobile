@@ -113,12 +113,12 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-        }
-        .navigationTitle("Nugget")
-        .alert("Error", isPresented: $showErrorAlert) {
-            Button("OK") {}
-        } message: {
-            Text(lastError ?? "???")
+            .navigationTitle("Nugget")
+            .alert("Error", isPresented: $showErrorAlert) {
+                Button("OK") {}
+            } message: {
+                Text(lastError ?? "???")
+            }
         }
     }
     

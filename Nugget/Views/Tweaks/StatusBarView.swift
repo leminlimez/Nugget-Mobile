@@ -646,6 +646,7 @@ struct StatusBarView: View {
                 Text("*Will also hide carrier name\n^Will also hide cellular data indicator")
             }
         }
+        .navigationTitle("Status Bar")
     }
 }
 
