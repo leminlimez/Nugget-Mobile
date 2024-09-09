@@ -86,7 +86,6 @@ class MobileGestaltManager {
         if self.GestaltChanges.isEmpty {
             return nil
         }
-        let fm = FileManager.default
         let gestaltURL = URL.documents.appendingPathComponent("com.apple.MobileGestalt.plist")
         let gestaltData = try Data(contentsOf: gestaltURL)
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]

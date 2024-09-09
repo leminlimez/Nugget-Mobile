@@ -13,6 +13,7 @@ struct LogView: View {
     let resetting: Bool
     
     let gestaltManager = MobileGestaltManager.GestaltManager
+    let ffManager = FeatureFlagManager.FFManager
     
     @State var log: String = ""
     @State var ran = false
@@ -89,6 +90,16 @@ struct LogView: View {
             ]
             if mobileGestaltData != nil {
                 addExploitedConcreteFile(list: &backupFiles, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/NOT.com.apple.MobileGestalt.plist", contents: mobileGestaltData!)
+            }
+            // Apply feature flag changes
+            var ffData: Data? = nil
+            if resetting {
+                ffData = try ffManager.reset()
+            } else {
+                ffData = try ffManager.apply()
+            }
+            if let ffData = ffData {
+                addExploitedConcreteFile(list: &backupFiles, path: "/var/preferences/FeatureFlags/Global.plist", contents: ffData)
             }
             backupFiles.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../../crash_on_purpose", contents: Data(), owner: 501, group: 501))
             let mbdb = Backup(files: backupFiles)

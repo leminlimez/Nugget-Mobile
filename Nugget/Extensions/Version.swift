@@ -22,8 +22,8 @@ class Version: Comparable {
     init(string: String) {
         let nums = string.split(separator: ".")
         self.major = Int(nums[0])!
-        self.minor = Int(nums[1]) ?? 0
-        self.patch = Int(nums[2]) ?? 0
+        self.minor = (nums.count > 1) ? Int(nums[1]) ?? 0 : 0
+        self.patch = (nums.count > 2) ? Int(nums[2]) ?? 0 : 0
     }
     
     private func compareTo(other: Version) -> Int {

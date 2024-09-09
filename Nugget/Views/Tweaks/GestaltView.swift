@@ -27,7 +27,7 @@ struct GestaltView: View {
     }
     
     @State private var CurrentSubType: Int = -1
-    @State private var CurrentSubTypeDisplay: String = "nil"
+    @State private var CurrentSubTypeDisplay: String = "Default"
     
     @State private var deviceModelChanged: Bool = false
     @State private var deviceModelName: String = ""
@@ -103,9 +103,7 @@ struct GestaltView: View {
                 ForEach($gestaltTweaks) { tweak in
                     Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
                         if nv {
-                            if deviceModelName != "" {
-                                gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
-                            }
+                            gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
                         } else {
                             gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
                         }
@@ -139,20 +137,7 @@ struct GestaltView: View {
             if !type.iOS17Only ||  iOS17 {
                 let newAction = UIAlertAction(title: type.title + " (" + String(type.key) + ")", style: .default) { (action) in
                     // apply the type
-                    var succeeded = true
-                    do {
-                        try gestaltManager.setGestaltValue(key: "ArtworkDeviceSubType", value: type.key)
-                    } catch {
-                        print(error.localizedDescription)
-                        succeeded = false
-                    }
-                    if succeeded {
-                        CurrentSubType = type.key
-                        CurrentSubTypeDisplay = type.title
-                        UIApplication.shared.alert(title: NSLocalizedString("Success!", comment: ""), body: NSLocalizedString("Please respring to finish applying changes.", comment: ""))
-                    } else {
-                        UIApplication.shared.alert(body: NSLocalizedString("Failed to apply Device SubType!", comment: "failed to apply subtype"))
-                    }
+                    gestaltManager.setGestaltValue(key: "ArtworkDeviceSubType", value: type.key)
                 }
                 if CurrentSubType == type.key {
                     // add a check mark
