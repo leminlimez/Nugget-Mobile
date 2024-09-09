@@ -1,0 +1,8 @@
+Package: com.leemin.nugget
+Name: Nugget
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Nugget.
+Maintainer: LeminLimez
+Author: LeminLimez
+Section: Utilities

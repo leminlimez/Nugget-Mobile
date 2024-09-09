@@ -1,0 +1,6 @@
+.theos/
+packages/
+.DS_Store
+/Resources/Frameworks
+/Resources/*.dylib
+/lib
