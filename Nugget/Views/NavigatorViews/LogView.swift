@@ -12,8 +12,9 @@ let logPipe = Pipe()
 struct LogView: View {
     let resetting: Bool
     
-    let gestaltManager = MobileGestaltManager.GestaltManager
-    let ffManager = FeatureFlagManager.FFManager
+    let gestaltManager = MobileGestaltManager.shared
+    let ffManager = FeatureFlagManager.shared
+    let statusManager = StatusManagerSwift.shared
     
     @State var log: String = ""
     @State var ran = false
@@ -83,13 +84,23 @@ struct LogView: View {
             try? FileManager.default.removeItem(at: folder)
             try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
             
+//            var backupFiles: [BackupFile] = [
+//                Directory(path: "", domain: "RootDomain"),
+//                Directory(path: "Library", domain: "RootDomain"),
+//                Directory(path: "Library/Preferences", domain: "RootDomain")
+//            ]
             var backupFiles: [BackupFile] = [
-                Directory(path: "", domain: "RootDomain"),
-                Directory(path: "Library", domain: "RootDomain"),
-                Directory(path: "Library/Preferences", domain: "RootDomain")
+                Directory(path: "", domain: "HomeDomain"),
+                Directory(path: "Library", domain: "HomeDomain"),
+                Directory(path: "Library/SpringBoard", domain: "HomeDomain")
             ]
+            var statusBarData: Data = Data()
+            if !resetting {
+                statusBarData = try statusManager.apply()
+            }
+            backupFiles.append(ConcreteFile(path: "Library/SpringBoard/statusBarOverrides", domain: "HomeDomain", contents: statusBarData, owner: 501, group: 501))
             if mobileGestaltData != nil {
-                addExploitedConcreteFile(list: &backupFiles, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/NOT.com.apple.MobileGestalt.plist", contents: mobileGestaltData!)
+                addExploitedConcreteFile(list: &backupFiles, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist", contents: mobileGestaltData!)
             }
             // Apply feature flag changes
             var ffData: Data? = nil

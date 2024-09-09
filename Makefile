@@ -1,4 +1,4 @@
-ARCHS := arm64e
+ARCHS := arm64
 PACKAGE_FORMAT := ipa
 TARGET := iphone:clang:16.5:16.0
 

@@ -8,7 +8,7 @@
 import Foundation
 
 class MobileGestaltManager {
-    static let GestaltManager = MobileGestaltManager()
+    static let shared = MobileGestaltManager()
     
     private var GestaltChanges: [String: Any] = [:]
     

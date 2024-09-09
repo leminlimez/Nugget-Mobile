@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GestaltView: View {
-    let gestaltManager = MobileGestaltManager.GestaltManager
+    let gestaltManager = MobileGestaltManager.shared
     
     struct GestaltTweak: Identifiable {
         var id = UUID()

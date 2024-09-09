@@ -15,6 +15,9 @@ struct NuggetApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .onAppear {
+                    StatusManagerSwift.shared.deviceVersion = UIDevice.current.systemVersion
+                }
         }
     }
 }

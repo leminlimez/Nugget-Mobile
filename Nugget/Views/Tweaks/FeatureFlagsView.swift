@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeatureFlagsView: View {
-    let ffManager = FeatureFlagManager.FFManager
+    let ffManager = FeatureFlagManager.shared
     
     struct FeatureFlagOption: Identifiable {
         var id = UUID()

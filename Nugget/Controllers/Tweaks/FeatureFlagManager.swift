@@ -21,7 +21,7 @@ struct FeatureFlag: Identifiable {
 }
 
 class FeatureFlagManager {
-    static let FFManager = FeatureFlagManager()
+    static let shared = FeatureFlagManager()
     
     private var EnabledFlags: [FeatureFlag] = []
     
