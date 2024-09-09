@@ -8,69 +8,71 @@
 import SwiftUI
 
 struct StatusBarView: View {
-    @State private var cellularServiceEnabled: Bool = StatusManager.sharedInstance().isCellularServiceOverridden()
-    @State private var cellularServiceValue: Bool = StatusManager.sharedInstance().getCellularServiceOverride()
+    @State private var radioPrimarySelection = 1
+//    @State private var cellularServiceEnabled: Bool = false
+//    @State private var cellularServiceValue: Bool = false
     
-    @State private var carrierText: String = StatusManager.sharedInstance().getCarrierOverride()
-    @State private var carrierTextEnabled: Bool = StatusManager.sharedInstance().isCarrierOverridden()
+    @State private var carrierText: String = ""
+    @State private var carrierTextEnabled: Bool = false
     
-    @State private var primaryServiceBadgeText: String = StatusManager.sharedInstance().getPrimaryServiceBadgeOverride()
-    @State private var primaryServiceBadgeTextEnabled: Bool = StatusManager.sharedInstance().isPrimaryServiceBadgeOverridden()
+    @State private var primaryServiceBadgeText: String = ""
+    @State private var primaryServiceBadgeTextEnabled: Bool = false
     
-    @State private var secondCellularServiceEnabled: Bool = StatusManager.sharedInstance().isSecondaryCellularServiceOverridden()
-    @State private var secondaryCellularServiceValue: Bool = StatusManager.sharedInstance().getSecondaryCellularServiceOverride()
+    @State private var radioSecondarySelection = 1
+//    @State private var secondCellularServiceEnabled: Bool = false
+//    @State private var secondaryCellularServiceValue: Bool = false
     
-    @State private var secondaryCarrierText: String = StatusManager.sharedInstance().getSecondaryCarrierOverride()
-    @State private var secondaryCarrierTextEnabled: Bool = StatusManager.sharedInstance().isSecondaryCarrierOverridden()
+    @State private var secondaryCarrierText: String = ""
+    @State private var secondaryCarrierTextEnabled: Bool = false
     
-    @State private var secondaryServiceBadgeText: String = StatusManager.sharedInstance().getSecondaryServiceBadgeOverride()
-    @State private var secondaryServiceBadgeTextEnabled: Bool = StatusManager.sharedInstance().isSecondaryServiceBadgeOverridden()
+    @State private var secondaryServiceBadgeText: String = ""
+    @State private var secondaryServiceBadgeTextEnabled: Bool = false
     
-    @State private var dateText: String = StatusManager.sharedInstance().getDateOverride()
-    @State private var dateTextEnabled: Bool = StatusManager.sharedInstance().isDateOverridden()
+    @State private var dateText: String = ""
+    @State private var dateTextEnabled: Bool = false
     
-    @State private var timeText: String = StatusManager.sharedInstance().getTimeOverride()
-    @State private var timeTextEnabled: Bool = StatusManager.sharedInstance().isTimeOverridden()
+    @State private var timeText: String = ""
+    @State private var timeTextEnabled: Bool = false
     
-    @State private var batteryDetailText: String = StatusManager.sharedInstance().getBatteryDetailOverride()
-    @State private var batteryDetailEnabled: Bool = StatusManager.sharedInstance().isBatteryDetailOverridden()
+    @State private var batteryDetailText: String = ""
+    @State private var batteryDetailEnabled: Bool = false
     
-    @State private var crumbText: String = StatusManager.sharedInstance().getCrumbOverride()
-    @State private var crumbTextEnabled: Bool = StatusManager.sharedInstance().isCrumbOverridden()
+    @State private var crumbText: String = ""
+    @State private var crumbTextEnabled: Bool = false
     
-    @State private var dataNetworkType: Int = Int(StatusManager.sharedInstance().getDataNetworkTypeOverride())
-    @State private var dataNetworkTypeEnabled: Bool = StatusManager.sharedInstance().isDataNetworkTypeOverridden()
+    @State private var dataNetworkType: Int = 0
+    @State private var dataNetworkTypeEnabled: Bool = false
     
-    @State private var secondaryDataNetworkType: Int = Int(StatusManager.sharedInstance().getSecondaryDataNetworkTypeOverride())
-    @State private var secondaryDataNetworkTypeEnabled: Bool = StatusManager.sharedInstance().isSecondaryDataNetworkTypeOverridden()
+    @State private var secondaryDataNetworkType: Int = 0
+    @State private var secondaryDataNetworkTypeEnabled: Bool = false
     
-    @State private var batteryCapacity: Double = Double(StatusManager.sharedInstance().getBatteryCapacityOverride())
-    @State private var batteryCapacityEnabled: Bool = StatusManager.sharedInstance().isBatteryCapacityOverridden()
+    @State private var batteryCapacity: Double = 0
+    @State private var batteryCapacityEnabled: Bool = false
     
-    @State private var wiFiStrengthBars: Double = Double(StatusManager.sharedInstance().getWiFiSignalStrengthBarsOverride())
-    @State private var wiFiStrengthBarsEnabled: Bool = StatusManager.sharedInstance().isWiFiSignalStrengthBarsOverridden()
+    @State private var wiFiStrengthBars: Double = 0
+    @State private var wiFiStrengthBarsEnabled: Bool = false
     
-    @State private var gsmStrengthBars: Double = Double(StatusManager.sharedInstance().getGsmSignalStrengthBarsOverride())
-    @State private var gsmStrengthBarsEnabled: Bool = StatusManager.sharedInstance().isGsmSignalStrengthBarsOverridden()
+    @State private var gsmStrengthBars: Double = 0
+    @State private var gsmStrengthBarsEnabled: Bool = false
     
-    @State private var secondaryGsmStrengthBars: Double = Double(StatusManager.sharedInstance().getSecondaryGsmSignalStrengthBarsOverride())
-    @State private var secondaryGsmStrengthBarsEnabled: Bool = StatusManager.sharedInstance().isSecondaryGsmSignalStrengthBarsOverridden()
+    @State private var secondaryGsmStrengthBars: Double = 0
+    @State private var secondaryGsmStrengthBarsEnabled: Bool = false
     
-    @State private var displayingRawWiFiStrength: Bool = StatusManager.sharedInstance().isDisplayingRawWiFiSignal()
-    @State private var displayingRawGSMStrength: Bool = StatusManager.sharedInstance().isDisplayingRawGSMSignal()
+    @State private var displayingRawWiFiStrength: Bool = false
+    @State private var displayingRawGSMStrength: Bool = false
     
-    @State private var DNDHidden: Bool = StatusManager.sharedInstance().isDNDHidden()
-    @State private var airplaneHidden: Bool = StatusManager.sharedInstance().isAirplaneHidden()
-    @State private var cellHidden: Bool = StatusManager.sharedInstance().isCellHidden()
-    @State private var wiFiHidden: Bool = StatusManager.sharedInstance().isWiFiHidden()
-    @State private var batteryHidden: Bool = StatusManager.sharedInstance().isBatteryHidden()
-    @State private var bluetoothHidden: Bool = StatusManager.sharedInstance().isBluetoothHidden()
-    @State private var alarmHidden: Bool = StatusManager.sharedInstance().isAlarmHidden()
-    @State private var locationHidden: Bool = StatusManager.sharedInstance().isLocationHidden()
-    @State private var rotationHidden: Bool = StatusManager.sharedInstance().isRotationHidden()
-    @State private var airPlayHidden: Bool = StatusManager.sharedInstance().isAirPlayHidden()
-    @State private var carPlayHidden: Bool = StatusManager.sharedInstance().isCarPlayHidden()
-    @State private var VPNHidden: Bool = StatusManager.sharedInstance().isVPNHidden()
+    @State private var DNDHidden: Bool = false
+    @State private var airplaneHidden: Bool = false
+    @State private var cellHidden: Bool = false
+    @State private var wiFiHidden: Bool = false
+    @State private var batteryHidden: Bool = false
+    @State private var bluetoothHidden: Bool = false
+    @State private var alarmHidden: Bool = false
+    @State private var locationHidden: Bool = false
+    @State private var rotationHidden: Bool = false
+    @State private var airPlayHidden: Bool = false
+    @State private var carPlayHidden: Bool = false
+    @State private var VPNHidden: Bool = false
     
     private var NetworkTypes: [String] = [
         "GPRS", // 0
@@ -90,25 +92,61 @@ struct StatusBarView: View {
         "5GUC", // 14
     ]
     
-    let fm = FileManager.default
-    
-    var body: some  View {
+    var body: some View {
         List {
             Section {
-                Toggle("Change Service Status", isOn: $cellularServiceEnabled).onChange(of: cellularServiceEnabled, perform: { nv in
-                    if nv {
-                        StatusManager.sharedInstance().setCellularService(cellularServiceValue)
-                    } else {
-                        StatusManager.sharedInstance().unsetCellularService()
-                    }
-                })
-                if cellularServiceEnabled {
-                    Toggle("Cellular Service Enabled", isOn: $cellularServiceValue).onChange(of: cellularServiceValue, perform: { nv in
-                        if cellularServiceEnabled {
-                            StatusManager.sharedInstance().setCellularService(nv)
-                        }
-                    })
+                
+            } footer: {
+                Text("Betas, use with caution. Have a backup.")
+            }
+            Section {
+                Picker(selection: $radioPrimarySelection, label: Text("Visibility")) {
+                    Text("Default").tag(1)
+                    Text("Force Show").tag(2)
+                    Text("Force Hide").tag(3)
                 }
+                .pickerStyle(.menu)
+                .onChange(of: radioPrimarySelection) { new in
+                    if new == 1 {
+                        StatusManager.sharedInstance().unsetCellularService()
+                    } else if new == 2 {
+                        StatusManager.sharedInstance().setCellularService(true)
+                    } else if new == 3 {
+                        StatusManager.sharedInstance().setCellularService(false)
+                    }
+                }
+                .onAppear {
+                    let serviceEnabled = StatusManager.sharedInstance().isCellularServiceOverridden()
+                    if serviceEnabled {
+                        let serviceValue = StatusManager.sharedInstance().getCellularServiceOverride()
+                        if serviceValue {
+                            radioPrimarySelection = 2
+                        } else {
+                            radioPrimarySelection = 3
+                        }
+                    } else {
+                        radioPrimarySelection = 1
+                    }
+                }
+                
+                //                            Toggle("Change Service Status", isOn: $cellularServiceEnabled).onChange(of: cellularServiceEnabled, perform: { nv in
+                //                                if nv {
+                //                                    StatusManager.sharedInstance().setCellularService(cellularServiceValue)
+                //                                } else {
+                //                                    StatusManager.sharedInstance().unsetCellularService()
+                //                                }
+                //                            }).onAppear(perform: {
+                //                                cellularServiceEnabled = StatusManager.sharedInstance().isCellularServiceOverridden()
+                //                            })
+                //                            if cellularServiceEnabled {
+                //                                Toggle("Cellular Service Enabled", isOn: $cellularServiceValue).onChange(of: cellularServiceValue, perform: { nv in
+                //                                    if cellularServiceEnabled {
+                //                                        StatusManager.sharedInstance().setCellularService(nv)
+                //                                    }
+                //                                }).onAppear(perform: {
+                //                                    cellularServiceValue = StatusManager.sharedInstance().getCellularServiceOverride()
+                //                                })
+                //                            }
                 
                 Toggle("Change Primary Carrier Text", isOn: $carrierTextEnabled).onChange(of: carrierTextEnabled, perform: { nv in
                     if nv {
@@ -116,6 +154,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetCarrier()
                     }
+                }).onAppear(perform: {
+                    carrierTextEnabled = StatusManager.sharedInstance().isCarrierOverridden()
                 })
                 TextField("Primary Carrier Text", text: $carrierText).onChange(of: carrierText, perform: { nv in
                     // This is important.
@@ -129,6 +169,8 @@ struct StatusBarView: View {
                     if carrierTextEnabled {
                         StatusManager.sharedInstance().setCarrier(safeNv)
                     }
+                }).onAppear(perform: {
+                    carrierText = StatusManager.sharedInstance().getCarrierOverride()
                 })
                 Toggle("Change Primary Service Badge Text", isOn: $primaryServiceBadgeTextEnabled).onChange(of: primaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
@@ -136,6 +178,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetPrimaryServiceBadge()
                     }
+                }).onAppear(perform: {
+                    primaryServiceBadgeTextEnabled = StatusManager.sharedInstance().isPrimaryServiceBadgeOverridden()
                 })
                 TextField("Primary Service Badge Text", text: $primaryServiceBadgeText).onChange(of: primaryServiceBadgeText, perform: { nv in
                     // This is important.
@@ -149,6 +193,8 @@ struct StatusBarView: View {
                     if primaryServiceBadgeTextEnabled {
                         StatusManager.sharedInstance().setPrimaryServiceBadge(safeNv)
                     }
+                }).onAppear(perform: {
+                    primaryServiceBadgeText = StatusManager.sharedInstance().getPrimaryServiceBadgeOverride()
                 })
                 
                 Toggle("Change Data Network Type", isOn: $dataNetworkTypeEnabled).onChange(of: dataNetworkTypeEnabled, perform: { nv in
@@ -157,6 +203,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetDataNetworkType()
                     }
+                }).onAppear(perform: {
+                    dataNetworkTypeEnabled = StatusManager.sharedInstance().isDataNetworkTypeOverridden()
                 })
                 HStack {
                     Text("Data Network Type")
@@ -178,26 +226,61 @@ struct StatusBarView: View {
                     } label: {
                         Text(NetworkTypes[dataNetworkType])
                     }
-                }
+                }.onAppear(perform: {
+                    dataNetworkType = Int(StatusManager.sharedInstance().getDataNetworkTypeOverride())
+                })
             } header: {
                 Text("Primary Carrier")
             }
             
             Section {
-                Toggle("Change Secondary Service Status", isOn: $secondCellularServiceEnabled).onChange(of: secondCellularServiceEnabled, perform: { nv in
-                    if nv {
-                        StatusManager.sharedInstance().setSecondaryCellularService(secondaryCellularServiceValue)
-                    } else {
-                        StatusManager.sharedInstance().unsetSecondaryCellularService()
-                    }
-                })
-                if secondCellularServiceEnabled {
-                    Toggle("Secondary Cellular Service Enabled", isOn: $secondaryCellularServiceValue).onChange(of: secondaryCellularServiceValue, perform: { nv in
-                        if secondCellularServiceEnabled {
-                            StatusManager.sharedInstance().setSecondaryCellularService(nv)
-                        }
-                    })
+                Picker(selection: $radioSecondarySelection, label: Text("Visibility")) {
+                    Text("Default").tag(1)
+                    Text("Force Show").tag(2)
+                    Text("Force Hide").tag(3)
                 }
+                .pickerStyle(.menu)
+                .onChange(of: radioSecondarySelection) { new in
+                    if new == 1 {
+                        StatusManager.sharedInstance().unsetSecondaryCellularService()
+                    } else if new == 2 {
+                        StatusManager.sharedInstance().setSecondaryCellularService(true)
+                    } else if new == 3 {
+                        StatusManager.sharedInstance().setSecondaryCellularService(false)
+                    }
+                }
+                .onAppear {
+                    let serviceEnabled = StatusManager.sharedInstance().isSecondaryCellularServiceOverridden()
+                    if serviceEnabled {
+                        let serviceValue = StatusManager.sharedInstance().getSecondaryCellularServiceOverride()
+                        if serviceValue {
+                            radioSecondarySelection = 2
+                        } else {
+                            radioSecondarySelection = 3
+                        }
+                    } else {
+                        radioSecondarySelection = 1
+                    }
+                }
+                
+                //                            Toggle("Change Secondary Service Status", isOn: $secondCellularServiceEnabled).onChange(of: secondCellularServiceEnabled, perform: { nv in
+                //                                if nv {
+                //                                    StatusManager.sharedInstance().setSecondaryCellularService(secondaryCellularServiceValue)
+                //                                } else {
+                //                                    StatusManager.sharedInstance().unsetSecondaryCellularService()
+                //                                }
+                //                            }).onAppear(perform: {
+                //                                secondCellularServiceEnabled = StatusManager.sharedInstance().isSecondaryCellularServiceOverridden()
+                //                            })
+                //                            if secondCellularServiceEnabled {
+                //                                Toggle("Secondary Cellular Service Enabled", isOn: $secondaryCellularServiceValue).onChange(of: secondaryCellularServiceValue, perform: { nv in
+                //                                    if secondCellularServiceEnabled {
+                //                                        StatusManager.sharedInstance().setSecondaryCellularService(nv)
+                //                                    }
+                //                                }).onAppear(perform: {
+                //                                    secondaryCellularServiceValue = StatusManager.sharedInstance().getSecondaryCellularServiceOverride()
+                //                                })
+                //                            }
                 
                 Toggle("Change Secondary Carrier Text", isOn: $secondaryCarrierTextEnabled).onChange(of: secondaryCarrierTextEnabled, perform: { nv in
                     if nv {
@@ -205,6 +288,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetSecondaryCarrier()
                     }
+                }).onAppear(perform: {
+                    secondaryCarrierTextEnabled = StatusManager.sharedInstance().isSecondaryCarrierOverridden()
                 })
                 TextField("Secondary Carrier Text", text: $secondaryCarrierText).onChange(of: secondaryCarrierText, perform: { nv in
                     // This is important.
@@ -218,6 +303,8 @@ struct StatusBarView: View {
                     if secondaryCarrierTextEnabled {
                         StatusManager.sharedInstance().setSecondaryCarrier(safeNv)
                     }
+                }).onAppear(perform: {
+                    secondaryCarrierText = StatusManager.sharedInstance().getSecondaryCarrierOverride()
                 })
                 Toggle("Change Secondary Service Badge Text", isOn: $secondaryServiceBadgeTextEnabled).onChange(of: secondaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
@@ -225,6 +312,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetSecondaryServiceBadge()
                     }
+                }).onAppear(perform: {
+                    secondaryServiceBadgeTextEnabled = StatusManager.sharedInstance().isSecondaryServiceBadgeOverridden()
                 })
                 TextField("Secondary Service Badge Text", text: $secondaryServiceBadgeText).onChange(of: secondaryServiceBadgeText, perform: { nv in
                     // This is important.
@@ -238,6 +327,8 @@ struct StatusBarView: View {
                     if secondaryServiceBadgeTextEnabled {
                         StatusManager.sharedInstance().setSecondaryServiceBadge(safeNv)
                     }
+                }).onAppear(perform: {
+                    secondaryServiceBadgeText = StatusManager.sharedInstance().getSecondaryServiceBadgeOverride()
                 })
                 
                 Toggle("Change Secondary Data Network Type", isOn: $secondaryDataNetworkTypeEnabled).onChange(of: secondaryDataNetworkTypeEnabled, perform: { nv in
@@ -246,7 +337,10 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetSecondaryDataNetworkType()
                     }
+                }).onAppear(perform: {
+                    secondaryDataNetworkTypeEnabled = StatusManager.sharedInstance().isSecondaryDataNetworkTypeOverridden()
                 })
+                
                 HStack {
                     Text("Secondary Data Network Type")
                     Spacer()
@@ -267,18 +361,21 @@ struct StatusBarView: View {
                     } label: {
                         Text(NetworkTypes[secondaryDataNetworkType])
                     }
-                }
+                }.onAppear(perform: {
+                    secondaryDataNetworkType = Int(StatusManager.sharedInstance().getSecondaryDataNetworkTypeOverride())
+                })
             } header: {
                 Text("Secondary Carrier")
             }
-            
-            Section (footer: Text("When set to blank on notched devices, this will display the carrier name.")) {
+            Section {
                 Toggle("Change Breadcrumb Text", isOn: $crumbTextEnabled).onChange(of: crumbTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setCrumb(crumbText)
                     } else {
                         StatusManager.sharedInstance().unsetCrumb()
                     }
+                }).onAppear(perform: {
+                    crumbTextEnabled = StatusManager.sharedInstance().isCrumbOverridden()
                 })
                 TextField("Breadcrumb Text", text: $crumbText).onChange(of: crumbText, perform: { nv in
                     // This is important.
@@ -292,6 +389,8 @@ struct StatusBarView: View {
                     if crumbTextEnabled {
                         StatusManager.sharedInstance().setCrumb(safeNv)
                     }
+                }).onAppear(perform: {
+                    crumbText = StatusManager.sharedInstance().getCrumbOverride()
                 })
                 Toggle("Change Battery Detail Text", isOn: $batteryDetailEnabled).onChange(of: batteryDetailEnabled, perform: { nv in
                     if nv {
@@ -299,6 +398,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetBatteryDetail()
                     }
+                }).onAppear(perform: {
+                    batteryDetailEnabled = StatusManager.sharedInstance().isBatteryDetailOverridden()
                 })
                 TextField("Battery Detail Text", text: $batteryDetailText).onChange(of: batteryDetailText, perform: { nv in
                     // This is important.
@@ -312,6 +413,8 @@ struct StatusBarView: View {
                     if batteryDetailEnabled {
                         StatusManager.sharedInstance().setBatteryDetail(safeNv)
                     }
+                }).onAppear(perform: {
+                    batteryDetailText = StatusManager.sharedInstance().getBatteryDetailOverride()
                 })
                 if UIDevice.current.userInterfaceIdiom == .pad {
                     Toggle("Change Status Bar Date Text", isOn: $dateTextEnabled).onChange(of: dateTextEnabled, perform: { nv in
@@ -320,10 +423,12 @@ struct StatusBarView: View {
                         } else {
                             StatusManager.sharedInstance().unsetDate()
                         }
+                    }).onAppear(perform: {
+                        dateTextEnabled = StatusManager.sharedInstance().isDateOverridden()
                     })
                     TextField("Status Bar Date Text", text: $dateText).onChange(of: dateText, perform: { nv in
                         // This is important.
-                        // Make sure the UTF-8 representation of the string does not exceed 256
+                        // Make sure the UTF-8 representation of the string does not exceed 64
                         // Otherwise the struct will overflow
                         var safeNv = nv
                         while safeNv.utf8CString.count > 256 {
@@ -333,6 +438,8 @@ struct StatusBarView: View {
                         if dateTextEnabled {
                             StatusManager.sharedInstance().setDate(safeNv)
                         }
+                    }).onAppear(perform: {
+                        dateText = StatusManager.sharedInstance().getDateOverride()
                     })
                 }
                 Toggle("Change Status Bar Time Text", isOn: $timeTextEnabled).onChange(of: timeTextEnabled, perform: { nv in
@@ -341,6 +448,8 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetTime()
                     }
+                }).onAppear(perform: {
+                    timeTextEnabled = StatusManager.sharedInstance().isTimeOverridden()
                 })
                 TextField("Status Bar Time Text", text: $timeText).onChange(of: timeText, perform: { nv in
                     // This is important.
@@ -354,7 +463,11 @@ struct StatusBarView: View {
                     if timeTextEnabled {
                         StatusManager.sharedInstance().setTime(safeNv)
                     }
+                }).onAppear(perform: {
+                    timeText = StatusManager.sharedInstance().getTimeOverride()
                 })
+            } footer: {
+                Text("When set to blank on notched devices, this will display the carrier name.")
             }
             
             Section {
@@ -364,34 +477,44 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetBatteryCapacity()
                     }
+                }).onAppear(perform: {
+                    batteryCapacityEnabled = StatusManager.sharedInstance().isBatteryCapacityOverridden()
                 })
                 HStack {
                     Text("\(Int(batteryCapacity))%")
-                        .frame(width: 125)
+                        .frame(width: 35)
                     Spacer()
                     Slider(value: $batteryCapacity, in: 0...100, step: 1.0)
                         .padding(.horizontal)
                         .onChange(of: batteryCapacity) { nv in
                             StatusManager.sharedInstance().setBatteryCapacity(Int32(nv))
                         }
+                        .onAppear(perform: {
+                            batteryCapacity = Double(StatusManager.sharedInstance().getBatteryCapacityOverride())
+                        })
                 }
                 
-                Toggle("Change WiFi Signal Strength Bars", isOn: $wiFiStrengthBarsEnabled).onChange(of: wiFiStrengthBarsEnabled, perform: { nv in
+                Toggle("Change Wi-Fi Signal Strength Bars", isOn: $wiFiStrengthBarsEnabled).onChange(of: wiFiStrengthBarsEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setWiFiSignalStrengthBars(Int32(wiFiStrengthBars))
                     } else {
                         StatusManager.sharedInstance().unsetWiFiSignalStrengthBars()
                     }
+                }).onAppear(perform: {
+                    wiFiStrengthBarsEnabled = StatusManager.sharedInstance().isWiFiSignalStrengthBarsOverridden()
                 })
                 HStack {
                     Text("\(Int(wiFiStrengthBars))")
-                        .frame(width: 125)
+                        .frame(width: 35)
                     Spacer()
                     Slider(value: $wiFiStrengthBars, in: 0...3, step: 1.0)
                         .padding(.horizontal)
                         .onChange(of: wiFiStrengthBars) { nv in
                             StatusManager.sharedInstance().setWiFiSignalStrengthBars(Int32(nv))
                         }
+                        .onAppear(perform: {
+                            wiFiStrengthBars = Double(StatusManager.sharedInstance().getWiFiSignalStrengthBarsOverride())
+                        })
                 }
                 
                 Toggle("Change Primary GSM Signal Strength Bars", isOn: $gsmStrengthBarsEnabled).onChange(of: gsmStrengthBarsEnabled, perform: { nv in
@@ -400,16 +523,21 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetGsmSignalStrengthBars()
                     }
+                }).onAppear(perform: {
+                    gsmStrengthBarsEnabled = StatusManager.sharedInstance().isGsmSignalStrengthBarsOverridden()
                 })
                 HStack {
                     Text("\(Int(gsmStrengthBars))")
-                        .frame(width: 125)
+                        .frame(width: 35)
                     Spacer()
                     Slider(value: $gsmStrengthBars, in: 0...4, step: 1.0)
                         .padding(.horizontal)
                         .onChange(of: gsmStrengthBars) { nv in
                             StatusManager.sharedInstance().setGsmSignalStrengthBars(Int32(nv))
                         }
+                        .onAppear(perform: {
+                            gsmStrengthBars = Double(StatusManager.sharedInstance().getGsmSignalStrengthBarsOverride())
+                        })
                 }
                 
                 Toggle("Change Secondary GSM Signal Strength Bars", isOn: $secondaryGsmStrengthBarsEnabled).onChange(of: secondaryGsmStrengthBarsEnabled, perform: { nv in
@@ -418,79 +546,106 @@ struct StatusBarView: View {
                     } else {
                         StatusManager.sharedInstance().unsetSecondaryGsmSignalStrengthBars()
                     }
+                }).onAppear(perform: {
+                    secondaryGsmStrengthBarsEnabled = StatusManager.sharedInstance().isSecondaryGsmSignalStrengthBarsOverridden()
                 })
                 HStack {
                     Text("\(Int(secondaryGsmStrengthBars))")
-                        .frame(width: 125)
+                        .frame(width: 35)
                     Spacer()
                     Slider(value: $secondaryGsmStrengthBars, in: 0...4, step: 1.0)
                         .padding(.horizontal)
                         .onChange(of: secondaryGsmStrengthBars) { nv in
                             StatusManager.sharedInstance().setSecondaryGsmSignalStrengthBars(Int32(nv))
                         }
+                        .onAppear(perform: {
+                            secondaryGsmStrengthBars = Double(StatusManager.sharedInstance().getSecondaryGsmSignalStrengthBarsOverride())
+                        })
                 }
             }
             
             Section {
-                Toggle("Show Numeric WiFi Strength", isOn: $displayingRawWiFiStrength).onChange(of: displayingRawWiFiStrength, perform: { nv in
+                Toggle("Show Numeric Wi-Fi Strength", isOn: $displayingRawWiFiStrength).onChange(of: displayingRawWiFiStrength, perform: { nv in
                     StatusManager.sharedInstance().displayRawWifiSignal(nv)
+                }).onAppear(perform: {
+                    displayingRawWiFiStrength = StatusManager.sharedInstance().isDisplayingRawWiFiSignal()
                 })
                 Toggle("Show Numeric Cellular Strength", isOn: $displayingRawGSMStrength).onChange(of: displayingRawGSMStrength, perform: { nv in
                     StatusManager.sharedInstance().displayRawGSMSignal(nv)
+                }).onAppear(perform: {
+                    displayingRawGSMStrength = StatusManager.sharedInstance().isDisplayingRawGSMSignal()
                 })
             }
-
-            Section (footer: Text("*Will also hide carrier name\n**Will also hide cellular data indicator")) {
-                // bruh I had to add a group cause SwiftUI won't let you add more than 10 things to a view?? ok
-                Group {
-                    Toggle("Hide Do Not Disturb", isOn: $DNDHidden).onChange(of: DNDHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideDND(nv)
-                    })
-                    Toggle("Hide Airplane Mode", isOn: $airplaneHidden).onChange(of: airplaneHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideAirplane(nv)
-                    })
-                    Toggle("Hide Cellular*", isOn: $cellHidden).onChange(of: cellHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideCell(nv)
-                    })
-                    Toggle("Hide Wi-Fi**", isOn: $wiFiHidden).onChange(of: wiFiHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideWiFi(nv)
-                    })
-                    if UIDevice.current.userInterfaceIdiom != .pad {
-                        Toggle("Hide Battery", isOn: $batteryHidden).onChange(of: batteryHidden, perform: { nv in
-                            StatusManager.sharedInstance().hideBattery(nv)
-                        })
-                    }
-                    Toggle("Hide Bluetooth", isOn: $bluetoothHidden).onChange(of: bluetoothHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideBluetooth(nv)
-                    })
-                    Toggle("Hide Alarm", isOn: $alarmHidden).onChange(of: alarmHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideAlarm(nv)
-                    })
-                    Toggle("Hide Location", isOn: $locationHidden).onChange(of: locationHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideLocation(nv)
-                    })
-                    Toggle("Hide Rotation Lock", isOn: $rotationHidden).onChange(of: rotationHidden, perform: { nv in
-                        StatusManager.sharedInstance().hideRotation(nv)
-                    })
-                }
+            
+            Section {
+                Toggle("Hide Focus (i.e. Do Not Disturb)", isOn: $DNDHidden).onChange(of: DNDHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideDND(nv)
+                }).onAppear(perform: {
+                    DNDHidden = StatusManager.sharedInstance().isDNDHidden()
+                })
+                Toggle("Hide Airplane Mode", isOn: $airplaneHidden).onChange(of: airplaneHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideAirplane(nv)
+                }).onAppear(perform: {
+                    airplaneHidden = StatusManager.sharedInstance().isAirplaneHidden()
+                })
+                Toggle("Hide Cellular*", isOn: $cellHidden).onChange(of: cellHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideCell(nv)
+                }).onAppear(perform: {
+                    cellHidden = StatusManager.sharedInstance().isCellHidden()
+                })
+            }
+            Section {
+                Toggle("Hide Wi-Fi^", isOn: $wiFiHidden).onChange(of: wiFiHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideWiFi(nv)
+                }).onAppear(perform: {
+                    wiFiHidden = StatusManager.sharedInstance().isWiFiHidden()
+                })
+                //                if UIDevice.current.userInterfaceIdiom != .pad {
+                Toggle("Hide Battery", isOn: $batteryHidden).onChange(of: batteryHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideBattery(nv)
+                }).onAppear(perform: {
+                    batteryHidden = StatusManager.sharedInstance().isBatteryHidden()
+                })
+                //                }
+                Toggle("Hide Bluetooth", isOn: $bluetoothHidden).onChange(of: bluetoothHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideBluetooth(nv)
+                }).onAppear(perform: {
+                    bluetoothHidden = StatusManager.sharedInstance().isBluetoothHidden()
+                })
+                Toggle("Hide Alarm", isOn: $alarmHidden).onChange(of: alarmHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideAlarm(nv)
+                }).onAppear(perform: {
+                    alarmHidden = StatusManager.sharedInstance().isAlarmHidden()
+                })
+                Toggle("Hide Location", isOn: $locationHidden).onChange(of: locationHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideLocation(nv)
+                }).onAppear(perform: {
+                    locationHidden = StatusManager.sharedInstance().isLocationHidden()
+                })
+                Toggle("Hide Rotation Lock", isOn: $rotationHidden).onChange(of: rotationHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideRotation(nv)
+                }).onAppear(perform: {
+                    rotationHidden = StatusManager.sharedInstance().isRotationHidden()
+                })
                 Toggle("Hide AirPlay", isOn: $airPlayHidden).onChange(of: airPlayHidden, perform: { nv in
                     StatusManager.sharedInstance().hideAirPlay(nv)
+                }).onAppear(perform: {
+                    airPlayHidden = StatusManager.sharedInstance().isAirPlayHidden()
                 })
                 Toggle("Hide CarPlay", isOn: $carPlayHidden).onChange(of: carPlayHidden, perform: { nv in
                     StatusManager.sharedInstance().hideCarPlay(nv)
+                }).onAppear(perform: {
+                    carPlayHidden = StatusManager.sharedInstance().isCarPlayHidden()
                 })
                 Toggle("Hide VPN", isOn: $VPNHidden).onChange(of: VPNHidden, perform: { nv in
                     StatusManager.sharedInstance().hideVPN(nv)
+                }).onAppear(perform: {
+                    VPNHidden = StatusManager.sharedInstance().isVPNHidden()
                 })
+            } footer: {
+                Text("*Will also hide carrier name\n^Will also hide cellular data indicator")
             }
         }
-        .navigationTitle("Status Bar")
-    }
-}
-
-struct StatusBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        StatusBarView()
     }
 }
 

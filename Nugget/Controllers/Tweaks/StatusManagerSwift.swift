@@ -6,11 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 @objc class StatusManagerSwift: NSObject, ObservableObject {
     @objc static let shared = StatusManagerSwift()
-    
-    @Published var deviceVersion: String = "17.0"
     
     func apply() throws -> Data {
         let fm = FileManager.default
@@ -23,7 +22,7 @@ import Foundation
     }
     
     @objc func getDeviceVersion() -> String {
-        return deviceVersion
+        return UIDevice.current.systemVersion
     }
     
     @objc func getOverridesFileURL() -> URL {
