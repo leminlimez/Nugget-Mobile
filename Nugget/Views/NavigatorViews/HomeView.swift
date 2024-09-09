@@ -28,79 +28,80 @@ struct HomeView: View {
                 
                 // MARK: Tweak Options
                 Section {
-                    VStack {
-                        // apply all tweaks button
-                        HStack {
-                            NavigationLink("Apply Tweaks") {
+                    // apply all tweaks button
+                    HStack {
+                        ZStack {
+                            NavLinkButton(label: "Apply Tweaks", color: .blue)
+                            NavigationLink("") {
                                 LogView(resetting: false)
-                            }
-                            .buttonStyle(TintedButton(color: .blue, fullwidth: true))
-                            Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies all selected tweaks.", comment: "apply tweaks info"))
-                            } label: {
-                                Image(systemName: "info")
-                            }
-                            .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                            }.opacity(0)
                         }
-                        // remove all tweaks button
-                        HStack {
-                            NavigationLink("Remove All Tweaks") {
+                        Button {
+                            UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies all selected tweaks.", comment: "apply tweaks info"))
+                        } label: {
+                            Image(systemName: "info")
+                        }
+                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                    }
+                    // remove all tweaks button
+                    HStack {
+                        ZStack {
+                            NavLinkButton(label: "Remove All Tweaks", color: .red)
+                            NavigationLink("") {
                                 LogView(resetting: true)
+                            }.opacity(0)
+                        }
+                        Button {
+                            UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
+                        } label: {
+                            Image(systemName: "info")
+                        }
+                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                    }
+                    // select pairing file button
+                    if pairingFile == nil {
+                        HStack {
+                            Button("Select Pairing File") {
+                                showPairingFileImporter.toggle()
                             }
-                            .buttonStyle(TintedButton(color: .red, fullwidth: true))
+                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
                             Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
+                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore.", comment: "pairing file selector info"))
                             } label: {
                                 Image(systemName: "info")
                             }
                             .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                        }
-                        // select pairing file button
-                        if pairingFile == nil {
-                            HStack {
-                                Button("Select Pairing File") {
-                                    showPairingFileImporter.toggle()
-                                }
-                                .buttonStyle(TintedButton(color: .green, fullwidth: true))
-                                Button {
-                                    UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore.", comment: "pairing file selector info"))
-                                } label: {
-                                    Image(systemName: "info")
-                                }
-                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                            }
                         }
                     }
-                    .listRowInsets(EdgeInsets())
-                    .padding()
-                    .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!], onCompletion: { result in
-                                    switch result {
-                                    case .success(let url):
-                                        guard url.startAccessingSecurityScopedResource() else {
-                                            return
-                                        }
-                                        pairingFile = try! String(contentsOf: url)
-                                        url.stopAccessingSecurityScopedResource()
-                                        startMinimuxer()
-                                    case .failure(let error):
-                                        lastError = error.localizedDescription
-                                        showErrorAlert.toggle()
-                                    }
-                                })
-                                .navigationTitle("SparseBox")
-                                .alert("Error", isPresented: $showErrorAlert) {
-                                    Button("OK") {}
-                                } message: {
-                                    Text(lastError ?? "???")
-                                }
                 } header: {
                     Label("Tweak Options", systemImage: "hammer")
                 }
+                .listRowInsets(EdgeInsets())
+                .padding()
+                .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!], onCompletion: { result in
+                                switch result {
+                                case .success(let url):
+                                    guard url.startAccessingSecurityScopedResource() else {
+                                        return
+                                    }
+                                    pairingFile = try! String(contentsOf: url)
+                                    url.stopAccessingSecurityScopedResource()
+                                    startMinimuxer()
+                                case .failure(let error):
+                                    lastError = error.localizedDescription
+                                    showErrorAlert.toggle()
+                                }
+                            })
+                            .alert("Error", isPresented: $showErrorAlert) {
+                                Button("OK") {}
+                            } message: {
+                                Text(lastError ?? "???")
+                            }
                 
                 // MARK: App Credits
                 Section {
                     // app credits
-                    LinkCell(imageName: "leminlimez", url: "https://github.com/leminlimez", title: "leminlimez", contribution: NSLocalizedString("Main Developer", comment: "leminlimez's contribution"), circle: true)
+                    LinkCell(imageName: "leminlimez", url: "https://x.com/leminlimez", title: "leminlimez", contribution: NSLocalizedString("Main Developer", comment: "leminlimez's contribution"), circle: true)
                 } header: {
                     Label("Credits", systemImage: "wrench.and.screwdriver")
                 }
@@ -118,6 +119,23 @@ struct HomeView: View {
             Button("OK") {}
         } message: {
             Text(lastError ?? "???")
+        }
+    }
+    
+    struct NavLinkButton: View {
+        var label: String
+        var color: Color
+        var material: UIBlurEffect.Style?
+        
+        var body: some View {
+            VStack(alignment: .center) {
+                Text(label)
+                    .padding(15)
+                    .frame(maxWidth: .infinity)
+                    .background(material == nil ? AnyView(color.opacity(0.2)) : AnyView(MaterialView(material!)))
+                    .cornerRadius(8)
+                    .foregroundColor(color)
+            }
         }
     }
     

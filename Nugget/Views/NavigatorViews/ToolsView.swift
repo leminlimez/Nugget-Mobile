@@ -19,7 +19,7 @@ struct ToolsView: View {
     
     @State var tools: [GeneralOption] = [
         .init(key: "GestaltView", view: AnyView(GestaltView()), title: NSLocalizedString("Mobile Gestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
-        .init(key: "FeatureFlagsView", view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag", minVersion: Version(string: "18.0"))
+        .init(key: "FeatureFlagsView", view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag", minVersion: Version(string: "17.0"))
     ]
     
     let userVersion = Version(string: UIDevice.current.systemVersion)
