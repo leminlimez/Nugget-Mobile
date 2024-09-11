@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GestaltView: View {
     let gestaltManager = MobileGestaltManager.shared
+    let userVersion = Version(string: UIDevice.current.systemVersion)
     
     struct GestaltTweak: Identifiable {
         var id = UUID()
@@ -23,7 +24,7 @@ struct GestaltView: View {
         var id = UUID()
         var key: Int
         var title: String
-        var iOS17Only: Bool = false
+        var minVersion: Version = Version(string: "16.0")
     }
     
     @State private var CurrentSubType: Int = -1
@@ -38,7 +39,9 @@ struct GestaltView: View {
         .init(key: 2436, title: NSLocalizedString("iPhone X Gestures", comment: "x gestures")),
         .init(key: 2556, title: NSLocalizedString("iPhone 14 Pro Dynamic Island", comment: "iPhone 14 Pro SubType")),
         .init(key: 2796, title: NSLocalizedString("iPhone 14 Pro Max Dynamic Island", comment: "iPhone 14 Pro Max SubType")),
-        .init(key: 2976, title: NSLocalizedString("iPhone 15 Pro Max Dynamic Island", comment: "iPhone 15 Pro Max SubType"), iOS17Only: true)
+        .init(key: 2976, title: NSLocalizedString("iPhone 15 Pro Max Dynamic Island", comment: "iPhone 15 Pro Max SubType"), minVersion: Version(string: "17.0")),
+        .init(key: 2622, title: NSLocalizedString("iPhone 16 Pro Dynamic Island", comment: "iPhone 16 Pro SubType"), minVersion: Version(string: "18.0")),
+        .init(key: 2868, title: NSLocalizedString("iPhone 16 Pro Max Dynamic Island", comment: "iPhone 16 Pro Max SubType"), minVersion: Version(string: "18.0"))
     ]
     
     // list of mobile gestalt tweaks
@@ -122,25 +125,57 @@ struct GestaltView: View {
             } catch {
                 print(error.localizedDescription)
             }
+            // get the base device subtype
+            do {
+                let subtype = try gestaltManager.getDefaultDeviceSubtype()
+                for (i, deviceSubType) in deviceSubTypes.enumerated() {
+                    if deviceSubType.key == -1 {
+                        deviceSubTypes[i].key = subtype
+                        break
+                    }
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+            // load enabled gestalt tweaks
+            let enabledTweaks = gestaltManager.getEnabledTweaks()
+            // first, the dynamic island
+            if let subtype = enabledTweaks["ArtworkDeviceSubType"] as? Int {
+                CurrentSubType = subtype
+                for deviceSubType in deviceSubTypes {
+                    if deviceSubType.key == subtype {
+                        CurrentSubTypeDisplay = deviceSubType.title
+                        break
+                    }
+                }
+            }
+            // next, the device model name
+            if let modelName = enabledTweaks["ArtworkDeviceProductDescription"] as? String {
+                deviceModelName = modelName
+                deviceModelChanged = true
+            }
+            // finally, do the other values
+            for (i, gestaltTweak) in gestaltTweaks.enumerated() {
+                if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
+                    gestaltTweaks[i].active = true
+                }
+            }
         }
     }
     
     func showSubTypeChangerPopup() {
         // create and configure alert controller
-        let alert = UIAlertController(title: NSLocalizedString("Choose a device subtype", comment: ""), message: NSLocalizedString("Respring to see changes", comment: ""), preferredStyle: .actionSheet)
-        
-        var iOS17 = false
-        if #available(iOS 17, *) {
-            iOS17 = true
-        }
+        let alert = UIAlertController(title: NSLocalizedString("Choose a device subtype", comment: ""), message: "", preferredStyle: .actionSheet)
         
         // create the actions
         
         for type in deviceSubTypes {
-            if !type.iOS17Only ||  iOS17 {
+            if userVersion >= type.minVersion {
                 let newAction = UIAlertAction(title: type.title + " (" + String(type.key) + ")", style: .default) { (action) in
                     // apply the type
                     gestaltManager.setGestaltValue(key: "ArtworkDeviceSubType", value: type.key)
+                    CurrentSubType = type.key
+                    CurrentSubTypeDisplay = type.title
                 }
                 if CurrentSubType == type.key {
                     // add a check mark

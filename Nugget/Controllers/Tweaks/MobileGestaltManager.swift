@@ -70,6 +70,30 @@ class MobileGestaltManager {
         }
     }
     
+    func getEnabledTweaks() -> [String: Any] {
+        return self.GestaltChanges
+    }
+    
+    func getPlistValue(_ dict: [String: Any], key: String) -> Any? {
+        for (k, v) in dict {
+            if k == key {
+                return v
+            } else if let subDict = v as? [String: Any] {
+                let subValue: Any? = getPlistValue(subDict, key: key)
+                if subValue != nil {
+                    return subValue
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getDefaultDeviceSubtype() throws -> Int {
+        let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
+        let plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
+        return getPlistValue(plist, key: "ArtworkDeviceSubType") as? Int ?? -1
+    }
+    
     func setPlistValue(_ dict: [String: Any], key: String, value: Any) -> [String: Any] {
         var newDict = dict
         for (k, v) in dict {
@@ -91,7 +115,9 @@ class MobileGestaltManager {
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
         for key in self.GestaltChanges.keys {
-            plist = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
+            if key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1 {
+                plist = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
+            }
         }
         
         return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)

@@ -19,13 +19,13 @@ struct FeatureFlagsView: View {
     
     @State var featureFlagOptions: [FeatureFlagOption] = [
         .init(label: "Toggle Lockscreen Clock Animation",
-              flag: .init(category: .SpringBoard, flags: ["SwiftUITimeAnimation"])),
+              flag: .init(id: 0, category: .SpringBoard, flags: ["SwiftUITimeAnimation"])),
         .init(label: "Toggle Duplicate Lockscreen Button and Lockscreen Quickswitch",
-              flag: .init(category: .SpringBoard, flags: ["AutobahnQuickSwitchTransition", "SlipSwitch", "PosterEditorKashida"])),
+              flag: .init(id: 1, category: .SpringBoard, flags: ["AutobahnQuickSwitchTransition", "SlipSwitch", "PosterEditorKashida"])),
         .init(label: "Enable Old Photo UI",
-              flag: .init(category: .Photos, flags: ["Lemonade"], is_list: false, inverted: true)),
+              flag: .init(id: 2, category: .Photos, flags: ["Lemonade"], is_list: false, inverted: true)),
         .init(label: "Enable Apple Intelligence",
-              flag: .init(category: .SpringBoard, flags: ["Domino", "SuperDomino"]))
+              flag: .init(id: 3, category: .SpringBoard, flags: ["Domino", "SuperDomino"]))
     ]
     
     var body: some View {
@@ -43,5 +43,18 @@ struct FeatureFlagsView: View {
         }
         .navigationTitle("Feature Flags")
         .navigationViewStyle(.stack)
+        .onAppear {
+            // get the enabled feature flags
+            // O(n^2), should be improved
+            let enabledFlags = ffManager.getEnabledFlags()
+            for (i, flagOption) in featureFlagOptions.enumerated() {
+                for enabledFlag in enabledFlags {
+                    if enabledFlag.id == flagOption.flag.id {
+                        featureFlagOptions[i].active = true
+                        break
+                    }
+                }
+            }
+        }
     }
 }

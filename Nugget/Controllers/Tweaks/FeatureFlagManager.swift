@@ -13,7 +13,7 @@ enum FeatureFlagCategory: String {
 }
 
 struct FeatureFlag: Identifiable {
-    let id = UUID()
+    let id: Int
     let category: FeatureFlagCategory
     let flags: [String]
     var is_list: Bool = true
@@ -35,6 +35,10 @@ class FeatureFlagManager {
                 return
             }
         }
+    }
+    
+    public func getEnabledFlags() -> [FeatureFlag] {
+        return self.EnabledFlags
     }
     
     public func apply() throws -> Data {
