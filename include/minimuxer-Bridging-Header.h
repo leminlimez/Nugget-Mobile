@@ -1,6 +1,7 @@
 #import "SwiftBridgeCore.h"
 #import "em_proxy.h"
 #import "minimuxer.h"
+#import "../Nugget/Controllers/Tweaks/StatusManager/StatusManager.h"
 #include "libimobiledevice/libimobiledevice.h"
 #include "libimobiledevice/mobilebackup2.h"
 
