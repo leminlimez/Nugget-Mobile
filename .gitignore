@@ -5,3 +5,4 @@ packages/
 /Resources/*.dylib
 /lib
 pairing/
+build/
