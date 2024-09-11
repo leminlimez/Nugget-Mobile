@@ -51,6 +51,15 @@ if [ -d $BUILD_LOCATION ]; then
     cp -r "$APP_BUILD_FILES/icon.png" "$BUILD_LOCATION/icon.png"
     cp -r "$APP_BUILD_FILES/Info.plist" "$BUILD_LOCATION/Info.plist"
     cp -r "$APP_BUILD_FILES/Assets.car" "$BUILD_LOCATION/Assets.car"
+    
+    # Add the frameworks
+    echo "Adding framework files"
+    mkdir -p $BUILD_LOCATION/Frameworks
+    if [[ $* == *--debug* ]]; then
+        cp -r $DEBUG_LOCATION/*.dylib "$BUILD_LOCATION/Frameworks"
+    else
+        cp -r $RELEASE_LOCATION/*.dylib "$BUILD_LOCATION/Frameworks"
+    fi
 
     # Create payload
     echo "Creating payload"

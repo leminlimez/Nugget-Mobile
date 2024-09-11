@@ -8,7 +8,7 @@ import PackageDescription
 import AppleProductTypes
 import Foundation
 
-let currentDirectoryPath = "/var/mobile/Library/Mobile Documents/iCloud~com~apple~Playgrounds/Documents/SparseBox.swiftpm"
+let currentDirectoryPath = "/var/mobile/Library/Mobile Documents/iCloud~com~apple~Playgrounds/Documents/Nugget.swiftpm"
 #if os(iOS)
 let compilerAccessiblePath = "/var/mobile/Containers/Data/PluginKitPlugin/C7B10296-7E83-4753-9BF5-A3F9A7F800C7/Documents"
 #else
@@ -16,14 +16,14 @@ let compilerAccessiblePath = FileManager.default.currentDirectoryPath
 #endif
 
 let package = Package(
-    name: "SparseBox",
+    name: "Nugget",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "SparseBox",
-            targets: ["SparseBox"],
+            name: "Nugget",
+            targets: ["Nugget"],
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .sparkle),
@@ -42,7 +42,7 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "SparseBox",
+            name: "Nugget",
             path: ".",
             resources: [
                 .process("Resources")

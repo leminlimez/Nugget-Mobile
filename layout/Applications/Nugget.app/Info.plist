@@ -13,9 +13,7 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleExecutable</key>
-	<string>Helium</string>
-	<key>NSPrincipalClass</key>
-	<string>HUDMainApplication</string>
+	<string>Nugget</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleIconFile</key>
@@ -41,6 +39,10 @@
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>ALTDeviceID</key>
+    <string></string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>CFBundleDevelopmentRegion</key>

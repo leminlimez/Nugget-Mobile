@@ -56,7 +56,7 @@ class MobileGestaltManager {
         self.GestaltChanges[key] = value
     }
     func setGestaltValues(keys: [String], values: [Any]) {
-        for keyIdx in 0...keys.count {
+        for keyIdx in 0...(keys.count - 1) {
             self.setGestaltValue(key: keys[keyIdx], value: values[keyIdx])
         }
     }

@@ -42,6 +42,7 @@ UI_EXT_DIR := $(EXT_DIR)/UI
 
 CONTROLLERS_DIR := $(SRC_DIR)/Controllers
 TWEAK_CONTROLLERS_DIR := $(CONTROLLERS_DIR)/Tweaks
+# STATUS_MANAGER_DIR := $(TWEAK_CONTROLLERS_DIR)/StatusManager
 
 $(APPLICATION_NAME)_FILES = \
   include/minimuxer-helpers.swift \
@@ -70,6 +71,7 @@ $(APPLICATION_NAME)_FILES += $(wildcard $(VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(UI_EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_CONTROLLERS_DIR)/*.swift)
+# $(APPLICATION_NAME)_FILES += $(wildcard $(STATUS_MANAGER_DIR)/*.m)
 $(APPLICATION_NAME)_FILES += $(SRC_DIR)/NuggetApp.swift
 
 $(APPLICATION_NAME)_FRAMEWORKS = UIKit

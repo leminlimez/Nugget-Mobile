@@ -4,3 +4,4 @@ packages/
 /Resources/Frameworks
 /Resources/*.dylib
 /lib
+pairing/

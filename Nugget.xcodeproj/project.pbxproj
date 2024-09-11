@@ -92,6 +92,7 @@
 		6F8593532C8F41E000F790D1 /* Nugget */ = {
 			isa = PBXGroup;
 			children = (
+				6F8594AD2C910C9700F790D1 /* Unused */,
 				6F8593582C8F41E100F790D1 /* Assets.xcassets */,
 				6F8594AA2C8FACCD00F790D1 /* Nugget-Bridging-Header.h */,
 				6F8593622C8F41F900F790D1 /* Controllers */,
@@ -135,7 +136,6 @@
 			children = (
 				6F8593652C8F425E00F790D1 /* GestaltView.swift */,
 				6F8593B42C8F9A3500F790D1 /* FeatureFlagsView.swift */,
-				6F8593B62C8FAA8700F790D1 /* StatusBarView.swift */,
 			);
 			path = Tweaks;
 			sourceTree = "<group>";
@@ -176,7 +176,6 @@
 				6F8594A42C8FAC8B00F790D1 /* StatusManager */,
 				6F8593792C8F4C7000F790D1 /* MobileGestaltManager.swift */,
 				6F8593B22C8F91C900F790D1 /* FeatureFlagManager.swift */,
-				6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */,
 			);
 			path = Tweaks;
 			sourceTree = "<group>";
@@ -193,6 +192,15 @@
 				6F8594A12C8FAC8B00F790D1 /* StatusSetter16_1.m */,
 			);
 			path = StatusManager;
+			sourceTree = "<group>";
+		};
+		6F8594AD2C910C9700F790D1 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				6F8593B62C8FAA8700F790D1 /* StatusBarView.swift */,
+				6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */,
+			);
+			path = Unused;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
