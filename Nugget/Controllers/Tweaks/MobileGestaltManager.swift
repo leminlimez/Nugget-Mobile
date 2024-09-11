@@ -127,7 +127,7 @@ class MobileGestaltManager {
     func reset() throws -> Data {
         let fm = FileManager.default
         let gestaltURL = URL.documents.appendingPathComponent("com.apple.MobileGestalt.plist")
-        try fm.removeItem(at: gestaltURL)
+        try? fm.removeItem(at: gestaltURL)
         return Data()
 //        return FileToRestore.init(contents: Data(), restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
     }
