@@ -71,6 +71,7 @@ $(APPLICATION_NAME)_FILES += $(wildcard $(VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(UI_EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_CONTROLLERS_DIR)/*.swift)
+$(APPLICATION_NAME)_FILES += $(wildcard $(CONTROLLERS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(STATUS_MANAGER_DIR)/*.m)
 $(APPLICATION_NAME)_FILES += $(SRC_DIR)/NuggetApp.swift
 

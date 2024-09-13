@@ -13,7 +13,7 @@ import SwiftUI
     
     func apply() throws -> Data {
         let fm = FileManager.default
-        let overridesURL = URL.documents.appendingPathComponent("statusBarOverrides")
+        let overridesURL = getOverridesFileURL()
         return try Data(contentsOf: overridesURL)
     }
     

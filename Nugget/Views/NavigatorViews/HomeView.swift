@@ -14,12 +14,12 @@ struct HomeView: View {
     @AppStorage("PairingFile") var pairingFile: String?
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
-    @AppStorage("AutoReboot") var autoReboot: Bool = false
+    @AppStorage("AutoReboot") var autoReboot: Bool = true
     @State var lastError: String?
     @State var path = NavigationPath()
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             List {
                 // MARK: App Version
                 Section {
@@ -79,7 +79,6 @@ struct HomeView: View {
                         }
                     }
                     .listRowInsets(EdgeInsets())
-                    .padding()
                     // auto reboot option
                     HStack {
                         Toggle(isOn: $autoReboot) {
