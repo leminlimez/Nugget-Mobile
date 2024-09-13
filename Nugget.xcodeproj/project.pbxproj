@@ -64,6 +64,7 @@
 		6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusManagerSwift.swift; sourceTree = "<group>"; };
 		6F8594B82C92056D00F790D1 /* Restore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restore.swift; sourceTree = "<group>"; };
 		6F8594BA2C9235C600F790D1 /* ApplyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyHandler.swift; sourceTree = "<group>"; };
+		6F8594BC2C9490BA00F790D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +97,7 @@
 		6F8593532C8F41E000F790D1 /* Nugget */ = {
 			isa = PBXGroup;
 			children = (
+				6F8594BC2C9490BA00F790D1 /* Info.plist */,
 				6F8594AE2C92052900F790D1 /* New Group */,
 				6F8593582C8F41E100F790D1 /* Assets.xcassets */,
 				6F8594AA2C8FACCD00F790D1 /* Nugget-Bridging-Header.h */,
@@ -447,6 +449,7 @@
 				DEVELOPMENT_TEAM = 2P4CP47H76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nugget/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -480,6 +483,7 @@
 				DEVELOPMENT_TEAM = 2P4CP47H76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nugget/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

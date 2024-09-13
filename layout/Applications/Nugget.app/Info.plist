@@ -20,6 +20,28 @@
 	<string>icon.png</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>Imported Type Identifiers</key>
+	<array>
+		<dict>
+			<key>Icon file names</key>
+			<array></array>
+			<key>Identifier</key>
+			<string>com.leemin.mobiledevicepairing</string>
+			<key>Conforms to Type Identifiers</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>Description</key>
+			<string>Mobile Device Pairing File</string>
+			<key>Equivalent Types</key>
+			<dict>
+				<key>Extensions</key>
+				<array>
+					<string>mobiledevicepairing</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 	<key>UIApplicationShowsViewsWhileLocked</key>
 	<false/>
 	<key>UIApplicationSystemWindowsSecureKey</key>

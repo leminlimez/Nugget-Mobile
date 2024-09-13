@@ -127,6 +127,15 @@ struct HomeView: View {
                     Label("Credits", systemImage: "wrench.and.screwdriver")
                 }
             }
+            .onOpenURL(perform: { url in
+                let fm = FileManager.default
+                
+                // for opening the mobiledevicepairing file
+                if url.pathExtension.lowercased() == "mobiledevicepairing" {
+                    pairingFile = try! String(contentsOf: url)
+                    startMinimuxer()
+                }
+            })
             .onAppear {
                 _ = start_emotional_damage("127.0.0.1:51820")
                 if let altPairingFile = Bundle.main.object(forInfoDictionaryKey: "ALTPairingFile") as? String, altPairingFile.count > 5000, pairingFile == nil {
