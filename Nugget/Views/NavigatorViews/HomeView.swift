@@ -120,7 +120,7 @@ struct HomeView: View {
                     LinkCell(imageName: "khanhduytran", url: "https://github.com/khanhduytran0/SparseBox", title: "khanhduytran0", contribution: "SparseBox", circle: true)
                     LinkCell(imageName: "jjtech", url: "https://github.com/JJTech0130/TrollRestore", title: "JJTech0130", contribution: "Sparserestore", circle: true)
                     LinkCell(imageName: "disfordottie", url: "https://x.com/disfordottie", title: "disfordottie", contribution: "Some Global Flag Features", circle: true)
-                    LinkCell(imageName: "lrdsnow", url: "https://github.com/Lrdsnow/EUEnabler", title: "Lrdsnow", contribution: "EU Enabler", circle: true)
+//                    LinkCell(imageName: "lrdsnow", url: "https://github.com/Lrdsnow/EUEnabler", title: "Lrdsnow", contribution: "EU Enabler", circle: true)
                     LinkCell(imageName: "app.gift", url: "https://sidestore.io/", title: "SideStore", contribution: "em_proxy and minimuxer", systemImage: true, circle: true)
                     LinkCell(imageName: "cable.connector", url: "https://libimobiledevice.org", title: "libimobiledevice", contribution: "Restore Library", systemImage: true, circle: true)
                 } header: {

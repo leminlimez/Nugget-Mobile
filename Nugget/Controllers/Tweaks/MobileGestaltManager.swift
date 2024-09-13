@@ -94,16 +94,19 @@ class MobileGestaltManager {
         return getPlistValue(plist, key: "ArtworkDeviceSubType") as? Int ?? -1
     }
     
-    func setPlistValue(_ dict: [String: Any], key: String, value: Any) -> [String: Any] {
+    func setPlistValue(_ dict: [String: Any], key: String, value: Any) -> ([String: Any], Bool) {
         var newDict = dict
+        var changed = false
         for (k, v) in dict {
             if k == key {
                 newDict[k] = value
+                changed = true
+                break
             } else if let subDict = v as? [String: Any] {
-                newDict[k] = self.setPlistValue(subDict, key: key, value: value)
+                (newDict[k], changed) = self.setPlistValue(subDict, key: key, value: value)
             }
         }
-        return newDict
+        return (newDict, changed)
     }
     
     func apply() throws -> Data? {
@@ -116,7 +119,14 @@ class MobileGestaltManager {
         
         for key in self.GestaltChanges.keys {
             if key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1 {
-                plist = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
+                var changed = false
+                (plist, changed) = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
+                if !changed {
+                    // not found, change in CacheExtra
+                    if var newPlist = plist["CacheExtra"] as? [String: Any] {
+                        newPlist[key] = self.GestaltChanges[key]
+                    }
+                }
             }
         }
         
