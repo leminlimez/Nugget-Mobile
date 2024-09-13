@@ -46,7 +46,10 @@ class ApplyHandler {
                 filesToRestore.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
             }
             if !filesToRestore.isEmpty {
-                RestoreManager.shared.restoreFiles(filesToRestore)
+                RestoreManager.shared.restoreFiles(filesToRestore, reboot: true)
+            } else {
+                print("No files to restore!")
+                return
             }
         } catch {
             print(error.localizedDescription)
