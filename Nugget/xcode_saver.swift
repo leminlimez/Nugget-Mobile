@@ -19,6 +19,10 @@ func start(_ pairingFile: String, _ documentsDir: String) throws {
     return
 }
 
+func ready() -> Bool {
+    return true
+}
+
 func idevicebackup2_main(_ a: Int32, _ b: inout [UnsafeMutablePointer<CChar>?]) {
     return
 }

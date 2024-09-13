@@ -75,7 +75,6 @@ $(APPLICATION_NAME)_FILES += $(wildcard $(STATUS_MANAGER_DIR)/*.m)
 $(APPLICATION_NAME)_FILES += $(SRC_DIR)/NuggetApp.swift
 
 $(APPLICATION_NAME)_FRAMEWORKS = UIKit
-$(APPLICATION_NAME)_PRIVATE_FRAMEWORKS = AppleMobileFileIntegrity
 $(APPLICATION_NAME)_CFLAGS = -fcommon -fobjc-arc
 $(APPLICATION_NAME)_SWIFTFLAGS = -Iinclude -import-objc-header include/minimuxer-Bridging-Header.h
 # $(APPLICATION_NAME)_SWIFTFLAGS += -Iinclude -import-objc-header Nugget/Nugget-Bridging-Header.h

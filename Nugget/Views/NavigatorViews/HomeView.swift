@@ -15,6 +15,7 @@ struct HomeView: View {
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
     @State var lastError: String?
+    @State var path = NavigationPath()
     
     var body: some View {
         NavigationView {
@@ -28,49 +29,47 @@ struct HomeView: View {
                 
                 // MARK: Tweak Options
                 Section {
-                    // apply all tweaks button
-                    HStack {
-                        ZStack {
-                            NavLinkButton(label: "Apply Tweaks", color: .blue)
-                            NavigationLink("") {
-                                LogView(resetting: false)
-                            }.opacity(0)
-                        }
-                        Button {
-                            UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies all selected tweaks.", comment: "apply tweaks info"))
-                        } label: {
-                            Image(systemName: "info")
-                        }
-                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                    }
-                    // remove all tweaks button
-                    HStack {
-                        ZStack {
-                            NavLinkButton(label: "Remove All Tweaks", color: .red)
-                            NavigationLink("") {
-                                LogView(resetting: true)
-                            }.opacity(0)
-                        }
-                        Button {
-                            UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
-                        } label: {
-                            Image(systemName: "info")
-                        }
-                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                    }
-                    // select pairing file button
-                    if pairingFile == nil {
+                    VStack {
+                        // apply all tweaks button
                         HStack {
-                            Button("Select Pairing File") {
-                                showPairingFileImporter.toggle()
+                            Button("Apply Tweaks") {
+                                applyChanges(reverting: false)
                             }
-                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
+                            .buttonStyle(TintedButton(color: .blue, fullwidth: true))
                             Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore.", comment: "pairing file selector info"))
+                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies all selected tweaks.", comment: "apply tweaks info"))
                             } label: {
                                 Image(systemName: "info")
                             }
                             .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                        }
+                        // remove all tweaks button
+                        HStack {
+                            Button("Remove All Tweaks") {
+                                applyChanges(reverting: true)
+                            }
+                            .buttonStyle(TintedButton(color: .red, fullwidth: true))
+                            Button {
+                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
+                            } label: {
+                                Image(systemName: "info")
+                            }
+                            .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                        }
+                        // select pairing file button
+                        if pairingFile == nil {
+                            HStack {
+                                Button("Select Pairing File") {
+                                    showPairingFileImporter.toggle()
+                                }
+                                .buttonStyle(TintedButton(color: .green, fullwidth: true))
+                                Button {
+                                    UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore.", comment: "pairing file selector info"))
+                                } label: {
+                                    Image(systemName: "info")
+                                }
+                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                            }
                         }
                     }
                 } header: {
@@ -114,6 +113,13 @@ struct HomeView: View {
                 startMinimuxer()
             }
             .navigationTitle("Nugget")
+            .navigationDestination(for: String.self) { view in
+                if view == "ApplyChanges" {
+                    LogView(resetting: false)
+                } else if view == "RevertChanges" {
+                    LogView(resetting: true)
+                }
+            }
             .alert("Error", isPresented: $showErrorAlert) {
                 Button("OK") {}
             } message: {
@@ -122,20 +128,12 @@ struct HomeView: View {
         }
     }
     
-    struct NavLinkButton: View {
-        var label: String
-        var color: Color
-        var material: UIBlurEffect.Style?
-        
-        var body: some View {
-            VStack(alignment: .center) {
-                Text(label)
-                    .padding(15)
-                    .frame(maxWidth: .infinity)
-                    .background(material == nil ? AnyView(color.opacity(0.2)) : AnyView(MaterialView(material!)))
-                    .cornerRadius(8)
-                    .foregroundColor(color)
-            }
+    func applyChanges(reverting: Bool) {
+        if ready() {
+            path.append(reverting ? "RevertChanges" : "ApplyChanges")
+        } else {
+            lastError = "minimuxer is not ready. Ensure you have WiFi and WireGuard VPN set up."
+            showErrorAlert.toggle()
         }
     }
     
