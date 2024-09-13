@@ -113,7 +113,7 @@ class MobileGestaltManager {
         if self.GestaltChanges.isEmpty {
             return nil
         }
-        let gestaltURL = URL.documents.appendingPathComponent("com.apple.MobileGestalt.plist")
+        let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
         let gestaltData = try Data(contentsOf: gestaltURL)
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
@@ -136,7 +136,7 @@ class MobileGestaltManager {
     
     func reset() throws -> Data {
         let fm = FileManager.default
-        let gestaltURL = URL.documents.appendingPathComponent("com.apple.MobileGestalt.plist")
+        let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
         try? fm.removeItem(at: gestaltURL)
         return Data()
 //        return FileToRestore.init(contents: Data(), restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
