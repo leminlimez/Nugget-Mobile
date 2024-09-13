@@ -27,6 +27,7 @@ struct HomeView: View {
                 } header: {
                     Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(buildNumber != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
                 }
+                .listStyle(InsetGroupedListStyle())
                 
                 // MARK: Tweak Options
                 Section {
@@ -89,6 +90,7 @@ struct HomeView: View {
                 } header: {
                     Label("Tweak Options", systemImage: "hammer")
                 }
+                .listStyle(InsetGroupedListStyle())
                 .listRowInsets(EdgeInsets())
                 .padding()
                 .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!], onCompletion: { result in

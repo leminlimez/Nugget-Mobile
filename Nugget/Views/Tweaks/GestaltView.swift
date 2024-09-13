@@ -107,13 +107,15 @@ struct GestaltView: View {
             Section {
                 // tweaks from list
                 ForEach($gestaltTweaks) { tweak in
-                    Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
-                        if nv {
-                            gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
-                        } else {
-                            gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
-                        }
-                    })
+                    if userVersion > tweak.minVersion.wrappedValue {
+                        Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
+                            if nv {
+                                gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
+                            } else {
+                                gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
+                            }
+                        })
+                    }
                 }
             }
         }
