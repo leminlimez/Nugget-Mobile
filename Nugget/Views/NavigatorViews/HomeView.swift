@@ -14,6 +14,7 @@ struct HomeView: View {
     @AppStorage("PairingFile") var pairingFile: String?
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
+    @AppStorage("AutoReboot") var autoReboot: Bool = false
     @State var lastError: String?
     @State var path = NavigationPath()
     
@@ -72,6 +73,15 @@ struct HomeView: View {
                             }
                         }
                     }
+                    .listRowInsets(EdgeInsets())
+                    .padding()
+                    // auto reboot option
+                    HStack {
+                        Toggle(isOn: $autoReboot) {
+                            Text("Auto reboot after apply")
+                                .minimumScaleFactor(0.5)
+                        }
+                    }
                 } header: {
                     Label("Tweak Options", systemImage: "hammer")
                 }
@@ -121,9 +131,9 @@ struct HomeView: View {
             .navigationTitle("Nugget")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
-                    LogView(resetting: false)
+                    LogView(resetting: false, autoReboot: autoReboot)
                 } else if view == "RevertChanges" {
-                    LogView(resetting: true)
+                    LogView(resetting: true, autoReboot: autoReboot)
                 }
             }
             .alert("Error", isPresented: $showErrorAlert) {

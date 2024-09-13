@@ -11,6 +11,7 @@ let logPipe = Pipe()
 
 struct LogView: View {
     let resetting: Bool
+    let autoReboot: Bool
     
     @State var log: String = ""
     @State var ran = false
@@ -39,7 +40,7 @@ struct LogView: View {
                     
                     DispatchQueue.global(qos: .background).async {
                         print("APPLYING")
-                        ApplyHandler.shared.apply(resetting: resetting)
+                        ApplyHandler.shared.apply(resetting: resetting, reboot: autoReboot)
                     }
                 }
             }
@@ -47,8 +48,9 @@ struct LogView: View {
         .navigationTitle("Log output")
     }
     
-    init(resetting: Bool) {
+    init(resetting: Bool, autoReboot: Bool) {
         self.resetting = resetting
+        self.autoReboot = autoReboot
         setvbuf(stdout, nil, _IOLBF, 0) // make stdout line-buffered
         setvbuf(stderr, nil, _IONBF, 0) // make stderr unbuffered
         

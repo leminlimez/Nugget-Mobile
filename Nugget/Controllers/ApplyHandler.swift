@@ -14,7 +14,7 @@ class ApplyHandler {
     let ffManager = FeatureFlagManager.shared
     let statusManager = StatusManagerSwift.shared
     
-    func apply(resetting: Bool) {
+    func apply(resetting: Bool, reboot: Bool) {
         var filesToRestore: [FileToRestore] = []
         do {
             // Apply mobilegestalt changes
@@ -46,7 +46,7 @@ class ApplyHandler {
                 filesToRestore.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
             }
             if !filesToRestore.isEmpty {
-                RestoreManager.shared.restoreFiles(filesToRestore, reboot: true)
+                RestoreManager.shared.restoreFiles(filesToRestore, reboot: reboot)
             } else {
                 print("No files to restore!")
                 return
