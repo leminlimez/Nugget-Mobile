@@ -71,6 +71,11 @@ struct HomeView: View {
                                 }
                                 .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                             }
+                        } else {
+                            Button("Reset pairing file") {
+                                pairingFile = nil
+                            }
+                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
                         }
                     }
                     .listRowInsets(EdgeInsets())
