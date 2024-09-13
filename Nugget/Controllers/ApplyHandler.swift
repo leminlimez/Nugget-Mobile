@@ -30,20 +30,24 @@ class ApplyHandler {
             
             // Apply status bar
             var statusBarData: Data = Data()
-            if !resetting {
+            if resetting {
+                statusBarData = try statusManager.reset()
+            } else {
                 statusBarData = try statusManager.apply()
             }
             filesToRestore.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
             
-            // Apply feature flag changes
-            var ffData: Data? = nil
-            if resetting {
-                ffData = try ffManager.reset()
-            } else {
-                ffData = try ffManager.apply()
-            }
-            if let ffData = ffData {
-                filesToRestore.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
+            // Apply feature flag changes (iOS 18.0+ only)
+            if #available(iOS 18.0, *) {
+                var ffData: Data? = nil
+                if resetting {
+                    ffData = try ffManager.reset()
+                } else {
+                    ffData = try ffManager.apply()
+                }
+                if let ffData = ffData {
+                    filesToRestore.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
+                }
             }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, reboot: reboot)
