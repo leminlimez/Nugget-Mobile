@@ -27,7 +27,7 @@ import SwiftUI
     
     @objc func getOverridesFileURL() -> URL {
         let fm = FileManager.default
-        let overridesURL = URL.documents.appendingPathComponent("statusBarOverrides")
+        let overridesURL = URL.tweaksDirectory.appendingPathComponent("statusBarOverrides")
         if !fm.fileExists(atPath: overridesURL.path) {
             // write new file to the app's documents directory
             do {

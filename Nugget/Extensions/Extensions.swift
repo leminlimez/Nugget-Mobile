@@ -13,6 +13,12 @@ extension URL {
             .default
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
+    static var tweaksDirectory: URL {
+        if !FileManager.default.fileExists(atPath: URL.documents.appendingPathComponent("Tweaks").path) {
+            try? FileManager.default.createDirectory(at: URL.documents.appendingPathComponent("Tweaks"), withIntermediateDirectories: true)
+        }
+        return URL.documents.appendingPathComponent("Tweaks")
+    }
 }
 
 extension Bundle {

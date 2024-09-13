@@ -15,7 +15,7 @@ class MobileGestaltManager {
     func loadMobileGestaltFile() throws {
         let fm = FileManager.default
         
-        let docsURL = URL.documents
+        let docsURL = URL.tweaksDirectory
         let gestaltURL = docsURL.appendingPathComponent("com.apple.MobileGestalt.plist")
 //        let gestaltBackupURL = docsURL.appendingPathComponent("com.apple.MobileGestalt-BACKUP.plist")
         if fm.fileExists(atPath: gestaltURL.path) {

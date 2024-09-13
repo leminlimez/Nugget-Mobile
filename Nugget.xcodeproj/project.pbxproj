@@ -31,6 +31,8 @@
 		6F8594AC2C8FADF300F790D1 /* StatusManagerSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */; };
 		6F8594B92C92056D00F790D1 /* Restore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594B82C92056D00F790D1 /* Restore.swift */; };
 		6F8594BB2C9235C600F790D1 /* ApplyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594BA2C9235C600F790D1 /* ApplyHandler.swift */; };
+		6F8594BE2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594BD2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift */; };
+		6F8594C02C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594BF2C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +67,8 @@
 		6F8594B82C92056D00F790D1 /* Restore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restore.swift; sourceTree = "<group>"; };
 		6F8594BA2C9235C600F790D1 /* ApplyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyHandler.swift; sourceTree = "<group>"; };
 		6F8594BC2C9490BA00F790D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6F8594BD2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicPlistTweaksManager.swift; sourceTree = "<group>"; };
+		6F8594BF2C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicPlistTweaksFileLocations.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +187,8 @@
 			isa = PBXGroup;
 			children = (
 				6F8594A42C8FAC8B00F790D1 /* StatusManager */,
+				6F8594BD2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift */,
+				6F8594BF2C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift */,
 				6F8593792C8F4C7000F790D1 /* MobileGestaltManager.swift */,
 				6F8593B22C8F91C900F790D1 /* FeatureFlagManager.swift */,
 				6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */,
@@ -297,12 +303,14 @@
 				6F8593752C8F448100F790D1 /* Alert++.swift in Sources */,
 				6F8594AC2C8FADF300F790D1 /* StatusManagerSwift.swift in Sources */,
 				6F8594B92C92056D00F790D1 /* Restore.swift in Sources */,
+				6F8594C02C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift in Sources */,
 				6F8593AC2C8F61FC00F790D1 /* LogView.swift in Sources */,
 				6F8593B52C8F9A3500F790D1 /* FeatureFlagsView.swift in Sources */,
 				6F8594BB2C9235C600F790D1 /* ApplyHandler.swift in Sources */,
 				6F8593572C8F41E000F790D1 /* RootView.swift in Sources */,
 				6F8593B72C8FAA8700F790D1 /* StatusBarView.swift in Sources */,
 				6F8594A62C8FAC8B00F790D1 /* StatusManager.m in Sources */,
+				6F8594BE2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift in Sources */,
 				6F8593B12C8F7B8400F790D1 /* xcode_saver.swift in Sources */,
 				6F8593772C8F490400F790D1 /* Version.swift in Sources */,
 				6F8594A92C8FAC8B00F790D1 /* StatusSetter16.m in Sources */,

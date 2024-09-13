@@ -17,6 +17,15 @@ class ApplyHandler {
     func apply(resetting: Bool, reboot: Bool) {
         var filesToRestore: [FileToRestore] = []
         do {
+            // Apply status bar
+            var statusBarData: Data = Data()
+            if resetting {
+                statusBarData = try statusManager.reset()
+            } else {
+                statusBarData = try statusManager.apply()
+            }
+            filesToRestore.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
+            
             // Apply mobilegestalt changes
             var mobileGestaltData: Data? = nil
             if resetting {
@@ -27,15 +36,6 @@ class ApplyHandler {
             if let mobileGestaltData = mobileGestaltData {
                 filesToRestore.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
             }
-            
-            // Apply status bar
-            var statusBarData: Data = Data()
-            if resetting {
-                statusBarData = try statusManager.reset()
-            } else {
-                statusBarData = try statusManager.apply()
-            }
-            filesToRestore.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
             
             // Apply feature flag changes (iOS 18.0+ only)
             if #available(iOS 18.0, *) {
