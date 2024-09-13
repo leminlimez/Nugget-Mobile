@@ -35,6 +35,7 @@ extern "C" {
 
 /** Error Codes */
 typedef enum {
+    DIAGNOSTICS_RELAY_ACTION_FLAG_NONE = 0,
 	DIAGNOSTICS_RELAY_E_SUCCESS         =  0,
 	DIAGNOSTICS_RELAY_E_INVALID_ARG     = -1,
 	DIAGNOSTICS_RELAY_E_PLIST_ERROR     = -2,
