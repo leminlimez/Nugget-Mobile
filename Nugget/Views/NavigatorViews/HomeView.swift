@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct HomeView: View {
-    private let buildNumber = 1
+    private let buildNumber = 2
     
     @AppStorage("PairingFile") var pairingFile: String?
     @State var showPairingFileImporter = false
@@ -140,6 +140,8 @@ struct HomeView: View {
                 _ = start_emotional_damage("127.0.0.1:51820")
                 if let altPairingFile = Bundle.main.object(forInfoDictionaryKey: "ALTPairingFile") as? String, altPairingFile.count > 5000, pairingFile == nil {
                     pairingFile = altPairingFile
+                } else if pairingFile == nil, FileManager.default.fileExists(atPath: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing").path) {
+                    pairingFile = try? String(contentsOf: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing"))
                 }
                 startMinimuxer()
             }
