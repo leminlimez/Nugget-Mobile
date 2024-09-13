@@ -4,6 +4,7 @@ fi
 set -e
 
 APP_NAME="Nugget"
+FILE_EXT="tipa"
 WORKING_LOCATION="$(pwd)"
 APP_BUILD_FILES="$WORKING_LOCATION/layout/Applications/$APP_NAME.app"
 DEBUG_LOCATION="$WORKING_LOCATION/.theos/obj/debug"
@@ -24,8 +25,8 @@ if [ ! -d "build" ]; then
     mkdir build
 fi
 #remove existing archive if there
-if [ -d "build/$APP_NAME.ipa" ]; then
-    rm -rf "build/$APP_NAME.ipa"
+if [ -d "build/$APP_NAME.$FILE_EXT" ]; then
+    rm -rf "build/$APP_NAME.$FILE_EXT"
 fi
 
 if ! type "gmake" >/dev/null; then
@@ -72,7 +73,7 @@ if [ -d $BUILD_LOCATION ]; then
     if [[ $* != *--debug* ]]; then
         strip Payload/$APP_NAME.app/$APP_NAME
     fi
-    zip -vr $APP_NAME.ipa Payload
+    zip -vr $APP_NAME.$FILE_EXT Payload
     rm -rf $APP_NAME.app
     rm -rf Payload
 fi

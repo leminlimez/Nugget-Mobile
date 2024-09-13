@@ -31,6 +31,10 @@ class MobileDevice {
     public static func deviceList() -> [String] {
         return []
     }
+    
+    public static func rebootDevice(udid: String) {
+        return
+    }
 }
 
 /* Backup.swift */
