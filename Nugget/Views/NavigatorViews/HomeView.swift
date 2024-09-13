@@ -65,7 +65,7 @@ struct HomeView: View {
                                 }
                                 .buttonStyle(TintedButton(color: .green, fullwidth: true))
                                 Button {
-                                    UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore.", comment: "pairing file selector info"))
+                                    UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
                                 } label: {
                                     Image(systemName: "info")
                                 }

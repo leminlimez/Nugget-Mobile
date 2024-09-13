@@ -13,6 +13,7 @@ var currentUIAlertController: UIAlertController?
 
 fileprivate let errorString = NSLocalizedString("Error", comment: "")
 fileprivate let okString = NSLocalizedString("OK", comment: "")
+fileprivate let helpString = NSLocalizedString("Help", comment: "")
 fileprivate let cancelString = NSLocalizedString("Cancel", comment: "")
 
 extension UIApplication {
@@ -37,6 +38,27 @@ extension UIApplication {
             
             currentUIAlertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
             if withButton { currentUIAlertController?.addAction(.init(title: okString, style: .cancel)) }
+            self.present(alert: currentUIAlertController!)
+        }
+    }
+    func helpAlert(title: String = errorString, body: String, link: String, animated: Bool = true, dismissButton: Bool = true) {
+        DispatchQueue.main.async {
+            var body = body
+            
+            if title == errorString {
+                // append debug info
+                let device = UIDevice.current
+                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+                let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+                let systemVersion = device.systemVersion
+                body += "\n\(device.systemName) \(systemVersion), version \(appVersion) build \(appBuild) escaped=\(FileManager.default.isReadableFile(atPath: "/var/mobile"))"
+            }
+            
+            currentUIAlertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
+            if dismissButton { currentUIAlertController?.addAction(.init(title: okString, style: .cancel)) }
+            currentUIAlertController?.addAction(.init(title: helpString, style: .default, handler: { _ in
+                UIApplication.shared.open(URL(string: link)!)
+            }))
             self.present(alert: currentUIAlertController!)
         }
     }
