@@ -50,7 +50,7 @@ struct GestaltView: View {
         .init(label: "Enable Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
         .init(label: "Enable Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
         .init(label: "Enable Tap to Wake (iPhone SE)", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
-        .init(label: "Enable iOS 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
+        .init(label: "Enable iPhone 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
         .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0]),
         .init(label: "Enable Stage Manager Supported (WARNING: risky on some devices, mainly phones)", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
         .init(label: "Allow iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]]),
