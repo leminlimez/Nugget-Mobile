@@ -117,7 +117,6 @@ class BasicPlistTweaksManager: ObservableObject {
         var changedLocations: [FileLocation] = []
         // add the location of where to restore
         for tweak in self.tweaks {
-            print("Tweak: \(tweak.title)\nmodified: \(tweak.modified)\nvalue: \(tweak.tweakType == .text ? tweak.stringValue : String(tweak.boolValue))\n\n")
             if tweak.modified && !changedLocations.contains(tweak.fileLocation) {
                 changedLocations.append(tweak.fileLocation)
             }
