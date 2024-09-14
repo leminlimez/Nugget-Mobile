@@ -7,40 +7,61 @@
 
 import Foundation
 
-protocol PlistTweak: Identifiable {
-    var id: UUID { get set }
-    var key: String { get set }
-    var title: String { get set }
-    var fileLocation: FileLocation { get set }
-    var modified: Bool { get set }
+//protocol PlistTweak: Identifiable {
+//    var id: UUID { get set }
+//    var key: String { get set }
+//    var title: String { get set }
+//    var fileLocation: FileLocation { get set }
+//    var modified: Bool { get set }
+//}
+//
+//struct ToggleOption: PlistTweak {
+//    var id = UUID()
+//    var key: String
+//    var title: String
+//    var fileLocation: FileLocation
+//    var modified: Bool = false
+//    var value: Bool = false
+//    var invertValue: Bool = false
+//}
+//
+//struct TextOption: PlistTweak {
+//    var id = UUID()
+//    var key: String
+//    var title: String
+//    var fileLocation: FileLocation
+//    var modified: Bool = false
+//    var value: String = ""
+//    var placeholder: String
+//}
+
+enum PlistTweakType {
+    case toggle
+    case text
 }
 
-struct ToggleOption: PlistTweak {
+struct PlistTweak: Identifiable {
     var id = UUID()
     var key: String
     var title: String
     var fileLocation: FileLocation
+    var tweakType: PlistTweakType // this is very stupid but SwiftUI hard typing doesn't like the protocols
     var modified: Bool = false
-    var value: Bool = false
+    
+    var boolValue: Bool = false
     var invertValue: Bool = false
-}
-
-struct TextOption: PlistTweak {
-    var id = UUID()
-    var key: String
-    var title: String
-    var fileLocation: FileLocation
-    var modified: Bool = false
-    var value: String = ""
+    
+    var stringValue: String = ""
+    var placeholder: String = ""
 }
 
 class BasicPlistTweaksManager {
     static var managers: [BasicPlistTweaksManager] = []
     
     var title: String
-    var tweaks: [any PlistTweak]
+    var tweaks: [PlistTweak]
     
-    init(title: String, tweaks: [any PlistTweak]) {
+    init(title: String, tweaks: [PlistTweak]) {
         self.title = title
         self.tweaks = tweaks
         
@@ -49,16 +70,16 @@ class BasicPlistTweaksManager {
             guard let data = try? Data(contentsOf: getURLFromFileLocation(tweak.fileLocation)) else { continue }
             guard let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else { continue }
             if let val = plist[tweak.key] {
-                if var toggleOp = self.tweaks[i] as? ToggleOption, let val = val as? Bool {
-                    toggleOp.value = val
-                } else if var textOp = self.tweaks[i] as? TextOption, let val = val as? String {
-                    textOp.value = val
+                if let val = val as? Bool {
+                    self.tweaks[i].boolValue = val
+                } else if let val = val as? String {
+                    self.tweaks[i].stringValue = val
                 }
             }
         }
     }
     
-    static func getManager(for title: String, tweaks: [any PlistTweak]) -> BasicPlistTweaksManager {
+    static func getManager(for title: String, tweaks: [PlistTweak]) -> BasicPlistTweaksManager {
         // have tweaks as an input in case it doesn't exist
         for (i, manager) in managers.enumerated() {
             if manager.title == title {
@@ -71,7 +92,7 @@ class BasicPlistTweaksManager {
         return newManager
     }
     
-    func setTweakValue(_ tweak: any PlistTweak, newVal: Any) {
+    func setTweakValue(_ tweak: PlistTweak, newVal: Any) {
         let fileURL = getURLFromFileLocation(tweak.fileLocation)
         let data = try? Data(contentsOf: fileURL)
         var plist: [String: Any] = [:]
@@ -109,15 +130,40 @@ class BasicPlistTweaksManager {
         return changes
     }
     
-    // TODO: Remove tweaks
-//    func reset() throws -> [FileLocation: Data] {
-//        return
-//    }
+    func reset() -> [FileLocation: Data] {
+        var changedLocations: [FileLocation] = []
+        // add the location of where to restore
+        for tweak in self.tweaks {
+            if !changedLocations.contains(tweak.fileLocation) {
+                changedLocations.append(tweak.fileLocation)
+            }
+        }
+        // create a dictionary of data to restore
+        var changes: [FileLocation: Data] = [:]
+        let emptyPlist: [String: Any] = [:]
+        let emptyData = try? PropertyListSerialization.data(fromPropertyList: emptyPlist, format: .xml, options: 0)
+        for changedLocation in changedLocations {
+            changes[changedLocation] = emptyData
+        }
+        return changes
+    }
     
     static func applyAll() -> [FileLocation: Data] {
         var changes: [FileLocation: Data] = [:]
         for manager in managers {
             changes.merge(manager.apply()) { originalData, newData in
+                // TODO: Merge the 2 files
+                return originalData // prioritize original data for now
+            }
+        }
+        return changes
+    }
+    
+    static func resetAll() -> [FileLocation: Data] {
+        // TODO: combine with applyAll()
+        var changes: [FileLocation: Data] = [:]
+        for manager in managers {
+            changes.merge(manager.reset()) { originalData, newData in
                 // TODO: Merge the 2 files
                 return originalData // prioritize original data for now
             }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ToolsView: View {
     struct GeneralOption: Identifiable {
-        var key: String
         var id = UUID()
         var view: AnyView
         var title: String
@@ -18,9 +17,10 @@ struct ToolsView: View {
     }
     
     @State var tools: [GeneralOption] = [
-        .init(key: "GestaltView", view: AnyView(GestaltView()), title: NSLocalizedString("Mobile Gestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
-        .init(key: "FeatureFlagsView", view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag", minVersion: Version(string: "18.0")),
-        .init(key: "StatusBarView", view: AnyView(StatusBarView()), title: NSLocalizedString("Status Bar", comment: "Title of tool"), imageName: "wifi")
+        .init(view: AnyView(GestaltView()), title: NSLocalizedString("Mobile Gestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
+        .init(view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag", minVersion: Version(string: "18.0")),
+        .init(view: AnyView(StatusBarView()), title: NSLocalizedString("Status Bar", comment: "Title of tool"), imageName: "wifi"),
+        .init(view: AnyView(SpringboardTweaksView()), title: NSLocalizedString("Springboard", comment: "Title of tool"), imageName: "app.badge")
     ]
     
     let userVersion = Version(string: UIDevice.current.systemVersion)

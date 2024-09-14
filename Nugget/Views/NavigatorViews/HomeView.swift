@@ -99,7 +99,12 @@ struct HomeView: View {
                                     guard url.startAccessingSecurityScopedResource() else {
                                         return
                                     }
-                                    pairingFile = try! String(contentsOf: url)
+                                    do {
+                                        pairingFile = try String(contentsOf: url)
+                                    } catch {
+                                        lastError = error.localizedDescription
+                                        showErrorAlert.toggle()
+                                    }
                                     url.stopAccessingSecurityScopedResource()
                                     startMinimuxer()
                                 case .failure(let error):
@@ -164,6 +169,9 @@ struct HomeView: View {
     func applyChanges(reverting: Bool) {
         if ready() {
             path.append(reverting ? "RevertChanges" : "ApplyChanges")
+        } else if pairingFile == nil {
+            lastError = "Please select your pairing file to continue."
+            showErrorAlert.toggle()
         } else {
             lastError = "minimuxer is not ready. Ensure you have WiFi and WireGuard VPN set up."
             showErrorAlert.toggle()

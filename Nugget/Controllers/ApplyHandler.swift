@@ -26,6 +26,17 @@ class ApplyHandler {
             }
             filesToRestore.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
             
+            // Apply basic plist changes
+            var basicPlistTweaksData: [FileLocation: Data] = [:]
+            if resetting {
+                basicPlistTweaksData = BasicPlistTweaksManager.resetAll()
+            } else {
+                basicPlistTweaksData = BasicPlistTweaksManager.applyAll()
+            }
+            for file_path in basicPlistTweaksData.keys {
+                filesToRestore.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
+            }
+            
             // Apply mobilegestalt changes
             var mobileGestaltData: Data? = nil
             if resetting {
