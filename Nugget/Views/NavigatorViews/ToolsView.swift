@@ -20,7 +20,8 @@ struct ToolsView: View {
         .init(view: AnyView(GestaltView()), title: NSLocalizedString("Mobile Gestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
         .init(view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag", minVersion: Version(string: "18.0")),
         .init(view: AnyView(StatusBarView()), title: NSLocalizedString("Status Bar", comment: "Title of tool"), imageName: "wifi"),
-        .init(view: AnyView(SpringboardTweaksView()), title: NSLocalizedString("Springboard", comment: "Title of tool"), imageName: "app.badge")
+        .init(view: AnyView(SpringboardTweaksView()), title: NSLocalizedString("Springboard", comment: "Title of tool"), imageName: "app.badge"),
+        .init(view: AnyView(InternalOptionsView()), title: NSLocalizedString("Internal Options", comment: "Title of tool"), imageName: "internaldrive")
     ]
     
     let userVersion = Version(string: UIDevice.current.systemVersion)

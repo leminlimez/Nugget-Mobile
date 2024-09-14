@@ -28,6 +28,7 @@ struct SpringboardTweaksView: View {
             ForEach($manager.tweaks) { tweak in
                 if tweak.tweakType.wrappedValue == .text {
                     Text(tweak.title.wrappedValue)
+                        .bold()
                     TextField(tweak.placeholder.wrappedValue, text: tweak.stringValue).onChange(of: tweak.stringValue.wrappedValue, perform: { nv in
                         manager.setTweakValue(tweak.wrappedValue, newVal: nv)
                     })
