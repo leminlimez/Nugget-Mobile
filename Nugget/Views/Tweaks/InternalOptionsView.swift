@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InternalOptionsView: View {
-    @State var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
+    @StateObject var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
         for: "Internal",
         tweaks: [
             .init(key: "UIStatusBarShowBuildVersion", title: "Show Build Version in Status Bar", fileLocation: .globalPreferences, tweakType: .toggle),

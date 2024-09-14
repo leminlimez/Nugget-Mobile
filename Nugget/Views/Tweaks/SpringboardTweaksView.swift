@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpringboardTweaksView: View {
-    @State var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
+    @StateObject var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
         for: "Springboard",
         tweaks: [
             PlistTweak(key: "LockScreenFootnote", title: "Lock Screen Footnote Text", fileLocation: .footnote, tweakType: .text, placeholder: "Footnote Text"),

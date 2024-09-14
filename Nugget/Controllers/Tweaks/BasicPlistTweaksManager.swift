@@ -55,11 +55,11 @@ struct PlistTweak: Identifiable {
     var placeholder: String = ""
 }
 
-class BasicPlistTweaksManager {
+class BasicPlistTweaksManager: ObservableObject {
     static var managers: [BasicPlistTweaksManager] = []
     
     var title: String
-    var tweaks: [PlistTweak]
+    @Published var tweaks: [PlistTweak]
     
     init(title: String, tweaks: [PlistTweak]) {
         self.title = title
@@ -117,6 +117,7 @@ class BasicPlistTweaksManager {
         var changedLocations: [FileLocation] = []
         // add the location of where to restore
         for tweak in self.tweaks {
+            print("Tweak: \(tweak.title)\nmodified: \(tweak.modified)\nvalue: \(tweak.tweakType == .text ? tweak.stringValue : String(tweak.boolValue))\n\n")
             if tweak.modified && !changedLocations.contains(tweak.fileLocation) {
                 changedLocations.append(tweak.fileLocation)
             }
