@@ -136,11 +136,16 @@ class MobileGestaltManager {
     
     func applyRdarFix() -> Data? {
         if let val = self.GestaltChanges["IOMobileGraphicsFamily"] as? Bool {
-            let plist: [String: Int] = [
-                "canvas_height": 1791,
-                "canvas_width": 828
-            ]
-            return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            if val {
+                let plist: [String: Int] = [
+                    "canvas_height": 1791,
+                    "canvas_width": 828
+                ]
+                return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            } else {
+                let plist: [String: Int] = [:]
+                return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            }
         }
         return nil
     }

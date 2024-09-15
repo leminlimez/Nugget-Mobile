@@ -39,13 +39,19 @@ class ApplyHandler {
             
             // Apply mobilegestalt changes
             var mobileGestaltData: Data? = nil
+            var resChangerData: Data? = nil
             if resetting {
                 mobileGestaltData = try gestaltManager.reset()
+                resChangerData = Data()
             } else {
                 mobileGestaltData = try gestaltManager.apply()
+                resChangerData = gestaltManager.applyRdarFix()
             }
             if let mobileGestaltData = mobileGestaltData {
                 filesToRestore.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
+            }
+            if let resChangerData = resChangerData {
+                filesToRestore.append(FileToRestore(contents: resChangerData, path: FileLocation.resolution.rawValue))
             }
             
             // Apply feature flag changes (iOS 18.0+ only)
