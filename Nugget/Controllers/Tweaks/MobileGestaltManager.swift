@@ -118,7 +118,7 @@ class MobileGestaltManager {
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
         for key in self.GestaltChanges.keys {
-            if key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1 {
+            if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) {
                 var changed = false
                 (plist, changed) = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
                 if !changed {
@@ -132,6 +132,17 @@ class MobileGestaltManager {
         
         return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
 //        return FileToRestore.init(contents: newData, restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
+    }
+    
+    func applyRdarFix() -> Data? {
+        if let val = self.GestaltChanges["IOMobileGraphicsFamily"] as? Bool {
+            let plist: [String: Int] = [
+                "canvas_height": 1791,
+                "canvas_width": 828
+            ]
+            return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+        }
+        return nil
     }
     
     func reset() throws -> Data {

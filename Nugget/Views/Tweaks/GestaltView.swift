@@ -30,6 +30,8 @@ struct GestaltView: View {
     @State private var CurrentSubType: Int = -1
     @State private var CurrentSubTypeDisplay: String = "Default"
     
+    @State private var modifyResolution: Bool = false
+    
     @State private var deviceModelChanged: Bool = false
     @State private var deviceModelName: String = ""
     
@@ -85,6 +87,11 @@ struct GestaltView: View {
                     .foregroundColor(.blue)
                     .padding(.leading, 10)
                 }
+                
+                // rdar fix (change resolution)
+                Toggle("Fix rdar (modifies resolution)", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
+                    gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: nv)
+                })
                 
                 // device model name
                 VStack {
@@ -150,6 +157,10 @@ struct GestaltView: View {
                         break
                     }
                 }
+            }
+            // second, the resolution
+            if let resChange = enabledTweaks["IOMobileGraphicsFamily"] as? Bool {
+                modifyResolution = resChange
             }
             // next, the device model name
             if let modelName = enabledTweaks["ArtworkDeviceProductDescription"] as? String {

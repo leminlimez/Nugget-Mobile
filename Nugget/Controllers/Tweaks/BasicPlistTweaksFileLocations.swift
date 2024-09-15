@@ -8,6 +8,9 @@
 import Foundation
 
 enum FileLocation: String {
+    // MobileGestalt Options
+    case resolution = "ManagedPreferencesDomain/mobile/com.apple.iokit.IOMobileGraphicsFamily.plist"
+    
     // Springboard Options
     case springboard = "ManagedPreferencesDomain/mobile/com.apple.springboard.plist"
     case footnote = "SysSharedContainerDomain-systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"
