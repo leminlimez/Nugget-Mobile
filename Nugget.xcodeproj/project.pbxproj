@@ -35,6 +35,9 @@
 		6F8594C02C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594BF2C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift */; };
 		6F8594C22C94DED800F790D1 /* SpringboardTweaksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594C12C94DED800F790D1 /* SpringboardTweaksView.swift */; };
 		6F8594C42C9507C400F790D1 /* InternalOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594C32C9507C400F790D1 /* InternalOptionsView.swift */; };
+		6F8594C92C98886000F790D1 /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594C82C98886000F790D1 /* FilePicker.swift */; };
+		6F8594CB2C98887900F790D1 /* FilePickerUIRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594CA2C98887900F790D1 /* FilePickerUIRepresentable.swift */; };
+		6F8594CD2C98892900F790D1 /* FixDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +76,9 @@
 		6F8594BF2C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicPlistTweaksFileLocations.swift; sourceTree = "<group>"; };
 		6F8594C12C94DED800F790D1 /* SpringboardTweaksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringboardTweaksView.swift; sourceTree = "<group>"; };
 		6F8594C32C9507C400F790D1 /* InternalOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalOptionsView.swift; sourceTree = "<group>"; };
+		6F8594C82C98886000F790D1 /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
+		6F8594CA2C98887900F790D1 /* FilePickerUIRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerUIRepresentable.swift; sourceTree = "<group>"; };
+		6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixDocumentPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				6F8593562C8F41E000F790D1 /* RootView.swift */,
+				6F8594C72C98885000F790D1 /* FilePicker */,
 				6F8593672C8F429700F790D1 /* NavigatorViews */,
 				6F8593642C8F423600F790D1 /* Tweaks */,
 			);
@@ -185,6 +192,7 @@
 			children = (
 				6F8593722C8F443A00F790D1 /* MaterialView.swift */,
 				6F85936F2C8F441200F790D1 /* TintedButton.swift */,
+				6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -229,6 +237,15 @@
 				6F8594B82C92056D00F790D1 /* Restore.swift */,
 			);
 			path = exploit;
+			sourceTree = "<group>";
+		};
+		6F8594C72C98885000F790D1 /* FilePicker */ = {
+			isa = PBXGroup;
+			children = (
+				6F8594C82C98886000F790D1 /* FilePicker.swift */,
+				6F8594CA2C98887900F790D1 /* FilePickerUIRepresentable.swift */,
+			);
+			path = FilePicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,6 +325,7 @@
 				6F85936E2C8F436C00F790D1 /* Extensions.swift in Sources */,
 				6F8593692C8F42A800F790D1 /* HomeView.swift in Sources */,
 				6F8593752C8F448100F790D1 /* Alert++.swift in Sources */,
+				6F8594CB2C98887900F790D1 /* FilePickerUIRepresentable.swift in Sources */,
 				6F8594AC2C8FADF300F790D1 /* StatusManagerSwift.swift in Sources */,
 				6F8594C22C94DED800F790D1 /* SpringboardTweaksView.swift in Sources */,
 				6F8594B92C92056D00F790D1 /* Restore.swift in Sources */,
@@ -320,6 +338,8 @@
 				6F8594A62C8FAC8B00F790D1 /* StatusManager.m in Sources */,
 				6F8594BE2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift in Sources */,
 				6F8593B12C8F7B8400F790D1 /* xcode_saver.swift in Sources */,
+				6F8594CD2C98892900F790D1 /* FixDocumentPicker.swift in Sources */,
+				6F8594C92C98886000F790D1 /* FilePicker.swift in Sources */,
 				6F8593772C8F490400F790D1 /* Version.swift in Sources */,
 				6F8594A92C8FAC8B00F790D1 /* StatusSetter16.m in Sources */,
 				6F8593552C8F41E000F790D1 /* NuggetApp.swift in Sources */,
