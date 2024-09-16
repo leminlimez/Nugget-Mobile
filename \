@@ -1,0 +1,11 @@
+Status bar fix for non rdar devices
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Changes to be committed:
+#	modified:   Nugget.xcodeproj/project.pbxproj
+#	modified:   Nugget/Controllers/Tweaks/MobileGestaltManager.swift
+#	new file:   Nugget/Extensions/UI/DeviceModel.swift
+#	modified:   Nugget/Views/Tweaks/GestaltView.swift
+#

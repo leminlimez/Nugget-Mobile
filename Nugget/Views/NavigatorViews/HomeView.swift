@@ -96,16 +96,12 @@ struct HomeView: View {
                 .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!], onCompletion: { result in
                                 switch result {
                                 case .success(let url):
-                                    guard url.startAccessingSecurityScopedResource() else {
-                                        return
-                                    }
                                     do {
                                         pairingFile = try String(contentsOf: url)
                                     } catch {
                                         lastError = error.localizedDescription
                                         showErrorAlert.toggle()
                                     }
-                                    url.stopAccessingSecurityScopedResource()
                                     startMinimuxer()
                                 case .failure(let error):
                                     lastError = error.localizedDescription
@@ -164,6 +160,13 @@ struct HomeView: View {
                 Text(lastError ?? "???")
             }
         }
+    }
+    
+    init() {
+        // Fix file picker
+        let fixMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, Selector(("fix_initForOpeningContentTypes:asCopy:")))!
+        let origMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.init(forOpeningContentTypes:asCopy:)))!
+        method_exchangeImplementations(origMethod, fixMethod)
     }
     
     func applyChanges(reverting: Bool) {
