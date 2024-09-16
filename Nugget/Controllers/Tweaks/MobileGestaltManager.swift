@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MobileGestaltManager {
     static let shared = MobileGestaltManager()
@@ -109,6 +110,34 @@ class MobileGestaltManager {
         return (newDict, changed)
     }
     
+    func getRdarFixMode() -> Int {
+        /* values for rdar fix:
+         * 0 = Disable
+         * 1 = rdar fix
+         * 2 = status bar fix
+         */
+        switch UIDevice().type {
+        case .iPhoneXR, .iPhoneXS, .iPhone11, .iPhone11Pro:
+            return 1
+        case .iPhone12, .iPhone12Pro, .iPhone13, .iPhone13Pro, .iPhone14:
+            return 2
+        default:
+            return 0
+        }
+    }
+    func getRdarFixTitle(mode: Int) -> String {
+        if mode == 1 {
+            return "Fix rdar"
+        } else if mode == 2 {
+            return "DI status bar fix"
+        }
+        return "hide"
+    }
+    
+    func getRdarFixTitle() -> String {
+        getRdarFixTitle(mode: getRdarFixMode())
+    }
+    
     func apply() throws -> Data? {
         if self.GestaltChanges.isEmpty {
             return nil
@@ -135,11 +164,22 @@ class MobileGestaltManager {
     }
     
     func applyRdarFix() -> Data? {
-        if let val = self.GestaltChanges["IOMobileGraphicsFamily"] as? Bool {
-            if val {
+        /* values for rdar fix:
+         * 0 = Disable
+         * 1 = rdar fix
+         * 2 = status bar fix
+         */
+        if let val = self.GestaltChanges["IOMobileGraphicsFamily"] as? Int {
+            if val == 1 {
                 let plist: [String: Int] = [
                     "canvas_height": 1791,
                     "canvas_width": 828
+                ]
+                return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            } else if val == 2 {
+                let plist: [String: Int] = [
+                    "canvas_height": 2868,
+                    "canvas_width": 1320
                 ]
                 return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
             } else {
