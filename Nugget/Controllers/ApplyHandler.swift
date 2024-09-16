@@ -14,7 +14,7 @@ class ApplyHandler {
     let ffManager = FeatureFlagManager.shared
     let statusManager = StatusManagerSwift.shared
     
-    func apply(resetting: Bool, reboot: Bool) {
+    func apply(resetting: Bool, udid: String) {
         var filesToRestore: [FileToRestore] = []
         do {
             // Apply status bar
@@ -67,7 +67,7 @@ class ApplyHandler {
                 }
             }
             if !filesToRestore.isEmpty {
-                RestoreManager.shared.restoreFiles(filesToRestore, reboot: reboot)
+                RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
             } else {
                 print("No files to restore!")
                 return

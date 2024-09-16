@@ -40,7 +40,20 @@ struct LogView: View {
                     
                     DispatchQueue.global(qos: .background).async {
                         print("APPLYING")
-                        ApplyHandler.shared.apply(resetting: resetting, reboot: autoReboot)
+                        // get the device and create a directory for the backup files
+                        let deviceList = MobileDevice.deviceList()
+                        var udid: String
+                        guard deviceList.count == 1 else {
+                            print("Invalid device count: \(deviceList.count)")
+                            return
+                        }
+                        
+                        udid = deviceList.first!
+                        ApplyHandler.shared.apply(resetting: resetting, udid: udid)
+                        if autoReboot && log.contains("crash_on_purpose") {
+                            print("Rebooting device...")
+                            MobileDevice.rebootDevice(udid: udid)
+                        }
                     }
                 }
             }
