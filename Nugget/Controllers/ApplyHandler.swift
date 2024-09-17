@@ -7,12 +7,22 @@
 
 import Foundation
 
+enum TweakPage {
+    case MobileGestalt
+    case FeatureFlags
+    case StatusBar
+    case SpringBoard
+    case Internal
+}
+
 class ApplyHandler {
     static let shared = ApplyHandler()
     
     let gestaltManager = MobileGestaltManager.shared
     let ffManager = FeatureFlagManager.shared
     let statusManager = StatusManagerSwift.shared
+    
+    var enabledTweaks: [TweakPage] = []
     
     func apply(resetting: Bool, udid: String) {
         var filesToRestore: [FileToRestore] = []
