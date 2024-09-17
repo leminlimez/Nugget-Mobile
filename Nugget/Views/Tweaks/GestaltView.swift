@@ -158,16 +158,11 @@ struct GestaltView: View {
                 print(error.localizedDescription)
             }
             // get the base device subtype
-            do {
-                let subtype = try gestaltManager.getDefaultDeviceSubtype()
-                for (i, deviceSubType) in deviceSubTypes.enumerated() {
-                    if deviceSubType.key == -1 {
-                        deviceSubTypes[i].key = subtype
-                        break
-                    }
+            for (i, deviceSubType) in deviceSubTypes.enumerated() {
+                if deviceSubType.key == -1 {
+                    deviceSubTypes[i].key = gestaltManager.deviceSubType
+                    break
                 }
-            } catch {
-                print(error.localizedDescription)
             }
             // load enabled gestalt tweaks
             let enabledTweaks = gestaltManager.getEnabledTweaks()

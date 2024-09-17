@@ -12,6 +12,17 @@ class MobileGestaltManager {
     static let shared = MobileGestaltManager()
     
     private var GestaltChanges: [String: Any] = [:]
+    var deviceSubType: Int
+    
+    init() {
+        deviceSubType = UserDefaults.standard.integer(forKey: "DeviceSubType")
+        if deviceSubType == -1 || deviceSubType == 0 {
+            if let newSubType = try? getDefaultDeviceSubtype() {
+                UserDefaults.standard.setValue(newSubType, forKey: "DeviceSubType")
+                deviceSubType = newSubType
+            }
+        }
+    }
     
     func loadMobileGestaltFile() throws {
         let fm = FileManager.default
@@ -201,6 +212,7 @@ class MobileGestaltManager {
         let fm = FileManager.default
         let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
         try? fm.removeItem(at: gestaltURL)
+        UserDefaults.standard.removeObject(forKey: "DeviceSubType")
         return Data()
 //        return FileToRestore.init(contents: Data(), restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
     }
