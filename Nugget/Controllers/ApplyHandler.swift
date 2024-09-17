@@ -13,6 +13,7 @@ enum TweakPage: String, CaseIterable {
     case StatusBar = "Status Bar"
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
+    case SkipSetup = "Skip Setup (Revert Changes)"
 }
 
 class ApplyHandler: ObservableObject {
@@ -24,8 +25,7 @@ class ApplyHandler: ObservableObject {
     
     @Published var enabledTweaks: [TweakPage] = []
     
-    func getTweakPageData(_ tweakPage: TweakPage, resetting: Bool) throws -> [FileToRestore] {
-        var files: [FileToRestore] = []
+    func getTweakPageData(_ tweakPage: TweakPage, resetting: Bool, files: inout [FileToRestore]) throws {
         switch tweakPage {
         case .MobileGestalt:
             // Apply mobilegestalt changes
@@ -68,15 +68,40 @@ class ApplyHandler: ObservableObject {
             for file_path in basicPlistTweaksData.keys {
                 files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
             }
+        case .SkipSetup:
+            // TODO: MAKE THIS NOT APPLY WHEN THERE ARE ONLY EXPLOIT FILES
+            // Apply the skip setup file
+            var skipSetupData: Data = Data()
+            if !resetting {
+                let plist: [String: Bool] = [
+                    "SetupDone": true,
+                    "SetupFinishedAllSteps": true
+                ]
+                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            }
+            if resetting || !self.isExploitOnly() {
+                files.append(FileToRestore(contents: skipSetupData, path: "ManagedPreferencesDomain/mobile/com.apple.purplebuddy.plist"))
+            }
         }
-        return []
     }
     
-    func apply(udid: String) -> Bool {
+    func isExploitOnly() -> Bool {
+        if enabledTweaks.contains(.StatusBar) || enabledTweaks.contains(.Internal) || enabledTweaks.contains(.SpringBoard) {
+            return false
+        } else if enabledTweaks.contains(.MobileGestalt) && gestaltManager.getRdarMode() != nil {
+            return false
+        }
+        return true
+    }
+    
+    func apply(udid: String, skipSetup: Bool) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             for tweak in enabledTweaks {
-                filesToRestore += try getTweakPageData(tweak, resetting: false)
+                try getTweakPageData(tweak, resetting: false, files: &filesToRestore)
+            }
+            if skipSetup {
+                try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
@@ -95,7 +120,7 @@ class ApplyHandler: ObservableObject {
         var filesToRestore: [FileToRestore] = []
         do {
             for tweak in tweaks {
-                filesToRestore += try getTweakPageData(tweak, resetting: true)
+                try getTweakPageData(tweak, resetting: true, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)

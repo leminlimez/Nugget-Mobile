@@ -190,6 +190,13 @@ class MobileGestaltManager {
         return nil
     }
     
+    func getRdarMode() -> Int? {
+        if let mode = self.GestaltChanges["IOMobileGraphicsFamily"] as? Int {
+            return mode
+        }
+        return nil
+    }
+    
     func reset() throws -> Data {
         let fm = FileManager.default
         let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
