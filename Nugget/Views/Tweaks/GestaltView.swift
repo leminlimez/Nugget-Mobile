@@ -20,6 +20,11 @@ struct GestaltView: View {
         var minVersion: Version = Version(string: "1.0")
     }
     
+    struct GestaltSection: Identifiable {
+        var id = UUID()
+        var tweaks: [GestaltTweak]
+    }
+    
     struct DeviceSubType: Identifiable {
         var id = UUID()
         var key: Int
@@ -49,21 +54,27 @@ struct GestaltView: View {
     ]
     
     // list of mobile gestalt tweaks
-    @State var gestaltTweaks: [GestaltTweak] = [
-        .init(label: "Enable Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"]),
-        .init(label: "Enable Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
-        .init(label: "Enable Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
-        .init(label: "Enable Tap to Wake (iPhone SE)", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
-        .init(label: "Enable iPhone 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
-        .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0]),
-        .init(label: "Enable Stage Manager Supported (WARNING: risky on some devices, mainly phones)", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
-        .init(label: "Allow iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]]),
-        .init(label: "Disable Region Restrictions (ie. Shutter Sound)", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"]),
-        .init(label: "Enable Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"]),
-        .init(label: "Toggle Action Button", keys: ["cT44WE1EohiwRzhsZ8xEsw"]),
-        .init(label: "Toggle Internal Storage (WARNING: risky for some devices, mainly iPads)", keys: ["LBJfwOEzExRxzlAnSuI7eg"]),
-        .init(label: "Set as Apple Internal Install (ie Metal HUD in any app)", keys: ["EqrsVvjcYDdxHBiQmGhAWw"]),
-        .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0"))
+    @State var gestaltTweaks: [GestaltSection] = [
+        .init(tweaks: [
+            .init(label: "Enable Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"]),
+            .init(label: "Enable Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
+            .init(label: "Enable Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
+            .init(label: "Enable Tap to Wake (iPhone SE)", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
+            .init(label: "Enable iPhone 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
+            .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0])
+        ]),
+        .init(tweaks: [
+            .init(label: "Enable Stage Manager Supported (WARNING: risky on some devices, mainly phones)", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
+            .init(label: "Allow iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]]),
+            .init(label: "Disable Region Restrictions (ie. Shutter Sound)", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"]),
+            .init(label: "Enable Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"]),
+            .init(label: "Toggle Action Button", keys: ["cT44WE1EohiwRzhsZ8xEsw"])
+        ]),
+        .init(tweaks: [
+            .init(label: "Toggle Internal Storage (WARNING: risky for some devices, mainly iPads)", keys: ["LBJfwOEzExRxzlAnSuI7eg"]),
+            .init(label: "Set as Apple Internal Install (ie Metal HUD in any app)", keys: ["EqrsVvjcYDdxHBiQmGhAWw"]),
+            .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0"))
+        ])
     ]
     
     var body: some View {
@@ -119,17 +130,19 @@ struct GestaltView: View {
                     })
                 }
             }
-            Section {
-                // tweaks from list
-                ForEach($gestaltTweaks) { tweak in
-                    if userVersion >= tweak.minVersion.wrappedValue {
-                        Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
-                            if nv {
-                                gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
-                            } else {
-                                gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
-                            }
-                        })
+            // tweaks from list
+            ForEach($gestaltTweaks) { category in
+                Section {
+                    ForEach(category.tweaks) { tweak in
+                        if userVersion >= tweak.minVersion.wrappedValue {
+                            Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
+                                if nv {
+                                    gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
+                                } else {
+                                    gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
+                                }
+                            })
+                        }
                     }
                 }
             }
@@ -176,9 +189,11 @@ struct GestaltView: View {
                 deviceModelChanged = true
             }
             // finally, do the other values
-            for (i, gestaltTweak) in gestaltTweaks.enumerated() {
-                if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
-                    gestaltTweaks[i].active = true
+            for (i, category) in gestaltTweaks.enumerated() {
+                for (j, gestaltTweak) in category.tweaks.enumerated() {
+                    if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
+                        gestaltTweaks[i].tweaks[j].active = true
+                    }
                 }
             }
         }
