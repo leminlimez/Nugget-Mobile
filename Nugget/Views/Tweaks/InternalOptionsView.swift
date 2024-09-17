@@ -27,6 +27,7 @@ struct InternalOptionsView: View {
             .init(key: "AnnounceAllPastes", title: "Show Notifications for System Pastes", fileLocation: .pasteboard, tweakType: .toggle)
         ]
     )
+    
     var body: some View {
         List {
             ForEach($manager.tweaks) { tweak in
@@ -35,6 +36,7 @@ struct InternalOptionsView: View {
                 })
             }
         }
-        .navigationTitle("Springboard Tweaks")
+        .tweakToggle(for: .Internal)
+        .navigationTitle("Internal Options")
     }
 }

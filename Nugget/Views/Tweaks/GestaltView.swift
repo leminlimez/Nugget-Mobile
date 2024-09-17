@@ -147,6 +147,7 @@ struct GestaltView: View {
                 }
             }
         }
+        .tweakToggle(for: .MobileGestalt)
         .navigationTitle("Mobile Gestalt")
         .navigationViewStyle(.stack)
         .onAppear {

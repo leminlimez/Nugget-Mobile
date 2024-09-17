@@ -41,6 +41,7 @@ struct FeatureFlagsView: View {
                 })
             }
         }
+        .tweakToggle(for: .FeatureFlags)
         .navigationTitle("Feature Flags")
         .navigationViewStyle(.stack)
         .onAppear {

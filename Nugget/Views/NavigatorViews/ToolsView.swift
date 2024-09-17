@@ -26,7 +26,7 @@ struct ToolsView: View {
     ]
     
     let userVersion = Version(string: UIDevice.current.systemVersion)
-    let applyHandler = ApplyHandler.shared
+    @StateObject var applyHandler = ApplyHandler.shared
     
     var body: some View {
         NavigationView {
@@ -46,7 +46,6 @@ struct ToolsView: View {
                                     // show that it is enabled
                                     Spacer()
                                     Image(systemName: "checkmark.seal")
-                                        .resizable()
                                         .foregroundStyle(Color(.green))
                                 }
                             }
