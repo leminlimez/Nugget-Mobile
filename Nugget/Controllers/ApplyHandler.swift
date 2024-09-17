@@ -72,10 +72,11 @@ class ApplyHandler: ObservableObject {
             // Apply the skip setup file
             var skipSetupData: Data = Data()
             if !resetting {
-                let plist: [String: Bool] = [
-                    "SetupDone": true,
-                    "SetupFinishedAllSteps": true
-                ]
+                let keys = ["AutoUpdatePresented", "Payment2Presented", "SiriOnBoardingPresented", "AppleIDPB10Presented", "WebKitShrinksStandaloneImagesToFit", "AssistantPresented", "iCloudQuotaPresented", "PBAppActivity2Presented", "PrivacyPresented", "PaymentMiniBuddy4Ran", "PBDiagnostics4Presented", "HSA2UpgradeMiniBuddy3Ran", "ApplePayOnBoardingPresented", "DiagnosticsAutoOptInSet", "SetupFinishedAllSteps", "AssistantPHSOffered", "IntelligencePresented", "UserInterfaceStyleModePresented", "ScreenTimePresented"]
+                var plist: [String: Bool] = [:]
+                for key in keys {
+                    plist[key] = true
+                }
                 skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
             }
             if resetting || !self.isExploitOnly() {

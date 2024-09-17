@@ -152,11 +152,6 @@ struct GestaltView: View {
         .navigationTitle("Mobile Gestalt")
         .navigationViewStyle(.stack)
         .onAppear {
-            do {
-                try gestaltManager.loadMobileGestaltFile()
-            } catch {
-                print(error.localizedDescription)
-            }
             // get the base device subtype
             for (i, deviceSubType) in deviceSubTypes.enumerated() {
                 if deviceSubType.key == -1 {

@@ -153,8 +153,7 @@ class MobileGestaltManager {
         if self.GestaltChanges.isEmpty {
             return nil
         }
-        let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
-        let gestaltData = try Data(contentsOf: gestaltURL)
+        let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
         for key in self.GestaltChanges.keys {
