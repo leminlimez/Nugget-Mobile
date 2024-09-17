@@ -7,34 +7,6 @@
 
 import Foundation
 
-//protocol PlistTweak: Identifiable {
-//    var id: UUID { get set }
-//    var key: String { get set }
-//    var title: String { get set }
-//    var fileLocation: FileLocation { get set }
-//    var modified: Bool { get set }
-//}
-//
-//struct ToggleOption: PlistTweak {
-//    var id = UUID()
-//    var key: String
-//    var title: String
-//    var fileLocation: FileLocation
-//    var modified: Bool = false
-//    var value: Bool = false
-//    var invertValue: Bool = false
-//}
-//
-//struct TextOption: PlistTweak {
-//    var id = UUID()
-//    var key: String
-//    var title: String
-//    var fileLocation: FileLocation
-//    var modified: Bool = false
-//    var value: String = ""
-//    var placeholder: String
-//}
-
 enum PlistTweakType {
     case toggle
     case text
@@ -58,11 +30,11 @@ struct PlistTweak: Identifiable {
 class BasicPlistTweaksManager: ObservableObject {
     static var managers: [BasicPlistTweaksManager] = []
     
-    var title: String
+    var page: TweakPage
     @Published var tweaks: [PlistTweak]
     
-    init(title: String, tweaks: [PlistTweak]) {
-        self.title = title
+    init(page: TweakPage, tweaks: [PlistTweak]) {
+        self.page = page
         self.tweaks = tweaks
         
         // set the tweak values if they exist
@@ -79,15 +51,15 @@ class BasicPlistTweaksManager: ObservableObject {
         }
     }
     
-    static func getManager(for title: String, tweaks: [PlistTweak]) -> BasicPlistTweaksManager {
+    static func getManager(for page: TweakPage, tweaks: [PlistTweak]) -> BasicPlistTweaksManager {
         // have tweaks as an input in case it doesn't exist
         for (i, manager) in managers.enumerated() {
-            if manager.title == title {
+            if manager.page == page {
                 return managers[i]
             }
         }
         // it does not exist, make a new manager and return that
-        var newManager = BasicPlistTweaksManager(title: title, tweaks: tweaks)
+        var newManager = BasicPlistTweaksManager(page: page, tweaks: tweaks)
         managers.append(newManager)
         return newManager
     }
@@ -104,9 +76,6 @@ class BasicPlistTweaksManager: ObservableObject {
         guard ((try? newData.write(to: fileURL)) != nil) else {return}
         for (i, t) in self.tweaks.enumerated() {
             if t.id == tweak.id {
-//                if var toggleOp = self.tweaks[i] as? ToggleOption, let newVal = newVal as? Bool {
-//                    toggleOp.value =
-//                }
                 self.tweaks[i].modified = true
                 break;
             }
@@ -169,5 +138,15 @@ class BasicPlistTweaksManager: ObservableObject {
             }
         }
         return changes
+    }
+    
+    static func applyPage(_ page: TweakPage, resetting: Bool) -> [FileLocation: Data] {
+        for manager in self.managers {
+            if manager.page == page {
+                return resetting ? manager.reset() : manager.apply()
+            }
+        }
+        // there is no manager, just apply blank
+        return [:]
     }
 }

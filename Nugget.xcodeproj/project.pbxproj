@@ -39,6 +39,7 @@
 		6F8594CB2C98887900F790D1 /* FilePickerUIRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594CA2C98887900F790D1 /* FilePickerUIRepresentable.swift */; };
 		6F8594CD2C98892900F790D1 /* FixDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */; };
 		6F8594CF2C988C0E00F790D1 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594CE2C988C0E00F790D1 /* DeviceModel.swift */; };
+		6F8594D22C99D6CC00F790D1 /* RevertTweaksPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594D12C99D6CC00F790D1 /* RevertTweaksPopoverView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		6F8594CA2C98887900F790D1 /* FilePickerUIRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerUIRepresentable.swift; sourceTree = "<group>"; };
 		6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixDocumentPicker.swift; sourceTree = "<group>"; };
 		6F8594CE2C988C0E00F790D1 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
+		6F8594D12C99D6CC00F790D1 /* RevertTweaksPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevertTweaksPopoverView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				6F8593562C8F41E000F790D1 /* RootView.swift */,
+				6F8594D02C99D68100F790D1 /* AccessoryViews */,
 				6F8594C72C98885000F790D1 /* FilePicker */,
 				6F8593672C8F429700F790D1 /* NavigatorViews */,
 				6F8593642C8F423600F790D1 /* Tweaks */,
@@ -251,6 +254,14 @@
 			path = FilePicker;
 			sourceTree = "<group>";
 		};
+		6F8594D02C99D68100F790D1 /* AccessoryViews */ = {
+			isa = PBXGroup;
+			children = (
+				6F8594D12C99D6CC00F790D1 /* RevertTweaksPopoverView.swift */,
+			);
+			path = AccessoryViews;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -324,6 +335,7 @@
 			files = (
 				6F8593702C8F441200F790D1 /* TintedButton.swift in Sources */,
 				6F8593662C8F425E00F790D1 /* GestaltView.swift in Sources */,
+				6F8594D22C99D6CC00F790D1 /* RevertTweaksPopoverView.swift in Sources */,
 				6F8594C42C9507C400F790D1 /* InternalOptionsView.swift in Sources */,
 				6F85936E2C8F436C00F790D1 /* Extensions.swift in Sources */,
 				6F8593692C8F42A800F790D1 /* HomeView.swift in Sources */,

@@ -12,6 +12,7 @@ let logPipe = Pipe()
 struct LogView: View {
     let resetting: Bool
     let autoReboot: Bool
+    let resettingTweaks: [TweakPage]
     
     @State var log: String = ""
     @State var ran = false
@@ -49,8 +50,13 @@ struct LogView: View {
                         }
                         
                         udid = deviceList.first!
-                        ApplyHandler.shared.apply(resetting: resetting, udid: udid)
-                        if autoReboot && log.contains("crash_on_purpose") {
+                        var succeeded: Bool = false
+                        if resetting {
+                            succeeded = ApplyHandler.shared.reset(tweaks: resettingTweaks, udid: udid)
+                        } else {
+                            succeeded = ApplyHandler.shared.apply(udid: udid)
+                        }
+                        if succeeded && autoReboot && log.contains("crash_on_purpose") {
                             print("Rebooting device...")
                             MobileDevice.rebootDevice(udid: udid)
                         }
@@ -61,9 +67,10 @@ struct LogView: View {
         .navigationTitle("Log output")
     }
     
-    init(resetting: Bool, autoReboot: Bool) {
+    init(resetting: Bool, autoReboot: Bool, resettingTweaks: [TweakPage] = []) {
         self.resetting = resetting
         self.autoReboot = autoReboot
+        self.resettingTweaks = resettingTweaks
         setvbuf(stdout, nil, _IOLBF, 0) // make stdout line-buffered
         setvbuf(stderr, nil, _IONBF, 0) // make stderr unbuffered
         

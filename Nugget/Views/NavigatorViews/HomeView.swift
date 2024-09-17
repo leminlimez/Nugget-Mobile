@@ -11,12 +11,16 @@ import UniformTypeIdentifiers
 struct HomeView: View {
     private let buildNumber = 5
     
-    @AppStorage("PairingFile") var pairingFile: String?
+    @State var showRevertPage = false
+    @State var revertingPages: [TweakPage] = []
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
-    @AppStorage("AutoReboot") var autoReboot: Bool = true
     @State var lastError: String?
     @State var path = NavigationPath()
+    
+    // Prefs
+    @AppStorage("AutoReboot") var autoReboot: Bool = true
+    @AppStorage("PairingFile") var pairingFile: String?
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -48,9 +52,12 @@ struct HomeView: View {
                         // remove all tweaks button
                         HStack {
                             Button("Remove All Tweaks") {
-                                applyChanges(reverting: true)
+                                showRevertPage.toggle()
                             }
                             .buttonStyle(TintedButton(color: .red, fullwidth: true))
+                            .sheet(isPresented: $showRevertPage, content: {
+                                RevertTweaksPopoverView(revertingPages: $revertingPages, revertFunction: applyChanges(reverting:))
+                            })
                             Button {
                                 UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
                             } label: {

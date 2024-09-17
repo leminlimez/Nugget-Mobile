@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum TweakPage {
-    case MobileGestalt
-    case FeatureFlags
-    case StatusBar
-    case SpringBoard
-    case Internal
+enum TweakPage: String, CaseIterable {
+    case MobileGestalt = "Mobilegestalt"
+    case FeatureFlags = "Feature Flags"
+    case StatusBar = "Status Bar"
+    case SpringBoard = "SpringBoard"
+    case Internal = "Internal Options"
 }
 
 class ApplyHandler {
@@ -24,29 +24,10 @@ class ApplyHandler {
     
     var enabledTweaks: [TweakPage] = []
     
-    func apply(resetting: Bool, udid: String) {
-        var filesToRestore: [FileToRestore] = []
-        do {
-            // Apply status bar
-            var statusBarData: Data = Data()
-            if resetting {
-                statusBarData = try statusManager.reset()
-            } else {
-                statusBarData = try statusManager.apply()
-            }
-            filesToRestore.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
-            
-            // Apply basic plist changes
-            var basicPlistTweaksData: [FileLocation: Data] = [:]
-            if resetting {
-                basicPlistTweaksData = BasicPlistTweaksManager.resetAll()
-            } else {
-                basicPlistTweaksData = BasicPlistTweaksManager.applyAll()
-            }
-            for file_path in basicPlistTweaksData.keys {
-                filesToRestore.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
-            }
-            
+    func getTweakPageData(_ tweakPage: TweakPage, resetting: Bool) throws -> [FileToRestore] {
+        var files: [FileToRestore] = []
+        switch tweakPage {
+        case .MobileGestalt:
             // Apply mobilegestalt changes
             var mobileGestaltData: Data? = nil
             var resChangerData: Data? = nil
@@ -58,33 +39,74 @@ class ApplyHandler {
                 resChangerData = gestaltManager.applyRdarFix()
             }
             if let mobileGestaltData = mobileGestaltData {
-                filesToRestore.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
+                files.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
             }
             if let resChangerData = resChangerData {
-                filesToRestore.append(FileToRestore(contents: resChangerData, path: FileLocation.resolution.rawValue))
+                files.append(FileToRestore(contents: resChangerData, path: FileLocation.resolution.rawValue))
             }
-            
+        case .FeatureFlags:
             // Apply feature flag changes (iOS 18.0+ only)
-            if #available(iOS 18.0, *) {
-                var ffData: Data? = nil
-                if resetting {
-                    ffData = try ffManager.reset()
-                } else {
-                    ffData = try ffManager.apply()
-                }
-                if let ffData = ffData {
-                    filesToRestore.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
-                }
+            var ffData: Data = Data()
+            if resetting {
+                ffData = try ffManager.reset()
+            } else {
+                ffData = try ffManager.apply()
+            }
+            files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
+        case .StatusBar:
+            // Apply status bar
+            var statusBarData: Data = Data()
+            if resetting {
+                statusBarData = try statusManager.reset()
+            } else {
+                statusBarData = try statusManager.apply()
+            }
+            files.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
+        case .SpringBoard, .Internal:
+            // Apply basic plist changes
+            var basicPlistTweaksData: [FileLocation: Data] = BasicPlistTweaksManager.applyPage(tweakPage, resetting: resetting)
+            for file_path in basicPlistTweaksData.keys {
+                files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
+            }
+        }
+        return []
+    }
+    
+    func apply(udid: String) -> Bool {
+        var filesToRestore: [FileToRestore] = []
+        do {
+            for tweak in enabledTweaks {
+                filesToRestore += try getTweakPageData(tweak, resetting: false)
             }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                return true
             } else {
                 print("No files to restore!")
-                return
+                return false
             }
         } catch {
             print(error.localizedDescription)
-            return
+            return false
+        }
+    }
+    
+    func reset(tweaks: [TweakPage], udid: String) -> Bool {
+        var filesToRestore: [FileToRestore] = []
+        do {
+            for tweak in tweaks {
+                filesToRestore += try getTweakPageData(tweak, resetting: true)
+            }
+            if !filesToRestore.isEmpty {
+                RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                return true
+            } else {
+                print("No files to restore!")
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
         }
     }
 }

@@ -36,6 +36,8 @@ EXPLOIT_DIR := $(SRC_DIR)/exploit
 VIEWS_DIR := $(SRC_DIR)/Views
 NAV_VIEWS_DIR := $(VIEWS_DIR)/NavigatorViews
 TWEAK_VIEWS_DIR := $(VIEWS_DIR)/Tweaks
+ACC_VIEWS_DIR := $(VIEWS_DIR)/AccessoryViews
+FILE_PICKER_VIEWS_DIR := $(VIEWS_DIR)/FilePicker
 
 EXT_DIR := $(SRC_DIR)/Extensions
 UI_EXT_DIR := $(EXT_DIR)/UI
@@ -67,6 +69,8 @@ $(APPLICATION_NAME)_FILES = \
 $(APPLICATION_NAME)_FILES += $(wildcard $(EXPLOIT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(NAV_VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_VIEWS_DIR)/*.swift)
+$(APPLICATION_NAME)_FILES += $(wildcard $(ACC_VIEWS_DIR)/*.swift)
+$(APPLICATION_NAME)_FILES += $(wildcard $(FILE_PICKER_VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(UI_EXT_DIR)/*.swift)
