@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct HomeView: View {
-    private let buildNumber = 4
+    private let buildNumber = 5
     
     @AppStorage("PairingFile") var pairingFile: String?
     @State var showPairingFileImporter = false
