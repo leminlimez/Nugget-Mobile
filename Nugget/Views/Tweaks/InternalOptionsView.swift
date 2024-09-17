@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InternalOptionsView: View {
     @StateObject var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
-        for: "Internal",
+        for: .Internal,
         tweaks: [
             .init(key: "UIStatusBarShowBuildVersion", title: "Show Build Version in Status Bar", fileLocation: .globalPreferences, tweakType: .toggle),
             .init(key: "NSForceRightToLeftWritingDirection", title: "Force Right-to-Left Layout", fileLocation: .globalPreferences, tweakType: .toggle),

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SpringboardTweaksView: View {
     @StateObject var manager: BasicPlistTweaksManager = BasicPlistTweaksManager.getManager(
-        for: "Springboard",
+        for: .SpringBoard,
         tweaks: [
             PlistTweak(key: "LockScreenFootnote", title: "Lock Screen Footnote Text", fileLocation: .footnote, tweakType: .text, placeholder: "Footnote Text"),
             PlistTweak(key: "SBDontLockAfterCrash", title: "Disable Lock After Respring", fileLocation: .springboard, tweakType: .toggle),
