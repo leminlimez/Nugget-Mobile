@@ -27,7 +27,7 @@ struct RevertTweaksPopoverView: View {
                 Section {
                     ForEach($tweakOptions) { option in
                         Toggle(isOn: option.enabled) {
-                            Text(option.page.wrappedValue.rawValue)
+                            Text("Revert \(option.page.wrappedValue.rawValue)")
                         }
                         .toggleStyle(.switch)
                         .onChange(of: option.enabled.wrappedValue) { nv in

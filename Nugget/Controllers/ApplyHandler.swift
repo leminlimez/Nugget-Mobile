@@ -13,7 +13,7 @@ enum TweakPage: String, CaseIterable {
     case StatusBar = "Status Bar"
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
-    case SkipSetup = "Skip Setup (Revert Changes)"
+    case SkipSetup = "Skip Setup"
 }
 
 class ApplyHandler: ObservableObject {
@@ -69,7 +69,6 @@ class ApplyHandler: ObservableObject {
                 files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
             }
         case .SkipSetup:
-            // TODO: MAKE THIS NOT APPLY WHEN THERE ARE ONLY EXPLOIT FILES
             // Apply the skip setup file
             var skipSetupData: Data = Data()
             if !resetting {
