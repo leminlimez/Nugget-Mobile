@@ -4,7 +4,7 @@ fi
 set -e
 
 APP_NAME="Nugget"
-FILE_EXT="tipa"
+FILE_EXT="ipa"
 WORKING_LOCATION="$(pwd)"
 APP_BUILD_FILES="$WORKING_LOCATION/layout/Applications/$APP_NAME.app"
 DEBUG_LOCATION="$WORKING_LOCATION/.theos/obj/debug"
@@ -49,7 +49,7 @@ fi
 if [ -d $BUILD_LOCATION ]; then
     # Add the necessary files
     echo "Adding application files"
-    cp -r "$APP_BUILD_FILES/icon.png" "$BUILD_LOCATION/icon.png"
+    cp -r $APP_BUILD_FILES/*.png $BUILD_LOCATION
     cp -r "$APP_BUILD_FILES/Info.plist" "$BUILD_LOCATION/Info.plist"
     cp -r "$APP_BUILD_FILES/Assets.car" "$BUILD_LOCATION/Assets.car"
     
