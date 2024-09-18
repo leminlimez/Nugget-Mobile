@@ -57,7 +57,7 @@ struct LogView: View {
                         } else {
                             succeeded = ApplyHandler.shared.apply(udid: udid/*, skipSetup: skipSetup*/)
                         }
-                        if succeeded && autoReboot && !log.contains("Find My") {
+                        if succeeded && autoReboot && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
                             print("Rebooting device...")
                             MobileDevice.rebootDevice(udid: udid)
                         }
