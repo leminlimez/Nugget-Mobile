@@ -13,7 +13,7 @@ enum TweakPage: String, CaseIterable {
     case StatusBar = "Status Bar"
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
-    case SkipSetup = "Skip Setup"
+//    case SkipSetup = "Skip Setup"
 }
 
 class ApplyHandler: ObservableObject {
@@ -68,20 +68,20 @@ class ApplyHandler: ObservableObject {
             for file_path in basicPlistTweaksData.keys {
                 files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
             }
-        case .SkipSetup:
-            // Apply the skip setup file
-            var skipSetupData: Data = Data()
-            if !resetting {
-                let keys = ["AutoUpdatePresented", "Payment2Presented", "SiriOnBoardingPresented", "AppleIDPB10Presented", "WebKitShrinksStandaloneImagesToFit", "AssistantPresented", "iCloudQuotaPresented", "PBAppActivity2Presented", "PrivacyPresented", "PaymentMiniBuddy4Ran", "PBDiagnostics4Presented", "HSA2UpgradeMiniBuddy3Ran", "ApplePayOnBoardingPresented", "DiagnosticsAutoOptInSet", "SetupFinishedAllSteps", "AssistantPHSOffered", "IntelligencePresented", "UserInterfaceStyleModePresented", "ScreenTimePresented"]
-                var plist: [String: Bool] = [:]
-                for key in keys {
-                    plist[key] = true
-                }
-                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
-            }
-            if resetting || !self.isExploitOnly() {
-                files.append(FileToRestore(contents: skipSetupData, path: "ManagedPreferencesDomain/mobile/com.apple.purplebuddy.plist"))
-            }
+//        case .SkipSetup:
+//            // Apply the skip setup file
+//            var skipSetupData: Data = Data()
+//            if !resetting {
+//                let keys = ["AutoUpdatePresented", "Payment2Presented", "SiriOnBoardingPresented", "AppleIDPB10Presented", "WebKitShrinksStandaloneImagesToFit", "AssistantPresented", "iCloudQuotaPresented", "PBAppActivity2Presented", "PrivacyPresented", "PaymentMiniBuddy4Ran", "PBDiagnostics4Presented", "HSA2UpgradeMiniBuddy3Ran", "ApplePayOnBoardingPresented", "DiagnosticsAutoOptInSet", "SetupFinishedAllSteps", "AssistantPHSOffered", "IntelligencePresented", "UserInterfaceStyleModePresented", "ScreenTimePresented"]
+//                var plist: [String: Bool] = [:]
+//                for key in keys {
+//                    plist[key] = true
+//                }
+//                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+//            }
+//            if resetting || !self.isExploitOnly() {
+//                files.append(FileToRestore(contents: skipSetupData, path: "ManagedPreferencesDomain/mobile/com.apple.purplebuddy.plist"))
+//            }
         }
     }
     
@@ -94,15 +94,15 @@ class ApplyHandler: ObservableObject {
         return true
     }
     
-    func apply(udid: String, skipSetup: Bool) -> Bool {
+    func apply(udid: String/*, skipSetup: Bool*/) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             for tweak in enabledTweaks {
                 try getTweakPageData(tweak, resetting: false, files: &filesToRestore)
             }
-            if skipSetup {
-                try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
-            }
+//            if skipSetup {
+//                try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
+//            }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
                 return true
