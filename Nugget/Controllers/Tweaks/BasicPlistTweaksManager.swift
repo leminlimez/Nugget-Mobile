@@ -100,19 +100,13 @@ class BasicPlistTweaksManager: ObservableObject {
     }
     
     func reset() -> [FileLocation: Data] {
-        var changedLocations: [FileLocation] = []
+        var changes: [FileLocation: Data] = [:]
         // add the location of where to restore
         for tweak in self.tweaks {
-            if !changedLocations.contains(tweak.fileLocation) {
-                changedLocations.append(tweak.fileLocation)
+            if changes[tweak.fileLocation] == nil {
+                // set it with empty data
+                changes[tweak.fileLocation] = Data()
             }
-        }
-        // create a dictionary of data to restore
-        var changes: [FileLocation: Data] = [:]
-        let emptyPlist: [String: Any] = [:]
-        let emptyData = try? PropertyListSerialization.data(fromPropertyList: emptyPlist, format: .xml, options: 0)
-        for changedLocation in changedLocations {
-            changes[changedLocation] = emptyData
         }
         return changes
     }

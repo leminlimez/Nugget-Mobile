@@ -60,7 +60,6 @@ class FeatureFlagManager {
     }
     
     public func reset() throws -> Data {
-        let plist: [String: Any] = [:]
-        return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+        return Data()
     }
 }
