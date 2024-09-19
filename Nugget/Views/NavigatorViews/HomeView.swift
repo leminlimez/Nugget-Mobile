@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct HomeView: View {
-    private let buildNumber = 6
+    private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
     
     @StateObject var applyHandler = ApplyHandler.shared
     
@@ -32,7 +32,7 @@ struct HomeView: View {
                 Section {
                     
                 } header: {
-                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(buildNumber != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
+                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
                 }
                 .listStyle(InsetGroupedListStyle())
                 

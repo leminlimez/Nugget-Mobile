@@ -86,9 +86,7 @@ class ApplyHandler: ObservableObject {
     }
     
     func isExploitOnly() -> Bool {
-        if enabledTweaks.contains(.StatusBar) || enabledTweaks.contains(.Internal) || enabledTweaks.contains(.SpringBoard) {
-            return false
-        } else if enabledTweaks.contains(.MobileGestalt) && gestaltManager.getRdarMode() != nil {
+        if enabledTweaks.contains(.StatusBar) {
             return false
         }
         return true

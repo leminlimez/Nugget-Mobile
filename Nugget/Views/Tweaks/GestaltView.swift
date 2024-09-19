@@ -107,8 +107,7 @@ struct GestaltView: View {
                         if nv {
                             gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: resMode)
                         } else {
-//                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: 0)
-                            gestaltManager.removeGestaltValue(key: "IOMobileGraphicsFamily")
+                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: 0)
                         }
                     })
                 }

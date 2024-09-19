@@ -9,23 +9,22 @@ import Foundation
 
 enum FileLocation: String {
     // MobileGestalt Options
-    case resolution = "ManagedPreferencesDomain/mobile/com.apple.iokit.IOMobileGraphicsFamily.plist"
+    case resolution = "/var/Managed Preferences/mobile/com.apple.iokit.IOMobileGraphicsFamily.plist"
     
     // Springboard Options
-    case springboard = "ManagedPreferencesDomain/mobile/com.apple.springboard.plist"
-    case footnote = "SysSharedContainerDomain-systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"
-    case wifi = "SystemPreferencesDomain/SystemConfiguration/com.apple.wifi.plist"
-    case uikit = "ManagedPreferencesDomain/mobile/com.apple.UIKit.plist"
-    case wifiDebug = "ManagedPreferencesDomain/mobile/com.apple.MobileWiFi.debug.plist"
-    case airdrop = "ManagedPreferencesDomain/mobile/com.apple.sharingd.plist"
+    case springboard = "/var/Managed Preferences/mobile/com.apple.springboard.plist"
+    case footnote = "/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"
+    case uikit = "/var/Managed Preferences/mobile/com.apple.UIKit.plist"
+    case wifiDebug = "/var/Managed Preferences/mobile/com.apple.MobileWiFi.debug.plist"
+    case airdrop = "/var/Managed Preferences/mobile/com.apple.sharingd.plist"
     
     // Internal Options
-    case globalPreferences = "ManagedPreferencesDomain/mobile/.GlobalPreferences.plist"
-    case appStore = "ManagedPreferencesDomain/mobile/com.apple.AppStore.plist"
-    case backboardd = "ManagedPreferencesDomain/mobile/com.apple.backboardd.plist"
-    case coreMotion = "ManagedPreferencesDomain/mobile/com.apple.CoreMotion.plist"
-    case pasteboard = "HomeDomain/Library/Preferences/com.apple.Pasteboard.plist"
-    case notes = "ManagedPreferencesDomain/mobile/com.apple.mobilenotes.plist"
+    case globalPreferences = "/var/Managed Preferences/mobile/.GlobalPreferences.plist"
+    case appStore = "/var/Managed Preferences/mobile/com.apple.AppStore.plist"
+    case backboardd = "/var/Managed Preferences/mobile/com.apple.backboardd.plist"
+    case coreMotion = "/var/Managed Preferences/mobile/com.apple.CoreMotion.plist"
+    case pasteboard = "/var/Managed Preferences/mobile/com.apple.Pasteboard.plist"
+    case notes = "/var/Managed Preferences/mobile/com.apple.mobilenotes.plist"
 }
 
 func getURLFromFileLocation(_ fileLocation: FileLocation) -> URL {
