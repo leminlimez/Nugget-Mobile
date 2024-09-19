@@ -187,9 +187,25 @@ class MobileGestaltManager {
                 ]
                 return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
             } else if val == 2 {
+                // get the resolution needed based on the device subtype
+                var new_canvas: CGSize = CGSize(width: 1320, height: 2868)
+                if let subtype = self.GestaltChanges["ArtworkDeviceSubType"] as? Int {
+                    switch subtype {
+                    case 2556:
+                        new_canvas = CGSize(width: 1179, height: 2556)
+                    case 2796, 2976:
+                        new_canvas = CGSize(width: 1290, height: 2796)
+                    case 2622:
+                        new_canvas = CGSize(width: 1206, height: 2622)
+                    case 2868:
+                        new_canvas = CGSize(width: 1320, height: 2868)
+                    default:
+                        print("No resolution for subtype \(subtype)!")
+                    }
+                }
                 let plist: [String: Int] = [
-                    "canvas_height": 2868,
-                    "canvas_width": 1320
+                    "canvas_height": Int(new_canvas.height),
+                    "canvas_width": Int(new_canvas.width)
                 ]
                 return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
             } else {
