@@ -30,11 +30,19 @@ struct SpringboardTweaksView: View {
                     Text(tweak.title.wrappedValue)
                         .bold()
                     TextField(tweak.placeholder.wrappedValue, text: tweak.stringValue).onChange(of: tweak.stringValue.wrappedValue, perform: { nv in
-                        manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                        do {
+                            try manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                        } catch {
+                            UIApplication.shared.alert(body: error.localizedDescription)
+                        }
                     })
                 } else if tweak.tweakType.wrappedValue == .toggle {
                     Toggle(tweak.title.wrappedValue, isOn: tweak.boolValue).onChange(of: tweak.boolValue.wrappedValue, perform: { nv in
-                        manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                        do {
+                            try manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                        } catch {
+                            UIApplication.shared.alert(body: error.localizedDescription)
+                        }
                     })
                 }
             }

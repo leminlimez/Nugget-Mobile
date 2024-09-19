@@ -12,7 +12,6 @@ import SwiftUI
     @objc static let shared = StatusManagerSwift()
     
     func apply() throws -> Data {
-        let fm = FileManager.default
         let overridesURL = getOverridesFileURL()
         return try Data(contentsOf: overridesURL)
     }

@@ -32,7 +32,11 @@ struct InternalOptionsView: View {
         List {
             ForEach($manager.tweaks) { tweak in
                 Toggle(tweak.title.wrappedValue, isOn: tweak.boolValue).onChange(of: tweak.boolValue.wrappedValue, perform: { nv in
-                    manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                    do {
+                        try manager.setTweakValue(tweak.wrappedValue, newVal: nv)
+                    } catch {
+                        UIApplication.shared.alert(body: error.localizedDescription)
+                    }
                 })
             }
         }

@@ -28,7 +28,7 @@ enum FileLocation: String {
 }
 
 func getURLFromFileLocation(_ fileLocation: FileLocation) -> URL {
-    let fileURL = URL.tweaksDirectory.appendingPathComponent(fileLocation.rawValue.components(separatedBy: "/").last ?? "temp")
+    let fileURL = URL.tweaksDirectory.appendingPathComponent(URL(fileURLWithPath: fileLocation.rawValue).lastPathComponent)
     if !FileManager.default.fileExists(atPath: fileURL.path) {
         guard let data = try? PropertyListSerialization.data(fromPropertyList: [:], format: .xml, options: 0) else { return fileURL }
         try? data.write(to: fileURL)

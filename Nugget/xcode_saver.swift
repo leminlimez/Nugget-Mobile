@@ -118,7 +118,7 @@ class Backup {
             }
         }
         
-        let manifestDBPath = directory.appendingPathComponent("Manifest.mbdb", conformingTo: .data)
+        _ = directory.appendingPathComponent("Manifest.mbdb", conformingTo: .data)
         
         let statusPath = directory.appendingPathComponent("Status.plist", conformingTo: .data)
         try PropertyListSerialization.data(fromPropertyList: generateStatus(), format: .xml, options: 0)

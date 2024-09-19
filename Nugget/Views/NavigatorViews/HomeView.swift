@@ -153,8 +153,6 @@ struct HomeView: View {
                 }
             }
             .onOpenURL(perform: { url in
-                let fm = FileManager.default
-                
                 // for opening the mobiledevicepairing file
                 if url.pathExtension.lowercased() == "mobiledevicepairing" {
                     do {

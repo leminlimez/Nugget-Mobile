@@ -18,7 +18,6 @@ struct PlistTweak: Identifiable {
     var title: String
     var fileLocation: FileLocation
     var tweakType: PlistTweakType // this is very stupid but SwiftUI hard typing doesn't like the protocols
-    var modified: Bool = false
     
     var boolValue: Bool = false
     var invertValue: Bool = false
@@ -53,18 +52,18 @@ class BasicPlistTweaksManager: ObservableObject {
     
     static func getManager(for page: TweakPage, tweaks: [PlistTweak]) -> BasicPlistTweaksManager {
         // have tweaks as an input in case it doesn't exist
-        for (i, manager) in managers.enumerated() {
+        for manager in managers {
             if manager.page == page {
-                return managers[i]
+                return manager
             }
         }
         // it does not exist, make a new manager and return that
-        var newManager = BasicPlistTweaksManager(page: page, tweaks: tweaks)
+        let newManager = BasicPlistTweaksManager(page: page, tweaks: tweaks)
         managers.append(newManager)
         return newManager
     }
     
-    func setTweakValue(_ tweak: PlistTweak, newVal: Any) {
+    func setTweakValue(_ tweak: PlistTweak, newVal: Any) throws {
         let fileURL = getURLFromFileLocation(tweak.fileLocation)
         let data = try? Data(contentsOf: fileURL)
         var plist: [String: Any] = [:]
@@ -72,29 +71,18 @@ class BasicPlistTweaksManager: ObservableObject {
             plist = readPlist
         }
         plist[tweak.key] = newVal
-        guard let newData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) else {return}
-        guard ((try? newData.write(to: fileURL)) != nil) else {return}
-        for (i, t) in self.tweaks.enumerated() {
-            if t.id == tweak.id {
-                self.tweaks[i].modified = true
-                break;
-            }
-        }
+        let newData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+        try newData.write(to: fileURL)
     }
     
     func apply() -> [FileLocation: Data] {
-        var changedLocations: [FileLocation] = []
-        // add the location of where to restore
-        for tweak in self.tweaks {
-            if tweak.modified && !changedLocations.contains(tweak.fileLocation) {
-                changedLocations.append(tweak.fileLocation)
-            }
-        }
         // create a dictionary of data to restore
         var changes: [FileLocation: Data] = [:]
-        for changedLocation in changedLocations {
-            guard let data = try? Data(contentsOf: getURLFromFileLocation(changedLocation)) else { continue }
-            changes[changedLocation] = data
+        for tweak in self.tweaks {
+            if changes[tweak.fileLocation] == nil {
+                guard let data = try? Data(contentsOf: getURLFromFileLocation(tweak.fileLocation)) else { continue }
+                changes[tweak.fileLocation] = data
+            }
         }
         return changes
     }
@@ -111,24 +99,20 @@ class BasicPlistTweaksManager: ObservableObject {
         return changes
     }
     
-    static func applyAll() -> [FileLocation: Data] {
+    static func applyAll(resetting: Bool) -> [FileLocation: Data] {
         var changes: [FileLocation: Data] = [:]
         for manager in managers {
-            changes.merge(manager.apply()) { originalData, newData in
-                // TODO: Merge the 2 files
-                return originalData // prioritize original data for now
-            }
-        }
-        return changes
-    }
-    
-    static func resetAll() -> [FileLocation: Data] {
-        // TODO: combine with applyAll()
-        var changes: [FileLocation: Data] = [:]
-        for manager in managers {
-            changes.merge(manager.reset()) { originalData, newData in
-                // TODO: Merge the 2 files
-                return originalData // prioritize original data for now
+            changes.merge(resetting ? manager.reset() : manager.apply()) { (current, new) in
+                // combine the 2 plists
+                do {
+                    guard let currentPlist = try PropertyListSerialization.propertyList(from: current, options: [], format: nil) as? [String: Any] else { return current }
+                    guard let newPlist = try PropertyListSerialization.propertyList(from: new, options: [], format: nil) as? [String: Any] else { return current }
+                    // combine them
+                    let mergedPlist = HelperFuncs.deepMerge(currentPlist, newPlist)
+                    return try PropertyListSerialization.data(fromPropertyList: mergedPlist, format: .binary, options: 0)
+                } catch {
+                    return current
+                }
             }
         }
         return changes
