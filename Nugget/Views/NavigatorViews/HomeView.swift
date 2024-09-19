@@ -122,11 +122,11 @@ struct HomeView: View {
                                 case .success(let url):
                                     do {
                                         pairingFile = try String(contentsOf: url)
+                                        startMinimuxer()
                                     } catch {
                                         lastError = error.localizedDescription
                                         showErrorAlert.toggle()
                                     }
-                                    startMinimuxer()
                                 case .failure(let error):
                                     lastError = error.localizedDescription
                                     showErrorAlert.toggle()
@@ -157,8 +157,13 @@ struct HomeView: View {
                 
                 // for opening the mobiledevicepairing file
                 if url.pathExtension.lowercased() == "mobiledevicepairing" {
-                    pairingFile = try! String(contentsOf: url)
-                    startMinimuxer()
+                    do {
+                        pairingFile = try String(contentsOf: url)
+                        startMinimuxer()
+                    } catch {
+                        lastError = error.localizedDescription
+                        showErrorAlert.toggle()
+                    }
                 }
             })
             .onAppear {
