@@ -118,7 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				6F8594BC2C9490BA00F790D1 /* Info.plist */,
-				6F8594AE2C92052900F790D1 /* New Group */,
 				6F8593582C8F41E100F790D1 /* Assets.xcassets */,
 				6F8594AA2C8FACCD00F790D1 /* Nugget-Bridging-Header.h */,
 				6F8593622C8F41F900F790D1 /* Controllers */,
@@ -230,13 +229,6 @@
 				6F8594A12C8FAC8B00F790D1 /* StatusSetter16_1.m */,
 			);
 			path = StatusManager;
-			sourceTree = "<group>";
-		};
-		6F8594AE2C92052900F790D1 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 		6F8594B32C92055100F790D1 /* exploit */ = {

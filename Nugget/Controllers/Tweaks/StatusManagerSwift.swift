@@ -18,6 +18,7 @@ import SwiftUI
     }
     
     func reset() throws -> Data {
+        try FileManager.default.removeItem(at: URL.tweaksDirectory.appendingPathComponent("statusBarOverrides"))
         return Data()
     }
     

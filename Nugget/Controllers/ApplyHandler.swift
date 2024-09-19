@@ -64,7 +64,7 @@ class ApplyHandler: ObservableObject {
             files.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides"))
         case .SpringBoard, .Internal:
             // Apply basic plist changes
-            var basicPlistTweaksData: [FileLocation: Data] = BasicPlistTweaksManager.applyPage(tweakPage, resetting: resetting)
+            let basicPlistTweaksData: [FileLocation: Data] = BasicPlistTweaksManager.applyPage(tweakPage, resetting: resetting)
             for file_path in basicPlistTweaksData.keys {
                 files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
             }
