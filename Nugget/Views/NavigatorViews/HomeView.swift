@@ -115,7 +115,7 @@ struct HomeView: View {
                 .listStyle(InsetGroupedListStyle())
                 .listRowInsets(EdgeInsets())
                 .padding()
-                .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!], onCompletion: { result in
+                .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!], onCompletion: { result in
                                 switch result {
                                 case .success(let url):
                                     do {
