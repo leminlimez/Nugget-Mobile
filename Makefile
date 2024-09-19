@@ -31,7 +31,7 @@ libimobiledevice_INSTALL_PATH = /Applications/$(APPLICATION_NAME).app/Frameworks
 
 SRC_DIR := Nugget
 # Directories
-EXPLOIT_DIR := $(SRC_DIR)/exploit
+SPARSERESTORE_DIR := $(SRC_DIR)/Sparserestore
 
 VIEWS_DIR := $(SRC_DIR)/Views
 NAV_VIEWS_DIR := $(VIEWS_DIR)/NavigatorViews
@@ -66,7 +66,7 @@ $(APPLICATION_NAME)_FILES = \
   $(SRC_DIR)/SwiftNIO/NIOCore/ByteBuffer-int.swift \
   $(SRC_DIR)/SwiftNIO/NIOPosix/PointerHelpers.swift
 
-$(APPLICATION_NAME)_FILES += $(wildcard $(EXPLOIT_DIR)/*.swift)
+$(APPLICATION_NAME)_FILES += $(wildcard $(SPARSERESTORE_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(NAV_VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_VIEWS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(ACC_VIEWS_DIR)/*.swift)

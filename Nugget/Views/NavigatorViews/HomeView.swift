@@ -9,7 +9,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct HomeView: View {
-    private let buildNumber = 5
+    private let buildNumber = 6
+    
+    @StateObject var applyHandler = ApplyHandler.shared
     
     @State var showRevertPage = false
     @State var revertingPages: [TweakPage] = []
@@ -186,17 +188,20 @@ struct HomeView: View {
     
     init() {
         // Fix file picker
-        let fixMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, Selector(("fix_initForOpeningContentTypes:asCopy:")))!
-        let origMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.init(forOpeningContentTypes:asCopy:)))!
-        method_exchangeImplementations(origMethod, fixMethod)
+        if let fixMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, Selector(("fix_initForOpeningContentTypes:asCopy:"))), let origMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.init(forOpeningContentTypes:asCopy:))) {
+            method_exchangeImplementations(origMethod, fixMethod)
+        }
     }
     
     func applyChanges(reverting: Bool) {
         if ready() {
-            // if applying non-exploit files, warn about setup
-            if ApplyHandler.shared.isExploitOnly() {
+            if !reverting && applyHandler.enabledTweaks.isEmpty {
+                // if there are no enabled tweaks then tell the user
+                UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
+            } else if ApplyHandler.shared.isExploitOnly() {
                 path.append(reverting ? "RevertChanges" : "ApplyChanges")
             } else {
+                // if applying non-exploit files, warn about setup
                 UIApplication.shared.confirmAlert(title: "Warning!", body: "You are applying non-exploit related files. This will make the setup screen appear. Click Cancel if you do not wish to proceed.\n\nWhen setting up, you MUST click \"Do not transfer apps & data\".\n\nIf you see a screen that says \"iPhone Partially Set Up\", DO NOT tap the big blue button. You must click \"Continue with Partial Setup\".", onOK: {
                     path.append(reverting ? "RevertChanges" : "ApplyChanges")
                 }, noCancel: false)

@@ -60,6 +60,8 @@ struct LogView: View {
                         if succeeded && autoReboot && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
                             print("Rebooting device...")
                             MobileDevice.rebootDevice(udid: udid)
+                        } else if log.contains("Find My") {
+                            UIApplication.shared.alert(body: "Find My must be disabled in order to use this tool.\n\nDisable Find My from Settings (Settings -> [Your Name] -> Find My) and then try again.")
                         }
                     }
                 }
