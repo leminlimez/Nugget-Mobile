@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ToolsView: View {
+    @StateObject var applyHandler = ApplyHandler.shared
+    
     struct GeneralOption: Identifiable {
         var id = UUID()
         var page: TweakPage
@@ -41,7 +43,7 @@ struct ToolsView: View {
                                     .foregroundColor(.blue)
                                 Text(option.title.wrappedValue)
                                     .padding(.horizontal, 8)
-                                if ApplyHandler.shared.enabledTweaks.contains(option.page.wrappedValue) {
+                                if applyHandler.isTweakEnabled(option.page.wrappedValue) {
                                     // show that it is enabled
                                     Spacer()
                                     Image(systemName: "checkmark.seal")

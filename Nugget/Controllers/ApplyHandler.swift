@@ -13,7 +13,7 @@ enum TweakPage: String, CaseIterable {
     case StatusBar = "Status Bar"
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
-//    case SkipSetup = "Skip Setup"
+    case SkipSetup = "Skip Setup"
 }
 
 class ApplyHandler: ObservableObject {
@@ -45,12 +45,10 @@ class ApplyHandler: ObservableObject {
         switch tweakPage {
         case .MobileGestalt:
             // Apply mobilegestalt changes
-            let mobileGestaltData: Data? = resetting ? try gestaltManager.reset() : try gestaltManager.apply()
-            let resChangerData: Data? = resetting ? Data() : gestaltManager.applyRdarFix()
-            if let mobileGestaltData = mobileGestaltData {
+            if let mobileGestaltData: Data = resetting ? gestaltManager.reset() : try gestaltManager.apply() {
                 files.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
             }
-            if let resChangerData = resChangerData {
+            if let resChangerData: Data = resetting ? Data() : gestaltManager.applyRdarFix() {
                 files.append(FileToRestore(contents: resChangerData, path: FileLocation.resolution.rawValue))
             }
         case .FeatureFlags:
@@ -67,20 +65,19 @@ class ApplyHandler: ObservableObject {
             for file_path in basicPlistTweaksData.keys {
                 files.append(FileToRestore(contents: basicPlistTweaksData[file_path]!, path: file_path.rawValue))
             }
-//        case .SkipSetup:
-//            // Apply the skip setup file
-//            var skipSetupData: Data = Data()
-//            if !resetting {
-//                let keys = ["AutoUpdatePresented", "Payment2Presented", "SiriOnBoardingPresented", "AppleIDPB10Presented", "WebKitShrinksStandaloneImagesToFit", "AssistantPresented", "iCloudQuotaPresented", "PBAppActivity2Presented", "PrivacyPresented", "PaymentMiniBuddy4Ran", "PBDiagnostics4Presented", "HSA2UpgradeMiniBuddy3Ran", "ApplePayOnBoardingPresented", "DiagnosticsAutoOptInSet", "SetupFinishedAllSteps", "AssistantPHSOffered", "IntelligencePresented", "UserInterfaceStyleModePresented", "ScreenTimePresented"]
-//                var plist: [String: Bool] = [:]
-//                for key in keys {
-//                    plist[key] = true
-//                }
-//                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
-//            }
-//            if resetting || !self.isExploitOnly() {
-//                files.append(FileToRestore(contents: skipSetupData, path: "ManagedPreferencesDomain/mobile/com.apple.purplebuddy.plist"))
-//            }
+        case .SkipSetup:
+            // Apply the skip setup file
+            var skipSetupData: Data = Data()
+            if !resetting {
+                let plist: [String: Any] = [
+                    "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "Android", "AppleID", "IntendedUser", "TOS", "Siri", "ScreenTime", "Diagnostics", "SoftwareUpdate", "Passcode", "Biometric", "Payment", "Zoom", "DisplayTone", "MessagingActivationUsingPhoneNumber", "HomeButtonSensitivity", "CloudStorage", "ScreenSaver", "TapToSetup", "Keyboard", "PreferredLanguage", "SpokenLanguage", "WatchMigration", "OnBoarding", "TVProviderSignIn", "TVHomeScreenSync", "Privacy", "TVRoom", "iMessageAndFaceTime", "AppStore", "Safety", "Multitasking", "ActionButton", "TermsOfAddress", "AccessibilityAppearance", "Welcome", "Appearance", "RestoreCompleted", "UpdateCompleted"],
+                    "CloudConfigurationUIComplete": true
+                ]
+                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+            }
+            if resetting || !self.isExploitOnly() {
+                files.append(FileToRestore(contents: skipSetupData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"))
+            }
         }
     }
     
@@ -92,16 +89,16 @@ class ApplyHandler: ObservableObject {
     }
     
     // MARK: Actual Applying/Resetting Functions
-    func apply(udid: String/*, skipSetup: Bool*/) -> Bool {
+    func apply(udid: String, skipSetup: Bool) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             print("Tweak pages being applied: \(self.enabledTweaks)")
             for tweak in self.enabledTweaks {
                 try getTweakPageData(tweak, resetting: false, files: &filesToRestore)
             }
-//            if skipSetup {
-//                try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
-//            }
+            if skipSetup {
+                try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
+            }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
                 return true

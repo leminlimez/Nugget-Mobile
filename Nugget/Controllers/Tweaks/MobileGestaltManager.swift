@@ -225,10 +225,9 @@ class MobileGestaltManager {
         return nil
     }
     
-    func reset() throws -> Data {
-        let fm = FileManager.default
+    func reset() -> Data {
         let gestaltURL = URL.tweaksDirectory.appendingPathComponent("com.apple.MobileGestalt.plist")
-        try? fm.removeItem(at: gestaltURL)
+        try? FileManager.default.removeItem(at: gestaltURL)
         UserDefaults.standard.removeObject(forKey: "DeviceSubType")
         return Data()
 //        return FileToRestore.init(contents: Data(), restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")

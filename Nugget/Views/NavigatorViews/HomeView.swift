@@ -21,7 +21,7 @@ struct HomeView: View {
     // Prefs
     @AppStorage("AutoReboot") var autoReboot: Bool = true
     @AppStorage("PairingFile") var pairingFile: String?
-//    @AppStorage("SkipSetup") var skipSetup: Bool = true
+    @AppStorage("SkipSetup") var skipSetup: Bool = true
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -96,19 +96,19 @@ struct HomeView: View {
                         }
                     }
                     // skip setup
-//                    Toggle(isOn: $skipSetup) {
-//                        HStack {
-//                            Text("Traditional Skip Setup")
-//                                .minimumScaleFactor(0.5)
-//                            Spacer()
-//                            Button {
-//                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies Cowabunga Lite's Skip Setup method to skip the setup for non-exploit files.\n\nThis may cause issues for some people, so turn it off if you use configuration profiles.\n\nThis will not be applied if you are only applying exploit files, as it will use the SparseRestore method to skip setup.", comment: "skip setup info"))
-//                            } label: {
-//                                Image(systemName: "info.circle")
-//                            }
-//                            .padding(.horizontal)
-//                        }
-//                    }
+                    Toggle(isOn: $skipSetup) {
+                        HStack {
+                            Text("Traditional Skip Setup")
+                                .minimumScaleFactor(0.5)
+                            Spacer()
+                            Button {
+                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies Cowabunga Lite's Skip Setup method to skip the setup for non-exploit files.\n\nThis may cause issues for some people, so turn it off if you use configuration profiles.\n\nThis will not be applied if you are only applying exploit files, as it will use the SparseRestore method to skip setup.", comment: "skip setup info"))
+                            } label: {
+                                Image(systemName: "info.circle")
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
                 } header: {
                     Label("Tweak Options", systemImage: "hammer")
                 }
@@ -174,9 +174,9 @@ struct HomeView: View {
             .navigationTitle("Nugget")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
-                    LogView(resetting: false, autoReboot: autoReboot)
+                    LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
                 } else if view == "RevertChanges" {
-                    LogView(resetting: true, autoReboot: autoReboot, resettingTweaks: revertingPages)
+                    LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup, resettingTweaks: revertingPages)
                 }
             }
             .alert("Error", isPresented: $showErrorAlert) {
@@ -199,7 +199,7 @@ struct HomeView: View {
             if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
                 // if there are no enabled tweaks then tell the user
                 UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
-            } else if ApplyHandler.shared.isExploitOnly() {
+            } else if ApplyHandler.shared.isExploitOnly() || skipSetup {
                 path.append(reverting ? "RevertChanges" : "ApplyChanges")
             } else {
                 // if applying non-exploit files, warn about setup

@@ -12,7 +12,7 @@ let logPipe = Pipe()
 struct LogView: View {
     let resetting: Bool
     let autoReboot: Bool
-//    let skipSetup: Bool
+    let skipSetup: Bool
     let resettingTweaks: Set<TweakPage>
     
     @State var log: String = ""
@@ -55,7 +55,7 @@ struct LogView: View {
                         if resetting {
                             succeeded = ApplyHandler.shared.reset(tweaks: resettingTweaks, udid: udid)
                         } else {
-                            succeeded = ApplyHandler.shared.apply(udid: udid/*, skipSetup: skipSetup*/)
+                            succeeded = ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup)
                         }
                         if succeeded && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
                             if autoReboot {
@@ -77,10 +77,10 @@ struct LogView: View {
         .navigationTitle("Log output")
     }
     
-    init(resetting: Bool, autoReboot: Bool,/* skipSetup: Bool,*/ resettingTweaks: Set<TweakPage> = []) {
+    init(resetting: Bool, autoReboot: Bool, skipSetup: Bool, resettingTweaks: Set<TweakPage> = []) {
         self.resetting = resetting
         self.autoReboot = autoReboot
-//        self.skipSetup = skipSetup
+        self.skipSetup = skipSetup
         self.resettingTweaks = resettingTweaks
         setvbuf(stdout, nil, _IOLBF, 0) // make stdout line-buffered
         setvbuf(stderr, nil, _IONBF, 0) // make stderr unbuffered
