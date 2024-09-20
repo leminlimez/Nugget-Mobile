@@ -156,17 +156,19 @@ class MobileGestaltManager {
         let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
-        for key in self.GestaltChanges.keys {
-            if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) {
-                var changed = false
-                (plist, changed) = setPlistValue(plist, key: key, value: self.GestaltChanges[key] as Any)
-                if !changed {
-                    // not found, change in CacheExtra
-                    if var newPlist = plist["CacheExtra"] as? [String: Any] {
+        if var newPlist = plist["CacheExtra"] as? [String: Any] {
+            
+            for key in self.GestaltChanges.keys {
+                if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) {
+                    var changed = false
+                    (newPlist, changed) = setPlistValue(newPlist, key: key, value: self.GestaltChanges[key] as Any)
+                    if !changed {
+                        // not found, change in CacheExtra
                         newPlist[key] = self.GestaltChanges[key]
                     }
                 }
             }
+            plist["CacheExtra"] = newPlist
         }
         
         return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
