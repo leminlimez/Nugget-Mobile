@@ -23,14 +23,14 @@ class ApplyHandler: ObservableObject {
     let ffManager = FeatureFlagManager.shared
     let statusManager = StatusManagerSwift.shared
     
-    @Published var enabledTweaks: [TweakPage] = []
+    @Published var enabledTweaks: Set<TweakPage> = []
     
     func getTweakPageData(_ tweakPage: TweakPage, resetting: Bool, files: inout [FileToRestore]) throws {
         switch tweakPage {
         case .MobileGestalt:
             // Apply mobilegestalt changes
-            var mobileGestaltData: Data? = resetting ? try gestaltManager.reset() : try gestaltManager.apply()
-            var resChangerData: Data? = resetting ? Data() : gestaltManager.applyRdarFix()
+            let mobileGestaltData: Data? = resetting ? try gestaltManager.reset() : try gestaltManager.apply()
+            let resChangerData: Data? = resetting ? Data() : gestaltManager.applyRdarFix()
             if let mobileGestaltData = mobileGestaltData {
                 files.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
             }
@@ -39,11 +39,11 @@ class ApplyHandler: ObservableObject {
             }
         case .FeatureFlags:
             // Apply feature flag changes (iOS 18.0+ only)
-            var ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()
+            let ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()
             files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
         case .StatusBar:
             // Apply status bar
-            var statusBarData: Data = resetting ? try statusManager.reset() : try statusManager.apply()
+            let statusBarData: Data = resetting ? try statusManager.reset() : try statusManager.apply()
             files.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides", usesInodes: false))
         case .SpringBoard, .Internal:
             // Apply basic plist changes

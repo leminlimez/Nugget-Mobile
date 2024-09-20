@@ -18,14 +18,9 @@ struct ModifyTweakViewModifier: ViewModifier {
                 Button(action: {
                     // enable modification
                     if !applyHandler.enabledTweaks.contains(pageKey) {
-                        applyHandler.enabledTweaks.append(pageKey)
+                        applyHandler.enabledTweaks.insert(pageKey)
                     } else {
-                        for (i, tweak) in applyHandler.enabledTweaks.enumerated() {
-                            if tweak == pageKey {
-                                applyHandler.enabledTweaks.remove(at: i)
-                                return
-                            }
-                        }
+                        applyHandler.enabledTweaks.remove(pageKey)
                     }
                 }) {
                     HStack {

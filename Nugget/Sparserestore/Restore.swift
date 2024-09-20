@@ -110,7 +110,7 @@ class RestoreManager {
             var last_path: String = ""
             var last_domain: String = ""
             var exploit_only = true
-            for (index, file) in sortedFiles.enumerated() {
+            for (_, file) in sortedFiles.enumerated() {
                 // for non exploit domains, the path will not start with /
                 if file.path.starts(with: "/") {
                     // file utilizes exploit
