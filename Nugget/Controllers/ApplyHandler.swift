@@ -10,6 +10,7 @@ import Foundation
 enum TweakPage: String, CaseIterable {
     case MobileGestalt = "Mobilegestalt"
     case FeatureFlags = "Feature Flags"
+    case Eligibility = "Eligibility"
     case StatusBar = "Status Bar"
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
@@ -21,6 +22,7 @@ class ApplyHandler: ObservableObject {
     
     let gestaltManager = MobileGestaltManager.shared
     let ffManager = FeatureFlagManager.shared
+    let eligibilityManager = EligibilityManager.shared
     let statusManager = StatusManagerSwift.shared
     
     @Published var enabledTweaks: Set<TweakPage> = []
@@ -55,6 +57,14 @@ class ApplyHandler: ObservableObject {
             // Apply feature flag changes (iOS 18.0+ only)
             let ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()
             files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
+        case .Eligibility:
+            // Apply eligibility changes
+            if !resetting {
+                let changes: [String: Data] = try eligibilityManager.apply()
+                for (file, newData) in changes {
+                    files.append(FileToRestore(contents: newData, path: file))
+                }
+            } // TODO: reverting
         case .StatusBar:
             // Apply status bar
             let statusBarData: Data = resetting ? try statusManager.reset() : try statusManager.apply()

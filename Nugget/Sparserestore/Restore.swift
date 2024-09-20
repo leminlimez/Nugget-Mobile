@@ -29,10 +29,10 @@ class RestoreManager {
         if last_domain != url.deletingLastPathComponent().path(percentEncoded: false) {
             last_domain = url.deletingLastPathComponent().path(percentEncoded: false)
             list.append(Directory(path: "", domain:
-                                    /*
-                                     * /var/.backup.i/var/root/Library/Bacdskup/SystemContainers/
-                                     */
-                                  "SysContainerDomain-../../../../../../../..\(basePath)\(last_domain)", owner: owner, group: group))
+                /*
+                 * /var/.backup.i/var/root/Library/Bacdskup/SystemContainers/
+                 */
+              "SysContainerDomain-../../../../../../../..\(basePath)\(last_domain)", owner: owner, group: group))
         }
         list.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../..\(basePath)\(url.path(percentEncoded: false))", contents: contents, owner: owner, group: group))
     }

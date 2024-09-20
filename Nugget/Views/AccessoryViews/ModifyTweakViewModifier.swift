@@ -17,7 +17,9 @@ struct ModifyTweakViewModifier: ViewModifier {
             .toolbar {
                 Button(action: {
                     // enable modification
-                    applyHandler.setTweakEnabled(pageKey, isEnabled: !applyHandler.isTweakEnabled(pageKey))
+                    if pageKey != .MobileGestalt || EligibilityManager.shared.aiEnabler == false {
+                        applyHandler.setTweakEnabled(pageKey, isEnabled: !applyHandler.isTweakEnabled(pageKey))
+                    }
                 }) {
                     HStack {
                         Text("Modify")

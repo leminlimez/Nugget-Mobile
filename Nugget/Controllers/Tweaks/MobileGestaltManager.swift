@@ -13,6 +13,7 @@ class MobileGestaltManager {
     
     private var GestaltChanges: [String: Any] = [:]
     var deviceSubType: Int
+    @Published var deviceModel: String?
     
     init() {
         deviceSubType = UserDefaults.standard.integer(forKey: "DeviceSubType")
@@ -20,6 +21,12 @@ class MobileGestaltManager {
             if let newSubType = try? getDefaultDeviceSubtype() {
                 UserDefaults.standard.setValue(newSubType, forKey: "DeviceSubType")
                 deviceSubType = newSubType
+            }
+        }
+        deviceModel = UserDefaults.standard.string(forKey: "DeviceModel")
+        if deviceModel == nil {
+            if let newModel = try? getDefaultDeviceModel() {
+                deviceModel = newModel
             }
         }
     }
@@ -38,6 +45,10 @@ class MobileGestaltManager {
         try gestaltData.write(to: gestaltURL)
 //            try gestaltData.write(to: gestaltBackupURL)
 //        }
+    }
+    
+    func hasGestaltChanges() -> Bool {
+        return !self.GestaltChanges.isEmpty
     }
     
     func setGestaltValue(key: String, value: Any) {
@@ -104,6 +115,12 @@ class MobileGestaltManager {
         let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
         let plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         return getPlistValue(plist, key: "ArtworkDeviceSubType") as? Int ?? -1
+    }
+    
+    func getDefaultDeviceModel() throws -> String? {
+        let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
+        let plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
+        return getPlistValue(plist, key: "h9jDsbgj7xIVeIQ8S3/X3Q") as? String
     }
     
     func setPlistValue(_ dict: [String: Any], key: String, value: Any) -> ([String: Any], Bool) {

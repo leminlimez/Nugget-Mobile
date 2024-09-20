@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F2A99722C9E0ABB00C8A862 /* EligibilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2A99712C9E0ABB00C8A862 /* EligibilityView.swift */; };
+		6F2A99742C9E0AEF00C8A862 /* EligibilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2A99732C9E0AEF00C8A862 /* EligibilityManager.swift */; };
+		6F2A99782C9E0C1E00C8A862 /* eligibility.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F2A99772C9E0C1E00C8A862 /* eligibility.plist */; };
+		6F2A997A2C9E18DE00C8A862 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F2A99792C9E18DE00C8A862 /* Config.plist */; };
 		6F8593552C8F41E000F790D1 /* NuggetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8593542C8F41E000F790D1 /* NuggetApp.swift */; };
 		6F8593572C8F41E000F790D1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8593562C8F41E000F790D1 /* RootView.swift */; };
 		6F8593592C8F41E100F790D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F8593582C8F41E100F790D1 /* Assets.xcassets */; };
@@ -45,6 +49,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F2A99712C9E0ABB00C8A862 /* EligibilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EligibilityView.swift; sourceTree = "<group>"; };
+		6F2A99732C9E0AEF00C8A862 /* EligibilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EligibilityManager.swift; sourceTree = "<group>"; };
+		6F2A99772C9E0C1E00C8A862 /* eligibility.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = eligibility.plist; sourceTree = "<group>"; };
+		6F2A99792C9E18DE00C8A862 /* Config.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Config.plist; sourceTree = "<group>"; };
 		6F8593512C8F41E000F790D1 /* Nugget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nugget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F8593542C8F41E000F790D1 /* NuggetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuggetApp.swift; sourceTree = "<group>"; };
 		6F8593562C8F41E000F790D1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -100,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F2A99762C9E0C1000C8A862 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				6F2A99772C9E0C1E00C8A862 /* eligibility.plist */,
+				6F2A99792C9E18DE00C8A862 /* Config.plist */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
 		6F8593482C8F41E000F790D1 = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +144,7 @@
 				6F85936C2C8F433E00F790D1 /* Extensions */,
 				6F8593632C8F422900F790D1 /* Views */,
 				6F8593542C8F41E000F790D1 /* NuggetApp.swift */,
+				6F2A99762C9E0C1000C8A862 /* Files */,
 				6F85935A2C8F41E100F790D1 /* Preview Content */,
 				6F8593B02C8F7B8400F790D1 /* xcode_saver.swift */,
 			);
@@ -167,9 +185,10 @@
 			children = (
 				6F8593652C8F425E00F790D1 /* GestaltView.swift */,
 				6F8593B42C8F9A3500F790D1 /* FeatureFlagsView.swift */,
-				6F8593B62C8FAA8700F790D1 /* StatusBarView.swift */,
+				6F2A99712C9E0ABB00C8A862 /* EligibilityView.swift */,
 				6F8594C12C94DED800F790D1 /* SpringboardTweaksView.swift */,
 				6F8594C32C9507C400F790D1 /* InternalOptionsView.swift */,
+				6F8593B62C8FAA8700F790D1 /* StatusBarView.swift */,
 			);
 			path = Tweaks;
 			sourceTree = "<group>";
@@ -216,6 +235,7 @@
 				6F8593792C8F4C7000F790D1 /* MobileGestaltManager.swift */,
 				6F8593B22C8F91C900F790D1 /* FeatureFlagManager.swift */,
 				6F8594AB2C8FADF300F790D1 /* StatusManagerSwift.swift */,
+				6F2A99732C9E0AEF00C8A862 /* EligibilityManager.swift */,
 			);
 			path = Tweaks;
 			sourceTree = "<group>";
@@ -319,6 +339,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F2A997A2C9E18DE00C8A862 /* Config.plist in Resources */,
+				6F2A99782C9E0C1E00C8A862 /* eligibility.plist in Resources */,
 				6F85935C2C8F41E100F790D1 /* Preview Assets.xcassets in Resources */,
 				6F8593592C8F41E100F790D1 /* Assets.xcassets in Resources */,
 			);
@@ -341,6 +363,7 @@
 				6F8593752C8F448100F790D1 /* Alert++.swift in Sources */,
 				6F8594CB2C98887900F790D1 /* FilePickerUIRepresentable.swift in Sources */,
 				6F8594AC2C8FADF300F790D1 /* StatusManagerSwift.swift in Sources */,
+				6F2A99742C9E0AEF00C8A862 /* EligibilityManager.swift in Sources */,
 				6F8594C22C94DED800F790D1 /* SpringboardTweaksView.swift in Sources */,
 				6F8594B92C92056D00F790D1 /* Restore.swift in Sources */,
 				6F8594C02C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift in Sources */,
@@ -349,6 +372,7 @@
 				6F8594BB2C9235C600F790D1 /* ApplyHandler.swift in Sources */,
 				6F8593572C8F41E000F790D1 /* RootView.swift in Sources */,
 				6F8593B72C8FAA8700F790D1 /* StatusBarView.swift in Sources */,
+				6F2A99722C9E0ABB00C8A862 /* EligibilityView.swift in Sources */,
 				6F8594A62C8FAC8B00F790D1 /* StatusManager.m in Sources */,
 				6F8594CF2C988C0E00F790D1 /* DeviceModel.swift in Sources */,
 				6F8594BE2C94B9AA00F790D1 /* BasicPlistTweaksManager.swift in Sources */,
