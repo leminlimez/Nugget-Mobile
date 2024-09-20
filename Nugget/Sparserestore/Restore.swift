@@ -18,7 +18,7 @@ struct FileToRestore {
 class RestoreManager {
     static let shared = RestoreManager()
     
-    private func addExploitedConcreteFile(list: inout [BackupFile], path: String, contents: Data, owner: Int32 = 501, group: Int32 = 501, inode: UInt64? = nil) {
+    private func addExploitedConcreteFile(list: inout [BackupFile], path: String, contents: Data, owner: Int32 = 501, group: Int32 = 501, last_domain: inout String) {
         let url = URL(filePath: path)
         var basePath: String = "/var/backup"
         if #available(iOS 17, *) {
@@ -26,15 +26,18 @@ class RestoreManager {
             basePath = url.path(percentEncoded: false).hasPrefix("/var/mobile/") ? "/var/mobile/backup" : "/var/backup"
         }
         
-        list.append(Directory(path: "", domain:
-            /*
-             * /var/.backup.i/var/root/Library/Bacdskup/SystemContainers/
-             */
-            "SysContainerDomain-../../../../../../../..\(basePath)\(url.deletingLastPathComponent().path(percentEncoded: false))", owner: owner, group: group))
-        list.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../..\(basePath)\(url.path(percentEncoded: false))", contents: contents, owner: owner, group: group, inode: inode))
+        if last_domain != url.deletingLastPathComponent().path(percentEncoded: false) {
+            last_domain = url.deletingLastPathComponent().path(percentEncoded: false)
+            list.append(Directory(path: "", domain:
+                                    /*
+                                     * /var/.backup.i/var/root/Library/Bacdskup/SystemContainers/
+                                     */
+                                  "SysContainerDomain-../../../../../../../..\(basePath)\(last_domain)", owner: owner, group: group))
+        }
+        list.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../..\(basePath)\(url.path(percentEncoded: false))", contents: contents, owner: owner, group: group))
     }
     
-    private func addRegularConcreteFile(list: inout [BackupFile], path: String, contents: Data, owner: Int32 = 501, group: Int32 = 501, inode: UInt64? = nil, last_path: inout String, last_domain: inout String) {
+    private func addRegularConcreteFile(list: inout [BackupFile], path: String, contents: Data, owner: Int32 = 501, group: Int32 = 501, last_path: inout String, last_domain: inout String) {
         let path_items = path.components(separatedBy: "/")
         guard path_items.count > 0 else { return }
         let domain = path_items[0]
@@ -74,31 +77,12 @@ class RestoreManager {
                     list.append(Directory(path: full_path, domain: domain))
                 } else {
                     // it is a file
-                    list.append(ConcreteFile(path: full_path, domain: domain, contents: contents, owner: owner, group: group, inode: inode))
+                    list.append(ConcreteFile(path: full_path, domain: domain, contents: contents, owner: owner, group: group))
                 }
             }
         }
         print()
     }
-    
-//    func restoreFile(_ contents: Data, udid: String) {
-//        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//        let folder = documentsDirectory.appendingPathComponent(udid, conformingTo: .data)
-//        
-//        do {
-//            try? FileManager.default.removeItem(at: folder)
-//            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
-//            
-//            var backupFiles: [BackupFile] = [
-//                Directory(path: "", domain: "HomeDomain"),
-//                Directory(path: "Library", domain: "HomeDomain"),
-//                Directory(path: "Library/Preferences", domain: "HomeDomain")
-//            ]
-//        } catch {
-//            print(error.localizedDescription)
-//            return
-//        }
-//    }
     
     func restoreFiles(_ files: [FileToRestore], udid: String) {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -119,24 +103,7 @@ class RestoreManager {
                 return file1.path < file2.path
             }
             
-            var backupFiles: [BackupFile] = [
-                Directory(path: "", domain: "RootDomain"),
-                Directory(path: "Library", domain: "RootDomain"),
-                Directory(path: "Library/Preferences", domain: "RootDomain")
-            ]
-            
-            // create the inode links
-            for (index, file) in sortedFiles.enumerated() {
-                if file.usesInodes {
-                    backupFiles.append(ConcreteFile(
-                        path: "Library/Preferences/temp\(index)",
-                        domain: "RootDomain",
-                        contents: file.contents,
-                        owner: file.owner,
-                        group: file.group,
-                        inode: UInt64(index)))
-                }
-            }
+            var backupFiles: [BackupFile] = []
             
             // add the domains and files
             // keep track of the last path and domain
@@ -147,23 +114,11 @@ class RestoreManager {
                 // for non exploit domains, the path will not start with /
                 if file.path.starts(with: "/") {
                     // file utilizes exploit
-                    addExploitedConcreteFile(list: &backupFiles, path: file.path, contents: file.usesInodes ? Data() : file.contents, owner: file.owner, group: file.group, inode: file.usesInodes ? UInt64(index) : nil)
+                    addExploitedConcreteFile(list: &backupFiles, path: file.path, contents: file.contents, owner: file.owner, group: file.group, last_domain: &last_domain)
                 } else {
                     // file is a regular domain, does not utilize exploit
                     exploit_only = false
-                    addRegularConcreteFile(list: &backupFiles, path: file.path, contents: file.usesInodes ? Data() : file.contents, owner: file.owner, group: file.group, inode: file.usesInodes ? UInt64(index) : nil, last_path: &last_path, last_domain: &last_domain)
-                }
-            }
-            
-            // break the hard links
-            for (index, file) in sortedFiles.enumerated() {
-                if file.usesInodes {
-                    backupFiles.append(ConcreteFile(
-                        path: "",
-                        domain: "SysContainerDomain-../../../../../../../../var/.backup.i/var/root/Library/Preferences/temp\(index)",
-                        contents: Data(),
-                        owner: 501,
-                        group: 501))
+                    addRegularConcreteFile(list: &backupFiles, path: file.path, contents: file.contents, owner: file.owner, group: file.group, last_path: &last_path, last_domain: &last_domain)
                 }
             }
             

@@ -29,15 +29,8 @@ class ApplyHandler: ObservableObject {
         switch tweakPage {
         case .MobileGestalt:
             // Apply mobilegestalt changes
-            var mobileGestaltData: Data? = nil
-            var resChangerData: Data? = nil
-            if resetting {
-                mobileGestaltData = try gestaltManager.reset()
-                resChangerData = Data()
-            } else {
-                mobileGestaltData = try gestaltManager.apply()
-                resChangerData = gestaltManager.applyRdarFix()
-            }
+            var mobileGestaltData: Data? = resetting ? try gestaltManager.reset() : try gestaltManager.apply()
+            var resChangerData: Data? = resetting ? Data() : gestaltManager.applyRdarFix()
             if let mobileGestaltData = mobileGestaltData {
                 files.append(FileToRestore(contents: mobileGestaltData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
             }
@@ -46,21 +39,11 @@ class ApplyHandler: ObservableObject {
             }
         case .FeatureFlags:
             // Apply feature flag changes (iOS 18.0+ only)
-            var ffData: Data = Data()
-            if resetting {
-                ffData = try ffManager.reset()
-            } else {
-                ffData = try ffManager.apply()
-            }
+            var ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()
             files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
         case .StatusBar:
             // Apply status bar
-            var statusBarData: Data = Data()
-            if resetting {
-                statusBarData = try statusManager.reset()
-            } else {
-                statusBarData = try statusManager.apply()
-            }
+            var statusBarData: Data = resetting ? try statusManager.reset() : try statusManager.apply()
             files.append(FileToRestore(contents: statusBarData, path: "HomeDomain/Library/SpringBoard/statusBarOverrides", usesInodes: false))
         case .SpringBoard, .Internal:
             // Apply basic plist changes
@@ -86,7 +69,7 @@ class ApplyHandler: ObservableObject {
     }
     
     func isExploitOnly() -> Bool {
-        if enabledTweaks.contains(.StatusBar) {
+        if self.enabledTweaks.contains(.StatusBar) {
             return false
         }
         return true
@@ -95,7 +78,8 @@ class ApplyHandler: ObservableObject {
     func apply(udid: String/*, skipSetup: Bool*/) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
-            for tweak in enabledTweaks {
+            print("Tweak pages being applied: \(self.enabledTweaks)")
+            for tweak in self.enabledTweaks {
                 try getTweakPageData(tweak, resetting: false, files: &filesToRestore)
             }
 //            if skipSetup {
@@ -117,8 +101,9 @@ class ApplyHandler: ObservableObject {
     func reset(tweaks: [TweakPage], udid: String) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
+            print("Tweak pages being reset: \(tweaks)")
             for tweak in tweaks {
-                try getTweakPageData(tweak, resetting: true, files: &filesToRestore)
+                try self.getTweakPageData(tweak, resetting: true, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
                 RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)

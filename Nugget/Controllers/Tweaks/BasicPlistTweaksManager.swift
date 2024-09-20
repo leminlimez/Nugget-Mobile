@@ -27,7 +27,37 @@ struct PlistTweak: Identifiable {
 }
 
 class BasicPlistTweaksManager: ObservableObject {
-    static var managers: [BasicPlistTweaksManager] = []
+    static var managers: [BasicPlistTweaksManager] = [
+        /* SpringBoard Manager */
+        .init(page: .SpringBoard, tweaks: [
+            PlistTweak(key: "LockScreenFootnote", title: "Lock Screen Footnote Text", fileLocation: .footnote, tweakType: .text, placeholder: "Footnote Text"),
+            PlistTweak(key: "SBDontLockAfterCrash", title: "Disable Lock After Respring", fileLocation: .springboard, tweakType: .toggle),
+            PlistTweak(key: "SBDontDimOrLockOnAC", title: "Disable Screen Dimming While Charging", fileLocation: .springboard, tweakType: .toggle),
+            PlistTweak(key: "SBHideLowPowerAlerts", title: "Disable Low Battery Alerts", fileLocation: .springboard, tweakType: .toggle),
+            PlistTweak(key: "SBNeverBreadcrumb", title: "Disable Breadcrumb", fileLocation: .springboard, tweakType: .toggle),
+            PlistTweak(key: "SBShowSupervisionTextOnLockScreen", title: "Show Supervision Text on Lock Screen", fileLocation: .springboard, tweakType: .toggle),
+            PlistTweak(key: "CCSPresentationGesture", title: "Disable CC Presentation Gesture", fileLocation: .springboard, tweakType: .toggle, invertValue: true),
+            PlistTweak(key: "WiFiManagerLoggingEnabled", title: "Show WiFi Debugger", fileLocation: .wifiDebug, tweakType: .toggle),
+            PlistTweak(key: "DiscoverableMode", title: "Permanently Allow Receiving AirDrop from Everyone", fileLocation: .airdrop, tweakType: .toggle)
+        ]),
+        /* Internal Options Manager */
+        .init(page: .Internal, tweaks: [
+            .init(key: "UIStatusBarShowBuildVersion", title: "Show Build Version in Status Bar", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "NSForceRightToLeftWritingDirection", title: "Force Right-to-Left Layout", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "MetalForceHudEnabled", title: "Enable Metal HUD Debug", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "AccessoryDeveloperEnabled", title: "Enable Accessory Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "iMessageDiagnosticsEnabled", title: "Enable iMessage Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "IDSDiagnosticsEnabled", title: "Enable Continuity Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "VCDiagnosticsEnabled", title: "Enable FaceTime Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
+            .init(key: "debugGestureEnabled", title: "Enable App Store Debug Gesture", fileLocation: .appStore, tweakType: .toggle),
+            .init(key: "DebugModeEnabled", title: "Enable Notes App Debug Mode", fileLocation: .notes, tweakType: .toggle),
+            .init(key: "BKDigitizerVisualizeTouches", title: "Show Touches With Debug Info", fileLocation: .backboardd, tweakType: .toggle),
+            .init(key: "BKHideAppleLogoOnLaunch", title: "Hide Respring Icon", fileLocation: .backboardd, tweakType: .toggle),
+            .init(key: "EnableWakeGestureHaptic", title: "Vibrate on Raise-to-Wake", fileLocation: .coreMotion, tweakType: .toggle),
+            .init(key: "PlaySoundOnPaste", title: "Play Sound on Paste", fileLocation: .pasteboard, tweakType: .toggle),
+            .init(key: "AnnounceAllPastes", title: "Show Notifications for System Pastes", fileLocation: .pasteboard, tweakType: .toggle)
+        ])
+    ]
     
     var page: TweakPage
     @Published var tweaks: [PlistTweak]
@@ -50,17 +80,14 @@ class BasicPlistTweaksManager: ObservableObject {
         }
     }
     
-    static func getManager(for page: TweakPage, tweaks: [PlistTweak]) -> BasicPlistTweaksManager {
-        // have tweaks as an input in case it doesn't exist
+    static func getManager(for page: TweakPage) -> BasicPlistTweaksManager? {
+        // get the manager if the page matches
         for manager in managers {
             if manager.page == page {
                 return manager
             }
         }
-        // it does not exist, make a new manager and return that
-        let newManager = BasicPlistTweaksManager(page: page, tweaks: tweaks)
-        managers.append(newManager)
-        return newManager
+        return nil
     }
     
     func setTweakValue(_ tweak: PlistTweak, newVal: Any) throws {
@@ -91,10 +118,8 @@ class BasicPlistTweaksManager: ObservableObject {
         var changes: [FileLocation: Data] = [:]
         // add the location of where to restore
         for tweak in self.tweaks {
-            if changes[tweak.fileLocation] == nil {
-                // set it with empty data
-                changes[tweak.fileLocation] = Data()
-            }
+            // set it with empty data
+            changes[tweak.fileLocation] = Data()
         }
         return changes
     }
