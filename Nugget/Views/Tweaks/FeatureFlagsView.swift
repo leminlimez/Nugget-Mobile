@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeatureFlagsView: View {
-    let ffManager = FeatureFlagManager.shared
+    @StateObject var ffManager = FeatureFlagManager.shared
     
     struct FeatureFlagOption: Identifiable {
         var id = UUID()
@@ -34,9 +34,14 @@ struct FeatureFlagsView: View {
             ForEach($featureFlagOptions) { tweak in
                 Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
                     if nv {
-                        ffManager.enableFlag(tweak.flag.wrappedValue)
+                        ffManager.EnabledFlags.append(tweak.flag.wrappedValue)
                     } else {
-                        ffManager.removeFlag(tweak.flag.wrappedValue)
+                        for (i, flag) in ffManager.EnabledFlags.enumerated() {
+                            if tweak.flag.wrappedValue.id == flag.id {
+                                ffManager.EnabledFlags.remove(at: i)
+                                return
+                            }
+                        }
                     }
                 })
             }
@@ -47,7 +52,7 @@ struct FeatureFlagsView: View {
         .onAppear {
             // get the enabled feature flags
             // O(n^2), should be improved
-            let enabledFlags = ffManager.getEnabledFlags()
+            let enabledFlags = ffManager.EnabledFlags
             for (i, flagOption) in featureFlagOptions.enumerated() {
                 for enabledFlag in enabledFlags {
                     if enabledFlag.id == flagOption.flag.id {

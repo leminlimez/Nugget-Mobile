@@ -20,26 +20,10 @@ struct FeatureFlag: Identifiable {
     var inverted: Bool = false
 }
 
-class FeatureFlagManager {
+class FeatureFlagManager: ObservableObject {
     static let shared = FeatureFlagManager()
     
-    private var EnabledFlags: [FeatureFlag] = []
-    
-    public func enableFlag(_ flag: FeatureFlag) {
-        self.EnabledFlags.append(flag)
-    }
-    public func removeFlag(_ flag: FeatureFlag) {
-        for (i, EnabledFlag) in self.EnabledFlags.enumerated() {
-            if EnabledFlag.id == flag.id {
-                self.EnabledFlags.remove(at: i)
-                return
-            }
-        }
-    }
-    
-    public func getEnabledFlags() -> [FeatureFlag] {
-        return self.EnabledFlags
-    }
+    @Published var EnabledFlags: [FeatureFlag] = []
     
     public func apply() throws -> Data {
         var plist: [String: Any] = [:]
