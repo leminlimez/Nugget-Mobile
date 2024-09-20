@@ -10,7 +10,7 @@ import SwiftUI
 struct RevertTweaksPopoverView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @Binding var revertingPages: [TweakPage]
+    @Binding var revertingPages: Set<TweakPage>
     let revertFunction: (_ reverting: Bool) -> Void
     
     struct TweakOption: Identifiable {
@@ -33,15 +33,10 @@ struct RevertTweaksPopoverView: View {
                         .onChange(of: option.enabled.wrappedValue) { nv in
                             if nv {
                                 if !revertingPages.contains(option.page.wrappedValue) {
-                                    revertingPages.append(option.page.wrappedValue)
+                                    revertingPages.insert(option.page.wrappedValue)
                                 }
                             } else {
-                                for (i, page) in revertingPages.enumerated() {
-                                    if page == option.page.wrappedValue {
-                                        revertingPages.remove(at: i)
-                                        return
-                                    }
-                                }
+                                revertingPages.remove(option.page.wrappedValue)
                             }
                         }
                     }
@@ -64,9 +59,14 @@ struct RevertTweaksPopoverView: View {
             .onAppear {
                 let populateArray: Bool = revertingPages.isEmpty
                 for page in TweakPage.allCases {
-                    tweakOptions.append(.init(page: page, enabled: populateArray ? true : revertingPages.contains(page)))
-                    if populateArray {
-                        revertingPages.append(page)
+                    var autoEnable: Bool = true
+                    // disable by default for non-exploit tweaks
+                    if page == .StatusBar {
+                        autoEnable = false
+                    }
+                    tweakOptions.append(.init(page: page, enabled: populateArray ? autoEnable : revertingPages.contains(page)))
+                    if populateArray && autoEnable {
+                        revertingPages.insert(page)
                     }
                 }
             }

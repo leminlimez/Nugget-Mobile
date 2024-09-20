@@ -14,7 +14,7 @@ struct HomeView: View {
     @StateObject var applyHandler = ApplyHandler.shared
     
     @State var showRevertPage = false
-    @State var revertingPages: [TweakPage] = []
+    @State var revertingPages: Set<TweakPage> = []
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
     @State var lastError: String?
@@ -176,9 +176,9 @@ struct HomeView: View {
             .navigationTitle("Nugget")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
-                    LogView(resetting: false, autoReboot: autoReboot/*, skipSetup: skipSetup*/)
+                    LogView(resetting: false, autoReboot: autoReboot)
                 } else if view == "RevertChanges" {
-                    LogView(resetting: true, autoReboot: autoReboot/*, skipSetup: skipSetup*/)
+                    LogView(resetting: true, autoReboot: autoReboot, resettingTweaks: revertingPages)
                 }
             }
             .alert("Error", isPresented: $showErrorAlert) {

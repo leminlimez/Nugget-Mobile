@@ -98,7 +98,7 @@ class ApplyHandler: ObservableObject {
         }
     }
     
-    func reset(tweaks: [TweakPage], udid: String) -> Bool {
+    func reset(tweaks: Set<TweakPage>, udid: String) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             print("Tweak pages being reset: \(tweaks)")

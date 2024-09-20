@@ -13,7 +13,7 @@ struct LogView: View {
     let resetting: Bool
     let autoReboot: Bool
 //    let skipSetup: Bool
-    let resettingTweaks: [TweakPage]
+    let resettingTweaks: Set<TweakPage>
     
     @State var log: String = ""
     @State var ran = false
@@ -77,7 +77,7 @@ struct LogView: View {
         .navigationTitle("Log output")
     }
     
-    init(resetting: Bool, autoReboot: Bool,/* skipSetup: Bool,*/ resettingTweaks: [TweakPage] = []) {
+    init(resetting: Bool, autoReboot: Bool,/* skipSetup: Bool,*/ resettingTweaks: Set<TweakPage> = []) {
         self.resetting = resetting
         self.autoReboot = autoReboot
 //        self.skipSetup = skipSetup
