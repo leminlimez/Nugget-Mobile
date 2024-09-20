@@ -26,7 +26,6 @@ struct ToolsView: View {
     ]
     
     let userVersion = Version(string: UIDevice.current.systemVersion)
-    @StateObject var applyHandler = ApplyHandler.shared
     
     var body: some View {
         NavigationView {
@@ -42,7 +41,7 @@ struct ToolsView: View {
                                     .foregroundColor(.blue)
                                 Text(option.title.wrappedValue)
                                     .padding(.horizontal, 8)
-                                if applyHandler.enabledTweaks.contains(option.page.wrappedValue) {
+                                if ApplyHandler.shared.enabledTweaks.contains(option.page.wrappedValue) {
                                     // show that it is enabled
                                     Spacer()
                                     Image(systemName: "checkmark.seal")

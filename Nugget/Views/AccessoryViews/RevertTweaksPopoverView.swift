@@ -32,9 +32,7 @@ struct RevertTweaksPopoverView: View {
                         .toggleStyle(.switch)
                         .onChange(of: option.enabled.wrappedValue) { nv in
                             if nv {
-                                if !revertingPages.contains(option.page.wrappedValue) {
-                                    revertingPages.insert(option.page.wrappedValue)
-                                }
+                                revertingPages.insert(option.page.wrappedValue)
                             } else {
                                 revertingPages.remove(option.page.wrappedValue)
                             }
@@ -57,15 +55,15 @@ struct RevertTweaksPopoverView: View {
                 }
             }
             .onAppear {
-                let populateArray: Bool = revertingPages.isEmpty
+                revertingPages.removeAll()
                 for page in TweakPage.allCases {
                     var autoEnable: Bool = true
                     // disable by default for non-exploit tweaks
                     if page == .StatusBar {
                         autoEnable = false
                     }
-                    tweakOptions.append(.init(page: page, enabled: populateArray ? autoEnable : revertingPages.contains(page)))
-                    if populateArray && autoEnable {
+                    tweakOptions.append(.init(page: page, enabled: autoEnable))
+                    if autoEnable {
                         revertingPages.insert(page)
                     }
                 }

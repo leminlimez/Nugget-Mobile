@@ -8,25 +8,20 @@
 import SwiftUI
 
 struct ModifyTweakViewModifier: ViewModifier {
-    @StateObject var applyHandler = ApplyHandler.shared
     let pageKey: TweakPage
     
     func body(content: Content) -> some View {
         content
-            .disabled(!applyHandler.enabledTweaks.contains(pageKey))
+            .disabled(!ApplyHandler.shared.enabledTweaks.contains(pageKey))
             .toolbar {
                 Button(action: {
                     // enable modification
-                    if !applyHandler.enabledTweaks.contains(pageKey) {
-                        applyHandler.enabledTweaks.insert(pageKey)
-                    } else {
-                        applyHandler.enabledTweaks.remove(pageKey)
-                    }
+                    ApplyHandler.shared.setTweakEnabled(pageKey, isEnabled: !ApplyHandler.shared.isTweakEnabled(pageKey))
                 }) {
                     HStack {
                         Text("Modify")
-                        Image(systemName: applyHandler.enabledTweaks.contains(pageKey) ? "checkmark.seal" : "xmark.seal")
-                            .foregroundStyle(Color(applyHandler.enabledTweaks.contains(pageKey) ? .green : .red))
+                        Image(systemName: ApplyHandler.shared.isTweakEnabled(pageKey) ? "checkmark.seal" : "xmark.seal")
+                            .foregroundStyle(Color(ApplyHandler.shared.isTweakEnabled(pageKey) ? .green : .red))
                     }
                 }
             }

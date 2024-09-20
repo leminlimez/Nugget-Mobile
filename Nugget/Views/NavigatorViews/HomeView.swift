@@ -11,8 +11,6 @@ import UniformTypeIdentifiers
 struct HomeView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
     
-    @StateObject var applyHandler = ApplyHandler.shared
-    
     @State var showRevertPage = false
     @State var revertingPages: Set<TweakPage> = []
     @State var showPairingFileImporter = false
@@ -198,7 +196,7 @@ struct HomeView: View {
     
     func applyChanges(reverting: Bool) {
         if ready() {
-            if !reverting && applyHandler.enabledTweaks.isEmpty {
+            if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
                 // if there are no enabled tweaks then tell the user
                 UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
             } else if ApplyHandler.shared.isExploitOnly() {

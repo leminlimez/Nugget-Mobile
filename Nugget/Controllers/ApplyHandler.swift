@@ -25,6 +25,22 @@ class ApplyHandler: ObservableObject {
     
     @Published var enabledTweaks: Set<TweakPage> = []
     
+    // MARK: Modifying Enabled Tweaks
+    func setTweakEnabled(_ tweak: TweakPage, isEnabled: Bool) {
+        if isEnabled {
+            enabledTweaks.insert(tweak)
+        } else {
+            enabledTweaks.remove(tweak)
+        }
+    }
+    func isTweakEnabled(_ tweak: TweakPage) -> Bool {
+        return enabledTweaks.contains(tweak)
+    }
+    func allEnabledTweaks() -> Set<TweakPage> {
+        return enabledTweaks
+    }
+    
+    // MARK: Getting Data For Each Tweak
     func getTweakPageData(_ tweakPage: TweakPage, resetting: Bool, files: inout [FileToRestore]) throws {
         switch tweakPage {
         case .MobileGestalt:
@@ -75,6 +91,7 @@ class ApplyHandler: ObservableObject {
         return true
     }
     
+    // MARK: Actual Applying/Resetting Functions
     func apply(udid: String/*, skipSetup: Bool*/) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
