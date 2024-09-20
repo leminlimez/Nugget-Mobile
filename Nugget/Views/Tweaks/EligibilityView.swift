@@ -45,15 +45,15 @@ struct EligibilityView: View {
                         manager.toggleAI(nv)
                     }
                     if aiEnabler {
-                        HStack {
-                            Toggle(isOn: $changeDeviceModel) {
+                        Toggle(isOn: $changeDeviceModel) {
+                            HStack {
                                 Text("Spoof Device Model")
-                            }
-                            Spacer()
-                            Button(action: {
-                                showInfoAlert(NSLocalizedString("Spoofs your device model to iPhone 15 Pro Max (or iPad Pro M4), allowing you to download the AI models.\n\nTurn this on to download the models, then turn this off and reapply after the models are downloading.\n\nNote: While this is on, it breaks Face ID. Reverting the file will fix it.", comment: "Device model changer info popup"))
-                            }) {
-                                Image(systemName: "info.circle")
+                                Spacer()
+                                Button(action: {
+                                    showInfoAlert(NSLocalizedString("Spoofs your device model to iPhone 15 Pro Max (or iPad Pro M4), allowing you to download the AI models.\n\nTurn this on to download the models, then turn this off and reapply after the models are downloading.\n\nNote: While this is on, it breaks Face ID. Reverting the file will fix it.", comment: "Device model changer info popup"))
+                                }) {
+                                    Image(systemName: "info.circle")
+                                }
                             }
                         }
                     }
