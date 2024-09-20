@@ -50,7 +50,7 @@ if [ -d $BUILD_LOCATION ]; then
     # Add the necessary files
     echo "Adding application files"
     cp -r $APP_BUILD_FILES/*.png $BUILD_LOCATION
-    cp -r $APP_BUILD_FILES/*.plist $BUILD_LOCATION/*.plist
+    cp -r $APP_BUILD_FILES/*.plist $BUILD_LOCATION
     cp -r "$APP_BUILD_FILES/Assets.car" "$BUILD_LOCATION/Assets.car"
     
     # Add the frameworks
