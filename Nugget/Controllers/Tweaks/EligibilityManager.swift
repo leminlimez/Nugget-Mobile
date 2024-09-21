@@ -127,4 +127,11 @@ class EligibilityManager: ObservableObject {
         }
         return changes
     }
+    
+    func revert() throws -> [String: Data] {
+        let changes: [String: Data] = [
+            "/var/db/os_eligibility/eligibility.plist": Data()
+        ]
+        return changes
+    }
 }

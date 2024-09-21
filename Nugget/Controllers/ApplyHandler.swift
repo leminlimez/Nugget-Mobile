@@ -59,12 +59,10 @@ class ApplyHandler: ObservableObject {
             files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
         case .Eligibility:
             // Apply eligibility changes
-            if !resetting {
-                let changes: [String: Data] = try eligibilityManager.apply()
-                for (file, newData) in changes {
-                    files.append(FileToRestore(contents: newData, path: file))
-                }
-            } // TODO: reverting
+            let changes: [String: Data] = resetting ? try eligibilityManager.revert() : try eligibilityManager.apply()
+            for (file, newData) in changes {
+                files.append(FileToRestore(contents: newData, path: file))
+            }
         case .StatusBar:
             // Apply status bar
             let statusBarData: Data = resetting ? try statusManager.reset() : try statusManager.apply()

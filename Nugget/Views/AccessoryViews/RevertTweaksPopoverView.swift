@@ -59,7 +59,7 @@ struct RevertTweaksPopoverView: View {
                 for page in TweakPage.allCases {
                     var autoEnable: Bool = true
                     // disable by default for non-exploit tweaks
-                    if page == .StatusBar || page == .SkipSetup {
+                    if page == .StatusBar || page == .SkipSetup || page == .Eligibility {
                         autoEnable = false
                     }
                     tweakOptions.append(.init(page: page, enabled: autoEnable))
