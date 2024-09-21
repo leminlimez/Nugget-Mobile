@@ -30,18 +30,18 @@ class EligibilityManager: ObservableObject {
         return newDict
     }
     
-    func getEuEnablerPlist(_ name: String) -> [String: Any] {
+    func getEuEnablerPlist(_ name: String) -> Data {
         if let url = Bundle.main.url(forResource: name, withExtension: "plist"), let data = try? Data(contentsOf: url) {
-            if var plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] {
+            if var plist = String(data: data, encoding: .utf8) {
                 // apply the region code
-                if let regionCode = Locale.current.region?.identifier {
+                if let regionCode = Locale.current.regionCode {
                     print("Applying for region code: \(regionCode)")
-                    plist = setRegionCode(plist, newRegion: regionCode)
+                    plist = plist.replacingOccurrences(of: "US", with: regionCode)
                 }
-                return plist
+                return plist.data(using: .utf8) ?? Data()
             }
         }
-        return [:]
+        return Data()
     }
     
     func getAiPlist() -> [String: Any] {
@@ -129,8 +129,9 @@ class EligibilityManager: ObservableObject {
     }
     
     func revert() throws -> [String: Data] {
-        let changes: [String: Data] = [
-            "/var/db/os_eligibility/eligibility.plist": Data()
+        var changes: [String: Data] = [
+            "/var/db/os_eligibility/eligibility.plist": Data(),
+            "/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist": Data()
         ]
         return changes
     }
