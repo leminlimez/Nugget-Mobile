@@ -149,12 +149,14 @@ class MobileGestaltManager {
             return 1
         case .iPhone12, .iPhone12Pro, .iPhone13, .iPhone13Pro, .iPhone14:
             return 2
+        case .iPhoneSE, .iPhoneSE2, .iPhoneSE3:
+            return 3
         default:
             return 0
         }
     }
     func getRdarFixTitle(mode: Int) -> String {
-        if mode == 1 {
+        if mode == 1 || mode == 3 {
             return "Fix rdar"
         } else if mode == 2 {
             return "DI status bar fix"
@@ -199,7 +201,7 @@ class MobileGestaltManager {
          * 2 = status bar fix
          */
         if let val = self.GestaltChanges["IOMobileGraphicsFamily"] as? Int {
-            if val == 1 {
+            if val == 1 || val == 3 {
                 let plist: [String: Int] = [
                     "canvas_height": 1791,
                     "canvas_width": 828
