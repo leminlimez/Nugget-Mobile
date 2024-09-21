@@ -111,12 +111,10 @@ class EligibilityManager: ObservableObject {
         var changes: [String: Data] = [:]
         if euEnabler {
             // eligibility.plist
-            let euEligPlist = getEuEnablerPlist("eligibility")
-            let eligData = try PropertyListSerialization.data(fromPropertyList: euEligPlist, format: .xml, options: 0)
+            let eligData = getEuEnablerPlist("eligibility")
             changes["/var/db/os_eligibility/eligibility.plist"] = eligData
             // Config.plist
-            let euConfPlist = getEuEnablerPlist("Config")
-            let confData = try PropertyListSerialization.data(fromPropertyList: euConfPlist, format: .binary, options: 0)
+            let confData = getEuEnablerPlist("Config")
             changes["/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist"] = confData
         }
         if aiEnabler {
