@@ -1,3 +1,4 @@
+![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
 # Nugget (mobile)
 Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4
 A mobiledevicepairing file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
