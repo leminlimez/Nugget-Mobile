@@ -41,6 +41,22 @@ struct LogView: View {
                     
                     DispatchQueue.global(qos: .background).async {
                         print("APPLYING")
+                        if ApplyHandler.shared.trollstore {
+                            // apply with trollstore
+                            var succeeded: Bool = false
+                            if resetting {
+                                succeeded = ApplyHandler.shared.reset(udid: "", trollstore: true)
+                            } else {
+                                succeeded = ApplyHandler.shared.apply(udid: "", skipSetup: false, trollstore: true)
+                            }
+                            if succeeded {
+                                // respring device
+                                UIApplication.shared.alert(title: "Success!", body: "Please respring your device to apply changes.")
+                            } else {
+                                UIApplication.shared.alert(body: "Please read logs for full error info")
+                            }
+                            return
+                        }
                         // get the device and create a directory for the backup files
                         let deviceList = MobileDevice.deviceList()
                         var udid: String
@@ -52,9 +68,9 @@ struct LogView: View {
                         udid = deviceList.first!
                         var succeeded: Bool = false
                         if resetting {
-                            succeeded = ApplyHandler.shared.reset(udid: udid)
+                            succeeded = ApplyHandler.shared.reset(udid: udid, trollstore: false)
                         } else {
-                            succeeded = ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup)
+                            succeeded = ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup, trollstore: false)
                         }
                         if succeeded && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
                             if autoReboot {

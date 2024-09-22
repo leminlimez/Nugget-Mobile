@@ -30,6 +30,17 @@ class ApplyHandler: ObservableObject {
         .MobileGestalt, .FeatureFlags, .SpringBoard, .Internal
     ]
     
+    @Published var trollstore: Bool = false
+    
+    init() {
+        do {
+            try FileManager.default.contentsOfDirectory(at: URL(fileURLWithPath: "/var/mobile/Library/Caches"), includingPropertiesForKeys: nil)
+            trollstore = true
+        } catch {
+            trollstore = false
+        }
+    }
+    
     // MARK: Modifying Enabled Tweaks
     func setTweakEnabled(_ tweak: TweakPage, isEnabled: Bool) {
         if isEnabled {
@@ -100,7 +111,7 @@ class ApplyHandler: ObservableObject {
     }
     
     // MARK: Actual Applying/Resetting Functions
-    func apply(udid: String, skipSetup: Bool) -> Bool {
+    func apply(udid: String, skipSetup: Bool, trollstore: Bool) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             print("Tweak pages being applied: \(self.enabledTweaks)")
@@ -111,7 +122,11 @@ class ApplyHandler: ObservableObject {
                 try getTweakPageData(.SkipSetup, resetting: false, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
-                RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                if trollstore {
+                    RestoreManager.shared.tsRestoreFiles(filesToRestore)
+                } else {
+                    RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                }
                 return true
             } else {
                 print("No files to restore!")
@@ -123,7 +138,7 @@ class ApplyHandler: ObservableObject {
         }
     }
     
-    func reset(udid: String) -> Bool {
+    func reset(udid: String, trollstore: Bool) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
             print("Tweak pages being reset: \(self.removingTweaks)")
@@ -131,7 +146,11 @@ class ApplyHandler: ObservableObject {
                 try self.getTweakPageData(tweak, resetting: true, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
-                RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                if trollstore {
+                    RestoreManager.shared.tsRestoreFiles(filesToRestore)
+                } else {
+                    RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
+                }
                 return true
             } else {
                 print("No files to restore!")

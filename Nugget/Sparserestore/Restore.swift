@@ -84,6 +84,27 @@ class RestoreManager {
         print()
     }
     
+    func tsRestoreFiles(_ files: [FileToRestore]) {
+        for file in files {
+            do {
+                // if it is a domain, convert it to a path
+                var filePath = file.path
+                if file.path.starts(with: "HomeDomain/") {
+                    filePath = file.path.replacingOccurrences(of: "HomeDomain/", with: "/var/mobile/")
+                } // TODO: Add more domains
+                
+                if file.contents == Data() {
+                    // if empty data, remove the file
+                    try FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
+                } else {
+                    try file.contents.write(to: URL(fileURLWithPath: filePath))
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func restoreFiles(_ files: [FileToRestore], udid: String) {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let folder = documentsDirectory.appendingPathComponent(udid, conformingTo: .data)

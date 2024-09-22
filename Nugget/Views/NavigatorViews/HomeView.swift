@@ -66,24 +66,26 @@ struct HomeView: View {
                             .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                         }
                         // select pairing file button
-                        if pairingFile == nil {
-                            HStack {
-                                Button("Select Pairing File") {
-                                    showPairingFileImporter.toggle()
+                        if !ApplyHandler.shared.trollstore {
+                                if pairingFile == nil {
+                                HStack {
+                                    Button("Select Pairing File") {
+                                        showPairingFileImporter.toggle()
+                                    }
+                                    .buttonStyle(TintedButton(color: .green, fullwidth: true))
+                                    Button {
+                                        UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
+                                    } label: {
+                                        Image(systemName: "info")
+                                    }
+                                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                                }
+                            } else {
+                                Button("Reset pairing file") {
+                                    pairingFile = nil
                                 }
                                 .buttonStyle(TintedButton(color: .green, fullwidth: true))
-                                Button {
-                                    UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
-                                } label: {
-                                    Image(systemName: "info")
-                                }
-                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                             }
-                        } else {
-                            Button("Reset pairing file") {
-                                pairingFile = nil
-                            }
-                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
                         }
                     }
                     .listRowInsets(EdgeInsets())
