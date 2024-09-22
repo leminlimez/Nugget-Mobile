@@ -12,7 +12,6 @@ struct HomeView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
     
     @State var showRevertPage = false
-    @State var revertingPages: Set<TweakPage> = []
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
     @State var lastError: String?
@@ -57,7 +56,7 @@ struct HomeView: View {
                             }
                             .buttonStyle(TintedButton(color: .red, fullwidth: true))
                             .sheet(isPresented: $showRevertPage, content: {
-                                RevertTweaksPopoverView(revertingPages: $revertingPages, revertFunction: applyChanges(reverting:))
+                                RevertTweaksPopoverView(revertFunction: applyChanges(reverting:))
                             })
                             Button {
                                 UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
@@ -176,7 +175,7 @@ struct HomeView: View {
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
                 } else if view == "RevertChanges" {
-                    LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup, resettingTweaks: revertingPages)
+                    LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup)
                 }
             }
             .alert("Error", isPresented: $showErrorAlert) {

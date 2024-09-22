@@ -13,7 +13,6 @@ struct LogView: View {
     let resetting: Bool
     let autoReboot: Bool
     let skipSetup: Bool
-    let resettingTweaks: Set<TweakPage>
     
     @State var log: String = ""
     @State var ran = false
@@ -53,7 +52,7 @@ struct LogView: View {
                         udid = deviceList.first!
                         var succeeded: Bool = false
                         if resetting {
-                            succeeded = ApplyHandler.shared.reset(tweaks: resettingTweaks, udid: udid)
+                            succeeded = ApplyHandler.shared.reset(udid: udid)
                         } else {
                             succeeded = ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup)
                         }
@@ -77,11 +76,10 @@ struct LogView: View {
         .navigationTitle("Log output")
     }
     
-    init(resetting: Bool, autoReboot: Bool, skipSetup: Bool, resettingTweaks: Set<TweakPage> = []) {
+    init(resetting: Bool, autoReboot: Bool, skipSetup: Bool) {
         self.resetting = resetting
         self.autoReboot = autoReboot
         self.skipSetup = skipSetup
-        self.resettingTweaks = resettingTweaks
         setvbuf(stdout, nil, _IOLBF, 0) // make stdout line-buffered
         setvbuf(stderr, nil, _IONBF, 0) // make stderr unbuffered
         

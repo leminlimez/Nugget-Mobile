@@ -10,7 +10,7 @@ import SwiftUI
 struct RevertTweaksPopoverView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @Binding var revertingPages: Set<TweakPage>
+    @StateObject var applyHandler = ApplyHandler.shared
     let revertFunction: (_ reverting: Bool) -> Void
     
     struct TweakOption: Identifiable {
@@ -32,9 +32,9 @@ struct RevertTweaksPopoverView: View {
                         .toggleStyle(.switch)
                         .onChange(of: option.enabled.wrappedValue) { nv in
                             if nv {
-                                revertingPages.insert(option.page.wrappedValue)
+                                applyHandler.removingTweaks.insert(option.page.wrappedValue)
                             } else {
-                                revertingPages.remove(option.page.wrappedValue)
+                                applyHandler.removingTweaks.remove(option.page.wrappedValue)
                             }
                         }
                     }
@@ -55,16 +55,9 @@ struct RevertTweaksPopoverView: View {
                 }
             }
             .onAppear {
-                revertingPages.removeAll()
                 for page in TweakPage.allCases {
-                    var autoEnable: Bool = true
-                    // disable by default for non-exploit tweaks
-                    if page == .StatusBar || page == .SkipSetup || page == .Eligibility {
-                        autoEnable = false
-                    }
-                    tweakOptions.append(.init(page: page, enabled: autoEnable))
-                    if autoEnable {
-                        revertingPages.insert(page)
+                    if applyHandler.removingTweaks.contains(page) {
+                        tweakOptions.append(.init(page: page, enabled: true))
                     }
                 }
             }

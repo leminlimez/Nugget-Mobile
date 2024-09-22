@@ -26,6 +26,9 @@ class ApplyHandler: ObservableObject {
     let statusManager = StatusManagerSwift.shared
     
     @Published var enabledTweaks: Set<TweakPage> = []
+    @Published var removingTweaks: Set<TweakPage> = [
+        .MobileGestalt, .FeatureFlags, .SpringBoard, .Internal
+    ]
     
     // MARK: Modifying Enabled Tweaks
     func setTweakEnabled(_ tweak: TweakPage, isEnabled: Bool) {
@@ -120,11 +123,11 @@ class ApplyHandler: ObservableObject {
         }
     }
     
-    func reset(tweaks: Set<TweakPage>, udid: String) -> Bool {
+    func reset(udid: String) -> Bool {
         var filesToRestore: [FileToRestore] = []
         do {
-            print("Tweak pages being reset: \(tweaks)")
-            for tweak in tweaks {
+            print("Tweak pages being reset: \(self.removingTweaks)")
+            for tweak in self.removingTweaks {
                 try self.getTweakPageData(tweak, resetting: true, files: &filesToRestore)
             }
             if !filesToRestore.isEmpty {
