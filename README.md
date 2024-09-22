@@ -12,7 +12,7 @@ Note: I am not responsible if your device bootloops, use this software with caut
 ## Getting Your mobiledevicepairing File
 To get the pairing file, use the following steps:
 1. Download `jitterbugpair` for your system from here: <https://github.com/osy/Jitterbug/releases/latest>
-**Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
+    - **Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
 2. Run the program by either double clicking it or using terminal/powershell
 3. Share the `.mobiledevicepairing` file to your iOS device
 4. Open the app and select the pairing file
