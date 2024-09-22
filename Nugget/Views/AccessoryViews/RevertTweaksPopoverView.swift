@@ -56,9 +56,7 @@ struct RevertTweaksPopoverView: View {
             }
             .onAppear {
                 for page in TweakPage.allCases {
-                    if applyHandler.removingTweaks.contains(page) {
-                        tweakOptions.append(.init(page: page, enabled: true))
-                    }
+                    tweakOptions.append(.init(page: page, enabled: applyHandler.removingTweaks.contains(page)))
                 }
             }
         }
