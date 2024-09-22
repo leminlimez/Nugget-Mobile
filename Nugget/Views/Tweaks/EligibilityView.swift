@@ -18,15 +18,15 @@ struct EligibilityView: View {
     var body: some View {
         List {
             // MARK: EU Enabler
-            Section {
-                Toggle(isOn: $euEnabler) {
-                    Text("Enable EU Sideloading")
-                }.onChange(of: euEnabler) { nv in
-                    manager.euEnabler = nv
-                }
-            } header: {
-                Text("EU Enabler")
-            }
+//            Section {
+//                Toggle(isOn: $euEnabler) {
+//                    Text("Enable EU Sideloading")
+//                }.onChange(of: euEnabler) { nv in
+//                    manager.euEnabler = nv
+//                }
+//            } header: {
+//                Text("EU Enabler")
+//            }
             
             // MARK: AI Enabler
             if #available(iOS 18.1, *) {

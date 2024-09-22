@@ -109,14 +109,14 @@ class EligibilityManager: ObservableObject {
     
     func apply() throws -> [String: Data] {
         var changes: [String: Data] = [:]
-        if euEnabler {
-            // eligibility.plist
-            let eligData = getEuEnablerPlist("eligibility")
-            changes["/var/db/os_eligibility/eligibility.plist"] = eligData
-            // Config.plist
-            let confData = getEuEnablerPlist("Config")
-            changes["/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist"] = confData
-        }
+//        if euEnabler {
+//            // eligibility.plist
+//            let eligData = getEuEnablerPlist("eligibility")
+//            changes["/var/db/os_eligibility/eligibility.plist"] = eligData
+//            // Config.plist
+//            let confData = getEuEnablerPlist("Config")
+//            changes["/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist"] = confData
+//        }
         if aiEnabler {
             // eligibility.plist
             let eligPlist = getAiPlist()
@@ -127,10 +127,11 @@ class EligibilityManager: ObservableObject {
     }
     
     func revert() throws -> [String: Data] {
-        var changes: [String: Data] = [
-            "/var/db/os_eligibility/eligibility.plist": Data(),
-            "/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist": Data()
-        ]
-        return changes
+//        var changes: [String: Data] = [
+//            "/var/db/os_eligibility/eligibility.plist": Data(),
+//            "/var/MobileAsset/AssetsV2/com_apple_MobileAsset_OSEligibility/purpose_auto/c55a421c053e10233e5bfc15c42fa6230e5639a9.asset/AssetData/Config.plist": Data()
+//        ]
+//        return changes
+        return [:]
     }
 }
