@@ -55,6 +55,8 @@ struct EligibilityView: View {
                                     Image(systemName: "info.circle")
                                 }
                             }
+                        }.onChange(of: changeDeviceModel) { nv in
+                            manager.setDeviceModelCode(nv)
                         }
                     }
                 } header: {
