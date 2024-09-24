@@ -1,7 +1,7 @@
 ![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
 
 # Nugget (mobile)
-Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4. A mobiledevicepairing file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
+Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4. A `.mobiledevicepairing` file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
 
 If you are having issues with minimuxer, see the [Solving Minimuxer Issues](#solving-minimuxer-issues) thread.
 
@@ -9,7 +9,7 @@ This uses the sparserestore exploit to write to files outside of the intended re
 
 Note: I am not responsible if your device bootloops, use this software with caution. Please back up your data before using!
 
-## Getting Your mobiledevicepairing File
+## Getting Your `.mobiledevicepairing` File
 To get the pairing file, use the following steps:
 1. Download `jitterbugpair` for your system from here: <https://github.com/osy/Jitterbug/releases/latest>
     - **Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
