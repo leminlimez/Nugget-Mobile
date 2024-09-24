@@ -27,7 +27,7 @@ You should only have to do this once unless you lose the file and delete the app
 
 ## Solving Minimuxer Issues
 If you have used Cowabunga Lite before, you may experience issues with minimuxer. This is due to how it skipped the setup process.
-These steps should solve the problem, howvever it is not an end-all be-all solution.
+These steps should solve the problem, however it is not an end-all be-all solution.
 1. Download [Nugget Python](https://github.com/leminlimez/Nugget) and follow the steps in the readme to install python and the requirements
 2. Connect your device and (in terminal) type `python3 fix-minimuxer.py` (or `python fix-minimuxer.py` if it doesn't work)
 
