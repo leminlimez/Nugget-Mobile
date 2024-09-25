@@ -1,7 +1,11 @@
 ![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
 
 # Nugget (mobile)
-Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4. A `.mobiledevicepairing` file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
+Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4.
+
+Sparserestore was patched in iOS 18.1 beta 5. Please do not make issues about this, it will not be fixed.
+
+A `.mobiledevicepairing` file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
 
 If you are having issues with minimuxer, see the [Solving Minimuxer Issues](#solving-minimuxer-issues) thread.
 
