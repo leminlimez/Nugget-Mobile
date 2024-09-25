@@ -9,7 +9,7 @@ This uses the sparserestore exploit to write to files outside of the intended re
 
 Note: I am not responsible if your device bootloops, use this software with caution. Please back up your data before using!
 
-## Getting Your `.mobiledevicepairing` File
+## Getting Your mobiledevicepairing File
 To get the pairing file, use the following steps:
 1. Download `jitterbugpair` for your system from here: <https://github.com/osy/Jitterbug/releases/latest>
     - **Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
