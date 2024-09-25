@@ -1,7 +1,7 @@
 ![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
+
 # Nugget (mobile)
-Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4
-A mobiledevicepairing file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
+Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4. A mobiledevicepairing file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
 
 If you are having issues with minimuxer, see the [Solving Minimuxer Issues](#solving-minimuxer-issues) thread.
 
@@ -12,7 +12,7 @@ Note: I am not responsible if your device bootloops, use this software with caut
 ## Getting Your mobiledevicepairing File
 To get the pairing file, use the following steps:
 1. Download `jitterbugpair` for your system from here: <https://github.com/osy/Jitterbug/releases/latest>
-**Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
+    - **Note:** On mac or linux, you may have to run the terminal command `chmod +x ./jitterbugpair` in the same directory.
 2. Run the program by either double clicking it or using terminal/powershell
 3. Share the `.mobiledevicepairing` file to your iOS device
 4. Open the app and select the pairing file
@@ -32,6 +32,7 @@ These steps should solve the problem, howvever it is not an end-all be-all solut
 2. Connect your device and (in terminal) type `python3 fix-minimuxer.py` (or `python fix-minimuxer.py` if it doesn't work)
 
 Your device should reboot. After it reboots, try Nugget mobile now. If it still doesn't work, follow the steps below:
+
 3. After your device reboots, go to `[Settings] -> General -> Transfer or Reset iPhone`
 4. Tap `Reset` and then `Reset Location & Privacy`
 5. Nugget mobile should work now. If it doesn't, try getting a new pairing file.
