@@ -112,10 +112,11 @@ class ApplyHandler: ObservableObject {
             "/var/Managed Preferences": "ManagedPreferencesDomain",
             "/var/root": "RootDomain",
             "/var/preferences": "SystemPreferencesDomain",
+            "/var/MobileDevice": "MobileDeviceDomain",
             "/var/mobile": "HomeDomain",
             "/var/db": "DatabaseDomain",
-            "/var/containers/Shared/SystemGroup/": "SysContainerDomain-",
-            "/var/containers/Data/SystemGroup/": "SysSharedContainerDomain-"
+            "/var/containers/Shared/SystemGroup/": "SysSharedContainerDomain-",
+            "/var/containers/Data/SystemGroup/": "SysContainerDomain-"
         ]
         for (rootPath, domain) in mappings {
             if path.starts(with: rootPath) {

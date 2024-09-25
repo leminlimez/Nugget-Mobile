@@ -58,7 +58,6 @@ class RestoreManager {
         // add the domain if needed
         if startIdx == 0 {
             list.append(Directory(path: "", domain: domain))
-            print(domain)
             startIdx = 1
         }
         last_domain = domain
@@ -81,7 +80,6 @@ class RestoreManager {
                 }
             }
         }
-        print()
     }
     
     func tsRestoreFiles(_ files: [FileToRestore]) {
@@ -131,7 +129,9 @@ class RestoreManager {
             var last_path: String = ""
             var last_domain: String = ""
             var exploit_only = true
+            print("Files: [")
             for (_, file) in sortedFiles.enumerated() {
+                print(file.path + ",")
                 // for non exploit domains, the path will not start with /
                 if file.path.starts(with: "/") {
                     // file utilizes exploit
@@ -147,6 +147,7 @@ class RestoreManager {
             if exploit_only {
                 backupFiles.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../../crash_on_purpose", contents: Data(), owner: 501, group: 501))
             }
+            print("]")
             
             // create backup
             let mbdb = Backup(files: backupFiles)
