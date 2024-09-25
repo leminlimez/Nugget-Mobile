@@ -103,7 +103,63 @@ class ApplyHandler: ObservableObject {
         }
     }
     
+    func convertToDomain(path: String) -> String {
+        // if it doesn't start with a / then it is already a domain
+        if !path.starts(with: "/") {
+            return path
+        }
+        let mappings: [String: String] = [
+            "/var/Managed Preferences": "ManagedPreferencesDomain",
+            "/var/root": "RootDomain",
+            "/var/preferences": "SystemPreferencesDomain",
+            "/var/mobile": "HomeDomain",
+            "/var/db": "DatabaseDomain",
+            "/var/containers/Shared/SystemGroup/": "SysContainerDomain-",
+            "/var/containers/Data/SystemGroup/": "SysSharedContainerDomain-"
+        ]
+        for (rootPath, domain) in mappings {
+            if path.starts(with: rootPath) {
+                return path.replacingOccurrences(of: rootPath, with: domain)
+            }
+        }
+        // no changes, return original path
+        return path
+    }
+    
+    func isExploitPatched() -> Bool {
+        if #available(iOS 18.1, *) {
+            if #available(iOS 18.2, *) {
+                return true
+            }
+            // get the build number
+            var osVersionString = [CChar](repeating: 0, count: 16)
+            var osVersionStringLen = size_t(osVersionString.count - 1)
+
+            let result = sysctlbyname("kern.osversion", &osVersionString, &osVersionStringLen, nil, 0)
+
+            if result == 0 {
+                // Convert C array to String
+                if let build = String(validatingUTF8: osVersionString) {
+                    // check build number for iOS 18.1 beta 1-4, return false if user is on that
+                    if build == "22B5007p" || build == "22B5023e" || build == "22B5034e" || build == "22B5045g" {
+                        return false
+                    }
+                } else {
+                    print("Failed to convert build number to String")
+                }
+            } else {
+                print("sysctlbyname failed with error: \(String(cString: strerror(errno)))")
+            }
+            return true
+        }
+        return false
+    }
+    
     func isExploitOnly() -> Bool {
+        // Checks for the newer versions with the exploit patched
+        if self.isExploitPatched() {
+            return false
+        }
         if self.enabledTweaks.contains(.StatusBar) {
             return false
         }
@@ -124,6 +180,13 @@ class ApplyHandler: ObservableObject {
             if !filesToRestore.isEmpty {
                 if trollstore {
                     RestoreManager.shared.tsRestoreFiles(filesToRestore)
+                } else if self.isExploitPatched() {
+                    // convert to domains
+                    var newFilesToRestore: [FileToRestore] = []
+                    for file in filesToRestore {
+                        newFilesToRestore.append(FileToRestore(contents: file.contents, path: self.convertToDomain(path: file.path), owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                    }
+                    RestoreManager.shared.restoreFiles(newFilesToRestore, udid: udid)
                 } else {
                     RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
                 }
@@ -148,6 +211,13 @@ class ApplyHandler: ObservableObject {
             if !filesToRestore.isEmpty {
                 if trollstore {
                     RestoreManager.shared.tsRestoreFiles(filesToRestore)
+                } else if self.isExploitPatched() {
+                    // convert to domains
+                    var newFilesToRestore: [FileToRestore] = []
+                    for file in filesToRestore {
+                        newFilesToRestore.append(FileToRestore(contents: file.contents, path: self.convertToDomain(path: file.path), owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                    }
+                    RestoreManager.shared.restoreFiles(newFilesToRestore, udid: udid)
                 } else {
                     RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
                 }
