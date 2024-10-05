@@ -3,10 +3,21 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6262D9592CAA458E007C6876 /* TabViewConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D9582CAA458E007C6876 /* TabViewConfiguration.swift */; };
+		6262D95B2CAA463D007C6876 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D95A2CAA463D007C6876 /* HelpView.swift */; };
+		6262D95D2CAA54DC007C6876 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D95C2CAA54DC007C6876 /* Color.swift */; };
+		6262D9602CAA7420007C6876 /* HomeHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D95F2CAA7420007C6876 /* HomeHelpView.swift */; };
+		6262D9622CAA74F6007C6876 /* TweakWhatDoTheyDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D9612CAA74F6007C6876 /* TweakWhatDoTheyDoView.swift */; };
+		6262D9642CABE9BF007C6876 /* AIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D9632CABE9BF007C6876 /* AIView.swift */; };
+		6262D9672CABF4B4007C6876 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6262D9662CABF4B4007C6876 /* MarkdownUI */; };
+		6262D96A2CABF589007C6876 /* AITutorial.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6262D9692CABF57B007C6876 /* AITutorial.txt */; };
+		6262D96C2CABF7CB007C6876 /* AITutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D96B2CABF7CB007C6876 /* AITutorialView.swift */; };
+		6262D96E2CAC089C007C6876 /* SQ_Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D96D2CAC089C007C6876 /* SQ_Button.swift */; };
+		6262D9722CACE854007C6876 /* ToolsHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6262D9712CACE854007C6876 /* ToolsHelpView.swift */; };
 		6F2A99722C9E0ABB00C8A862 /* EligibilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2A99712C9E0ABB00C8A862 /* EligibilityView.swift */; };
 		6F2A99742C9E0AEF00C8A862 /* EligibilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2A99732C9E0AEF00C8A862 /* EligibilityManager.swift */; };
 		6F2A99782C9E0C1E00C8A862 /* eligibility.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F2A99772C9E0C1E00C8A862 /* eligibility.plist */; };
@@ -49,6 +60,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6262D9582CAA458E007C6876 /* TabViewConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewConfiguration.swift; sourceTree = "<group>"; };
+		6262D95A2CAA463D007C6876 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		6262D95C2CAA54DC007C6876 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		6262D95F2CAA7420007C6876 /* HomeHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHelpView.swift; sourceTree = "<group>"; };
+		6262D9612CAA74F6007C6876 /* TweakWhatDoTheyDoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweakWhatDoTheyDoView.swift; sourceTree = "<group>"; };
+		6262D9632CABE9BF007C6876 /* AIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIView.swift; sourceTree = "<group>"; };
+		6262D9692CABF57B007C6876 /* AITutorial.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = AITutorial.txt; sourceTree = "<group>"; };
+		6262D96B2CABF7CB007C6876 /* AITutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITutorialView.swift; sourceTree = "<group>"; };
+		6262D96D2CAC089C007C6876 /* SQ_Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQ_Button.swift; sourceTree = "<group>"; };
+		6262D9712CACE854007C6876 /* ToolsHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsHelpView.swift; sourceTree = "<group>"; };
 		6F2A99712C9E0ABB00C8A862 /* EligibilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EligibilityView.swift; sourceTree = "<group>"; };
 		6F2A99732C9E0AEF00C8A862 /* EligibilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EligibilityManager.swift; sourceTree = "<group>"; };
 		6F2A99772C9E0C1E00C8A862 /* eligibility.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = eligibility.plist; sourceTree = "<group>"; };
@@ -97,17 +118,41 @@
 		6F8594D82C9C9F6E00F790D1 /* HelperFuncs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFuncs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		6262D8A52CAA3634007C6876 /* Extras */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extras; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		6F85934E2C8F41E000F790D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6262D9672CABF4B4007C6876 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6262D95E2CAA7404007C6876 /* HelpViewChildren */ = {
+			isa = PBXGroup;
+			children = (
+				6262D95F2CAA7420007C6876 /* HomeHelpView.swift */,
+				6262D9612CAA74F6007C6876 /* TweakWhatDoTheyDoView.swift */,
+				6262D96B2CABF7CB007C6876 /* AITutorialView.swift */,
+				6262D9712CACE854007C6876 /* ToolsHelpView.swift */,
+			);
+			path = HelpViewChildren;
+			sourceTree = "<group>";
+		};
+		6262D9682CABF558007C6876 /* MarkdownPlainText */ = {
+			isa = PBXGroup;
+			children = (
+				6262D9692CABF57B007C6876 /* AITutorial.txt */,
+			);
+			path = MarkdownPlainText;
+			sourceTree = "<group>";
+		};
 		6F2A99762C9E0C1000C8A862 /* Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +181,8 @@
 		6F8593532C8F41E000F790D1 /* Nugget */ = {
 			isa = PBXGroup;
 			children = (
+				6262D9682CABF558007C6876 /* MarkdownPlainText */,
+				6262D8A52CAA3634007C6876 /* Extras */,
 				6F8594BC2C9490BA00F790D1 /* Info.plist */,
 				6F8593582C8F41E100F790D1 /* Assets.xcassets */,
 				6F8594AA2C8FACCD00F790D1 /* Nugget-Bridging-Header.h */,
@@ -171,6 +218,7 @@
 		6F8593632C8F422900F790D1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6262D9582CAA458E007C6876 /* TabViewConfiguration.swift */,
 				6F8593562C8F41E000F790D1 /* RootView.swift */,
 				6F8594D02C99D68100F790D1 /* AccessoryViews */,
 				6F8594C72C98885000F790D1 /* FilePicker */,
@@ -189,6 +237,7 @@
 				6F8594C12C94DED800F790D1 /* SpringboardTweaksView.swift */,
 				6F8594C32C9507C400F790D1 /* InternalOptionsView.swift */,
 				6F8593B62C8FAA8700F790D1 /* StatusBarView.swift */,
+				6262D9632CABE9BF007C6876 /* AIView.swift */,
 			);
 			path = Tweaks;
 			sourceTree = "<group>";
@@ -196,6 +245,8 @@
 		6F8593672C8F429700F790D1 /* NavigatorViews */ = {
 			isa = PBXGroup;
 			children = (
+				6262D95E2CAA7404007C6876 /* HelpViewChildren */,
+				6262D95A2CAA463D007C6876 /* HelpView.swift */,
 				6F8593682C8F42A800F790D1 /* HomeView.swift */,
 				6F85936A2C8F42D100F790D1 /* ToolsView.swift */,
 				6F8593AB2C8F61FC00F790D1 /* LogView.swift */,
@@ -211,6 +262,7 @@
 				6F85936D2C8F436C00F790D1 /* Extensions.swift */,
 				6F8593762C8F490400F790D1 /* Version.swift */,
 				6F8594D82C9C9F6E00F790D1 /* HelperFuncs.swift */,
+				6262D95C2CAA54DC007C6876 /* Color.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -222,6 +274,7 @@
 				6F85936F2C8F441200F790D1 /* TintedButton.swift */,
 				6F8594CC2C98892900F790D1 /* FixDocumentPicker.swift */,
 				6F8594CE2C988C0E00F790D1 /* DeviceModel.swift */,
+				6262D96D2CAC089C007C6876 /* SQ_Button.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -295,6 +348,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				6262D8A52CAA3634007C6876 /* Extras */,
+			);
 			name = Nugget;
 			productName = Nugget;
 			productReference = 6F8593512C8F41E000F790D1 /* Nugget.app */;
@@ -325,6 +381,9 @@
 				Base,
 			);
 			mainGroup = 6F8593482C8F41E000F790D1;
+			packageReferences = (
+				6262D9652CABF4B4007C6876 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+			);
 			productRefGroup = 6F8593522C8F41E000F790D1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -339,6 +398,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6262D96A2CABF589007C6876 /* AITutorial.txt in Resources */,
 				6F2A997A2C9E18DE00C8A862 /* Config.plist in Resources */,
 				6F2A99782C9E0C1E00C8A862 /* eligibility.plist in Resources */,
 				6F85935C2C8F41E100F790D1 /* Preview Assets.xcassets in Resources */,
@@ -354,20 +414,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F8593702C8F441200F790D1 /* TintedButton.swift in Sources */,
+				6262D95B2CAA463D007C6876 /* HelpView.swift in Sources */,
 				6F8593662C8F425E00F790D1 /* GestaltView.swift in Sources */,
+				6262D9642CABE9BF007C6876 /* AIView.swift in Sources */,
 				6F8594D22C99D6CC00F790D1 /* RevertTweaksPopoverView.swift in Sources */,
 				6F8594C42C9507C400F790D1 /* InternalOptionsView.swift in Sources */,
 				6F85936E2C8F436C00F790D1 /* Extensions.swift in Sources */,
 				6F8593692C8F42A800F790D1 /* HomeView.swift in Sources */,
 				6F8594D42C9A006800F790D1 /* ModifyTweakViewModifier.swift in Sources */,
 				6F8593752C8F448100F790D1 /* Alert++.swift in Sources */,
+				6262D9622CAA74F6007C6876 /* TweakWhatDoTheyDoView.swift in Sources */,
 				6F8594CB2C98887900F790D1 /* FilePickerUIRepresentable.swift in Sources */,
 				6F8594AC2C8FADF300F790D1 /* StatusManagerSwift.swift in Sources */,
 				6F2A99742C9E0AEF00C8A862 /* EligibilityManager.swift in Sources */,
 				6F8594C22C94DED800F790D1 /* SpringboardTweaksView.swift in Sources */,
 				6F8594B92C92056D00F790D1 /* Restore.swift in Sources */,
+				6262D96E2CAC089C007C6876 /* SQ_Button.swift in Sources */,
 				6F8594C02C94BBC400F790D1 /* BasicPlistTweaksFileLocations.swift in Sources */,
 				6F8593AC2C8F61FC00F790D1 /* LogView.swift in Sources */,
+				6262D95D2CAA54DC007C6876 /* Color.swift in Sources */,
+				6262D9602CAA7420007C6876 /* HomeHelpView.swift in Sources */,
 				6F8593B52C8F9A3500F790D1 /* FeatureFlagsView.swift in Sources */,
 				6F8594BB2C9235C600F790D1 /* ApplyHandler.swift in Sources */,
 				6F8593572C8F41E000F790D1 /* RootView.swift in Sources */,
@@ -380,6 +446,7 @@
 				6F8594CD2C98892900F790D1 /* FixDocumentPicker.swift in Sources */,
 				6F8594C92C98886000F790D1 /* FilePicker.swift in Sources */,
 				6F8593772C8F490400F790D1 /* Version.swift in Sources */,
+				6262D96C2CABF7CB007C6876 /* AITutorialView.swift in Sources */,
 				6F8594A92C8FAC8B00F790D1 /* StatusSetter16.m in Sources */,
 				6F8593552C8F41E000F790D1 /* NuggetApp.swift in Sources */,
 				6F8593B32C8F91C900F790D1 /* FeatureFlagManager.swift in Sources */,
@@ -388,6 +455,8 @@
 				6F85937A2C8F4C7000F790D1 /* MobileGestaltManager.swift in Sources */,
 				6F8594D92C9C9F6E00F790D1 /* HelperFuncs.swift in Sources */,
 				6F8593732C8F443A00F790D1 /* MaterialView.swift in Sources */,
+				6262D9722CACE854007C6876 /* ToolsHelpView.swift in Sources */,
+				6262D9592CAA458E007C6876 /* TabViewConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,25 +589,30 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nugget/Preview Content\"";
-				DEVELOPMENT_TEAM = 2P4CP47H76;
+				DEVELOPMENT_TEAM = A3P27833G5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nugget/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.leemin.Nugget;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.3rdparty.nugget.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Nugget/Nugget-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -554,25 +628,30 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nugget/Preview Content\"";
-				DEVELOPMENT_TEAM = 2P4CP47H76;
+				DEVELOPMENT_TEAM = A3P27833G5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nugget/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.leemin.Nugget;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.3rdparty.nugget.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Nugget/Nugget-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -602,6 +681,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6262D9652CABF4B4007C6876 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6262D9662CABF4B4007C6876 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6262D9652CABF4B4007C6876 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6F8593492C8F41E000F790D1 /* Project object */;
 }

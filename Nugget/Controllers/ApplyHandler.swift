@@ -15,6 +15,7 @@ enum TweakPage: String, CaseIterable {
     case SpringBoard = "SpringBoard"
     case Internal = "Internal Options"
     case SkipSetup = "Skip Setup"
+    case AI = "Apple Intelligence"
 }
 
 class ApplyHandler: ObservableObject {
@@ -60,6 +61,12 @@ class ApplyHandler: ObservableObject {
             // Apply feature flag changes (iOS 18.0+ only)
             let ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()
             files.append(FileToRestore(contents: ffData, path: "/var/preferences/FeatureFlags/Global.plist"))
+        case .AI:
+            // Apply eligibility changes
+            let changes: [String: Data] = resetting ? try eligibilityManager.revert() : try eligibilityManager.apply()
+            for (file, newData) in changes {
+                files.append(FileToRestore(contents: newData, path: file))
+            }
         case .Eligibility:
             // Apply eligibility changes
             let changes: [String: Data] = resetting ? try eligibilityManager.revert() : try eligibilityManager.apply()

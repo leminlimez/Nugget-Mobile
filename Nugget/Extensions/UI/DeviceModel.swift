@@ -126,7 +126,7 @@ unrecognized       = "?unrecognized?"
 // #-#-#-#-#-#-#-#-#-#-#-#-#
 // MARK: UIDevice extensions
 // #-#-#-#-#-#-#-#-#-#-#-#-#
-
+ 
 public extension UIDevice {
     var type: Model {
         var systemInfo = utsname()
@@ -331,14 +331,22 @@ public extension UIDevice {
             "AppleTV14,1" : .AppleTV3_4K
         ]
     
-        guard let mcode = modelCode, let map = String(validatingUTF8: mcode), let model = modelMap[map] else { return Model.unrecognized }
+        guard let mcode = modelCode,
+              let map = String(bytes: Array(mcode.utf8), encoding: .utf8),
+              let model = modelMap[map] else {
+            return Model.unrecognized
+        }
+
         if model == .simulator {
-            if let simModelCode = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] {
-                if let simMap = String(validatingUTF8: simModelCode), let simModel = modelMap[simMap] {
-                    return simModel
-                }
+            if let simModelCode = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"],
+               let simMap = String(bytes: Array(simModelCode.utf8), encoding: .utf8),
+               let simModel = modelMap[simMap] {
+                return simModel
             }
         }
+
         return model
+
+
     }
 }
