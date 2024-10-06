@@ -33,8 +33,8 @@ struct ToolsView: View {
     @State var tools: [ToolCategory] = [
         .init(title: "Sparserestore Tweaks", pages: [
             .init(page: .MobileGestalt, view: AnyView(GestaltView()), title: NSLocalizedString("Mobile Gestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
-            .init(page: .FeatureFlags, view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag.circle.fill", minVersion: Version(string: "18.0")),
-            .init(page: .Eligibility, view: AnyView(EligibilityView()), title: NSLocalizedString("Eligibility", comment: "Title of tool"), imageName: "mappin.circle.fill", minVersion: Version(string: "18.0")/*Version(string: "17.4")*/),
+            .init(page: .FeatureFlags, view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "flag.circle.fill", minVersion: Version(string: "18.0"), minVersionString: "18.0"),
+            .init(page: .Eligibility, view: AnyView(EligibilityView()), title: NSLocalizedString("Eligibility", comment: "Title of tool"), imageName: "mappin.circle.fill", minVersion: Version(string: "18.0"), minVersionString: "18.0"/*Version(string: "17.4")*/),
             .init(page: .SpringBoard, view: AnyView(SpringboardTweaksView()), title: NSLocalizedString("SpringBoard", comment: "Title of tool"), imageName: "gear.circle.fill"),
             .init(page: .Internal, view: AnyView(InternalOptionsView()), title: NSLocalizedString("Internal Options", comment: "Title of tool"), imageName: "internaldrive")
         ]),
@@ -50,216 +50,214 @@ struct ToolsView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                Image(systemName: "wrench.and.screwdriver.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.blue)
-                    .padding(.top, 50)
-                    .symbolRenderingMode(.hierarchical)
-                Text("Tweaks")
-                    .font(.largeTitle.weight(.bold))
-                Text("Tweak your iOS Device with tweaks such as Dynamic island and Apple Intelligence.")
-                    .fontWeight(.bold)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom)
-                ForEach($tools) { category in
-                    Section {
-                        if category.title.wrappedValue == "Sparserestore Tweaks" {
-                            HStack {
-                                Image(systemName: "iphone")
-                                    .font(.system(size: 20))
-                                    .overlay {
-                                        Text("")
-                                            .font(.system(size: 7))
-                                    }
-                                Text(category.title.wrappedValue)
-                                    .bold()
-                                Spacer()
-                            }
-                            .padding(.leading, 20)
-                            .padding(.top)
-                        } else if category.title.wrappedValue == "Domain Restore Tweaks" {
-                            HStack {
-                                Image(systemName: "iphone")
-                                    .font(.system(size: 20))
-                                    .overlay {
-                                        Image(systemName: "network")
-                                            .font(.system(size: 7))
-                                    }
-                                if #available(iOS 17.0, *) {
-                                    Text("\(category.title.wrappedValue)\n")
+            GeometryReader { geo in
+                ScrollView {
+                    Image(systemName: "wrench.and.screwdriver.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(.blue)
+                        .padding(.top, 50)
+                        .symbolRenderingMode(.hierarchical)
+                    Text("Tweaks")
+                        .font(.largeTitle.weight(.bold))
+                    Text("Tweak your iOS Device with tweaks such as Dynamic island and Apple Intelligence.")
+                        .fontWeight(.bold)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom)
+                    ForEach($tools) { category in
+                        Section {
+                            if category.title.wrappedValue == "Sparserestore Tweaks" {
+                                HStack {
+                                    Image(systemName: "iphone")
+                                        .font(.system(size: 20))
+                                        .overlay {
+                                            Text("")
+                                                .font(.system(size: 7))
+                                        }
+                                    Text(category.title.wrappedValue)
                                         .bold()
-                                    +
-                                    Text("Requires Skip Setup")
-                                        .foregroundStyle(.secondary)
-                                        .font(.footnote)
-                                } else {
-                                    Text("\(category.title.wrappedValue)\n")
-                                        .bold()
-                                    +
-                                    Text("Requires Skip Setup")
-                                        .foregroundColor(.secondary)
-                                        .font(.footnote)
+                                    Spacer()
                                 }
-                                
-                                Spacer()
-                            }
-                            .padding(.leading, 20)
-                        } else if category.title.wrappedValue == "Special Features" {
-                            HStack {
-                                Image(systemName: "iphone")
-                                    .font(.system(size: 20))
-                                    .overlay {
-                                        Image(systemName: "sparkles")
-                                            .font(.system(size: 7))
+                                .padding(.leading, 20)
+                                .padding(.top)
+                            } else if category.title.wrappedValue == "Domain Restore Tweaks" {
+                                HStack {
+                                    Image(systemName: "iphone")
+                                        .font(.system(size: 20))
+                                        .overlay {
+                                            Image(systemName: "network")
+                                                .font(.system(size: 7))
+                                        }
+                                    if #available(iOS 17.0, *) {
+                                        Text("\(category.title.wrappedValue)\n")
+                                            .bold()
+                                        +
+                                        Text("Requires Skip Setup")
+                                            .foregroundStyle(.secondary)
+                                            .font(.footnote)
+                                    } else {
+                                        Text("\(category.title.wrappedValue)\n")
+                                            .bold()
+                                        +
+                                        Text("Requires Skip Setup")
+                                            .foregroundColor(.secondary)
+                                            .font(.footnote)
                                     }
-                                if #available(iOS 17.0, *) {
-                                    Text("\(category.title.wrappedValue)\n")
-                                        .bold()
-                                    +
-                                    Text("Requires iOS 18.1")
-                                        .foregroundStyle(.secondary)
-                                        .font(.footnote)
-                                } else {
-                                    Text("\(category.title.wrappedValue)\n")
-                                        .bold()
-                                    +
-                                    Text("Requires iOS 18.1")
-                                        .foregroundColor(.secondary)
-                                        .font(.footnote)
+                                    
+                                    Spacer()
                                 }
-                                
-                                Spacer()
+                                .padding(.leading, 20)
+                            } else if category.title.wrappedValue == "Special Features" {
+                                HStack {
+                                    Image(systemName: "iphone")
+                                        .font(.system(size: 20))
+                                        .overlay {
+                                            Image(systemName: "sparkles")
+                                                .font(.system(size: 7))
+                                        }
+                                    if #available(iOS 17.0, *) {
+                                        Text("\(category.title.wrappedValue)\n")
+                                            .bold()
+                                        +
+                                        Text("Requires iOS 18.1")
+                                            .foregroundStyle(.secondary)
+                                            .font(.footnote)
+                                    } else {
+                                        Text("\(category.title.wrappedValue)\n")
+                                            .bold()
+                                        +
+                                        Text("Requires iOS 18.1")
+                                            .foregroundColor(.secondary)
+                                            .font(.footnote)
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                .padding(.leading, 20)
                             }
-                            .padding(.leading, 20)
-                        }
-                        
-                        VStack {
-                            ForEach(category.pages.indices, id: \.self) { index in
-                                let option = category.pages[index]
-                                if option.minVersion.wrappedValue <= userVersion {
-                                    NavigationLink(destination: option.view.wrappedValue) {
-                                        HStack {
-                                            if option.title.wrappedValue == "Internal Options" {
-                                                Image(systemName: "arrow.down.circle.fill")
-                                                    .symbolRenderingMode(.hierarchical)
-                                                    .font(.system(size: 30))
-                                                    .foregroundStyle(.clear)
-                                                    .overlay(alignment: .center) {
-                                                        ZStack {
-                                                            Circle()
-                                                                .foregroundStyle(colors[index % colors.count])
-                                                                .opacity(0.2)
-                                                                .frame(width: 30, height: 30)
-                                                            
-                                                            Image(systemName: option.imageName.wrappedValue)
-                                                                .font(.system(size: 16, weight: .regular))
-                                                                .foregroundStyle(colors[index % colors.count])
-                                                                .symbolRenderingMode(.hierarchical)
+                            
+                            VStack {
+                                ForEach(category.pages.indices, id: \.self) { index in
+                                    let option = category.pages[index]
+                                    if option.minVersion.wrappedValue <= userVersion {
+                                        NavigationLink(destination: option.view.wrappedValue) {
+                                            HStack {
+                                                if option.title.wrappedValue == "Internal Options" {
+                                                    Image(systemName: "arrow.down.circle.fill")
+                                                        .symbolRenderingMode(.hierarchical)
+                                                        .font(.system(size: 30))
+                                                        .foregroundStyle(.clear)
+                                                        .overlay(alignment: .center) {
+                                                            ZStack {
+                                                                Circle()
+                                                                    .foregroundStyle(colors[index % colors.count])
+                                                                    .opacity(0.2)
+                                                                    .frame(width: 30, height: 30)
+                                                                
+                                                                Image(systemName: option.imageName.wrappedValue)
+                                                                    .font(.system(size: 16, weight: .regular))
+                                                                    .foregroundStyle(colors[index % colors.count])
+                                                                    .symbolRenderingMode(.hierarchical)
+                                                            }
                                                         }
-                                                    }
-                                            } else if option.title.wrappedValue == "Apple Intelligence" {
-                                                
-                                                Image(systemName: "arrow.down.circle.fill")
-                                                    .symbolRenderingMode(.hierarchical)
-                                                    .font(.system(size: 30))
-                                                    .foregroundStyle(.clear)
-                                                    .overlay(alignment: .center) {
-                                                        ZStack {
-                                                            Circle()
-                                                                .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                                                .opacity(0.2)
-                                                                .frame(width: 30, height: 30)
-                                                            
-                                                            Image(systemName: option.imageName.wrappedValue)
-                                                                .font(.system(size: 16, weight: .regular))
-                                                                .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                                                .symbolRenderingMode(.hierarchical)
+                                                } else if option.title.wrappedValue == "Apple Intelligence" {
+                                                    
+                                                    Image(systemName: "arrow.down.circle.fill")
+                                                        .symbolRenderingMode(.hierarchical)
+                                                        .font(.system(size: 30))
+                                                        .foregroundStyle(.clear)
+                                                        .overlay(alignment: .center) {
+                                                            ZStack {
+                                                                Circle()
+                                                                    .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                                                    .opacity(0.2)
+                                                                    .frame(width: 30, height: 30)
+                                                                
+                                                                Image(systemName: option.imageName.wrappedValue)
+                                                                    .font(.system(size: 16, weight: .regular))
+                                                                    .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                                                    .symbolRenderingMode(.hierarchical)
+                                                            }
                                                         }
-                                                    }
-                                            } else if option.title.wrappedValue == "Mobile Gestalt" {
-                                                
-                                                Image(systemName: "arrow.down.circle.fill")
-                                                    .symbolRenderingMode(.hierarchical)
-                                                    .font(.system(size: 30))
-                                                    .foregroundStyle(.clear)
-                                                    .overlay(alignment: .center) {
-                                                        ZStack {
-                                                            Circle()
-                                                                .foregroundStyle(colors[index % colors.count])
-                                                                .opacity(0.2)
-                                                                .frame(width: 30, height: 30)
-                                                            
-                                                            Image(systemName: option.imageName.wrappedValue)
-                                                                .font(.system(size: 16, weight: .regular))
-                                                                .foregroundStyle(colors[index % colors.count])
-                                                                .symbolRenderingMode(.hierarchical)
+                                                } else if option.title.wrappedValue == "Mobile Gestalt" {
+                                                    
+                                                    Image(systemName: "arrow.down.circle.fill")
+                                                        .symbolRenderingMode(.hierarchical)
+                                                        .font(.system(size: 30))
+                                                        .foregroundStyle(.clear)
+                                                        .overlay(alignment: .center) {
+                                                            ZStack {
+                                                                Circle()
+                                                                    .foregroundStyle(colors[index % colors.count])
+                                                                    .opacity(0.2)
+                                                                    .frame(width: 30, height: 30)
+                                                                
+                                                                Image(systemName: option.imageName.wrappedValue)
+                                                                    .font(.system(size: 16, weight: .regular))
+                                                                    .foregroundStyle(colors[index % colors.count])
+                                                                    .symbolRenderingMode(.hierarchical)
+                                                            }
                                                         }
-                                                    }
-                                            } else {
-                                                Image(systemName: option.imageName.wrappedValue)
-                                                    .font(.system(size: 30))
-                                                    .foregroundColor(colors[index % colors.count])
-                                                    .symbolRenderingMode(.hierarchical)
-                                            }
-                                            Text(option.title.wrappedValue)
-                                                .foregroundStyle(colorScheme == .light ? .black : .white)
-                                            Spacer()
-                                            if applyHandler.isTweakEnabled(option.page.wrappedValue) {
-                                                Image(systemName:"checkmark.seal.fill")
-                                                    .symbolRenderingMode(.hierarchical)
-                                                    .foregroundStyle(.green)
-                                                    .font(.system(size: 20))
+                                                } else {
+                                                    Image(systemName: option.imageName.wrappedValue)
+                                                        .font(.system(size: 30))
+                                                        .foregroundColor(colors[index % colors.count])
+                                                        .symbolRenderingMode(.hierarchical)
+                                                }
+                                                Text(option.title.wrappedValue)
+                                                    .foregroundStyle(colorScheme == .light ? .black : .white)
+                                                Spacer()
+                                                if applyHandler.isTweakEnabled(option.page.wrappedValue) {
+                                                    Image(systemName:"checkmark.seal.fill")
+                                                        .symbolRenderingMode(.hierarchical)
+                                                        .foregroundStyle(.green)
+                                                        .font(.system(size: 20))
+                                                }
                                             }
                                         }
-                                        .padding(.leading)
-                                        .padding(.trailing)
-                                    }
-                                    // Add a divider if it's not the last element
-                                    if index != category.pages.count - 1 {
-                                        Divider()
-                                    }
-                                } else {
-                                    VStack {
-                                        HStack {
-                                            Image(systemName: "gear.circle.fill")
-                                                .font(.system(size: 30))
-                                                .foregroundColor(.red)
-                                                .symbolRenderingMode(.hierarchical)
-                                            Text("Update iOS to \(option.minVersionString.wrappedValue)")
-                                                .foregroundStyle(colorScheme == .light ? .black : .white)
-                                                .fontWeight(.bold)
-                                            Spacer()
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing)
-                                        
+                                        // Add a divider if it's not the last element
                                         if index != category.pages.count - 1 {
                                             Divider()
                                         }
+                                    } else {
+                                        VStack {
+                                            HStack {
+                                                Image(systemName: "gear.circle.fill")
+                                                    .font(.system(size: 30))
+                                                    .foregroundColor(.red)
+                                                    .symbolRenderingMode(.hierarchical)
+                                                Text("Update iOS to \(option.minVersionString.wrappedValue)")
+                                                    .foregroundStyle(colorScheme == .light ? .black : .white)
+                                                    .fontWeight(.bold)
+                                                Spacer()
+                                            }
+                                            
+                                            if index != category.pages.count - 1 {
+                                                Divider()
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            .padding()
+                            .background{
+                                RoundedRectangle(cornerRadius: 25, style: .continuous)
+                                    .foregroundStyle(.regularMaterial)
+                                    .frame(width: abs(geo.size.width - 30))
+                            }
+                            .frame(width: abs(geo.size.width - 30))
+                            
                         }
-                        .padding()
-                        .background{
-                            RoundedRectangle(cornerRadius: 25, style: .continuous)
-                                .foregroundStyle(.regularMaterial)
-                                .frame(width: 316)
-                        }
-                        .frame(width: 316)
-                        
                     }
+                    
+                    
+                    Color.clear.frame(height: 30)
                 }
-                
-                
-                Color.clear.frame(height: 30)
-            }
-            .overlay(alignment: .top) {
-                VariableBlurView()
-                    .frame(height: getStatusBarHeight())
-                    .edgesIgnoringSafeArea(.top)
+                .overlay(alignment: .top) {
+                    VariableBlurView()
+                        .frame(height: getStatusBarHeight())
+                        .edgesIgnoringSafeArea(.top)
+                }
             }
         }
     }

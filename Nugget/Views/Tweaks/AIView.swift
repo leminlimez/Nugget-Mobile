@@ -35,22 +35,31 @@ struct AIView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            Image(systemName: "apple.intelligence")
-                .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .font(.system(size: 50))
-                .symbolRenderingMode(.hierarchical)
-                .padding(.top)
-            Text("Apple Intelligence")
-                .font(.largeTitle.weight(.bold))
-            Text("Enable the new Siri UI with advanced contextual features and priority notifications.")
-                .fontWeight(.bold)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.bottom)
-            ModifyTweakViewModifier(pageKey: .AI)
-            //MARK: tweaks from list
-            
+        GeometryReader { geo in
+            ScrollView {
+                Image(systemName: "apple.intelligence")
+                    .foregroundStyle(LinearGradient(colors: [.yellow, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .font(.system(size: 50))
+                    .symbolRenderingMode(.hierarchical)
+                    .padding(.top)
+                Text("Apple Intelligence")
+                    .font(.largeTitle.weight(.bold))
+                Text("Enable the new Siri UI with advanced contextual features and priority notifications.")
+                    .fontWeight(.bold)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom)
+                ModifyTweakViewModifier(pageKey: .AI)
+                    .padding()
+                    .background{
+                        RoundedRectangle(cornerRadius: 25, style: .continuous)
+                            .foregroundStyle(.regularMaterial)
+                            .frame(width: abs(geo.size.width - 30))
+                    }
+                    .frame(width: abs(geo.size.width - 30))
+                
+                //MARK: tweaks from list
+                
                 VStack {
                     if #available(iOS 18.1, *) {
                         VStack {
@@ -133,8 +142,6 @@ struct AIView: View {
                                     .foregroundStyle(colorScheme == .light ? .black : .white)
                                 Spacer()
                             }
-                            .padding(.leading)
-                            .padding(.trailing)
                         }
                     } else {
                         
@@ -145,35 +152,36 @@ struct AIView: View {
                 .background{
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .foregroundStyle(.regularMaterial)
-                        .frame(width: 316)
+                        .frame(width: abs(geo.size.width - 30))
                 }
-                .frame(width: 316)
+                .frame(width: abs(geo.size.width - 30))
+                
+                
+            }
             
             
-        }
-        
-        
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationViewStyle(.stack)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            HStack {
-                                Image(systemName: "arrow.left.circle.fill")
-                                    .symbolRenderingMode(.hierarchical)
-                                Text("Tweaks")
-                                    .fontWeight(.bold)
-                            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(.stack)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.left.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                            Text("Tweaks")
+                                .fontWeight(.bold)
                         }
                     }
                 }
-                .onAppear {
-                    aiEnabler = manager.aiEnabler
-                    changeDeviceModel = manager.spoofingDevice
-                }
+            }
+            .onAppear {
+                aiEnabler = manager.aiEnabler
+                changeDeviceModel = manager.spoofingDevice
+            }
+        }
     }
     func openSoftwareUpdateSettings() {
             if let url = URL(string: "App-Prefs:root=General&path=SOFTWARE_UPDATE_LINK"),

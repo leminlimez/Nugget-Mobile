@@ -210,8 +210,6 @@ struct SQ_Button: View {
                 }
             }
         }
-        .padding(.leading)
-        .padding(.trailing)
     }
 
     func showInfoAlert(_ body: String) {

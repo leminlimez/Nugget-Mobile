@@ -13,7 +13,7 @@ struct ModifyTweakViewModifier: View {
     @StateObject var applyHandler = ApplyHandler.shared
     
     var body: some View {
-        VStack {
+        
             Button(action: {
                 // enable modification
                 withAnimation(.easeInOut) {
@@ -23,7 +23,7 @@ struct ModifyTweakViewModifier: View {
                 HStack {
                     Image(systemName: applyHandler.isTweakEnabled(pageKey) ? "checkmark.seal.fill" : "xmark.seal.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .green : .red))
+                        .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .systemGreen : .systemRed))
                         .font(.system(size: 30))
                     
                     Text("Modify")
@@ -31,19 +31,10 @@ struct ModifyTweakViewModifier: View {
                         .foregroundStyle(colorScheme == .light ? .black : .white)
                     Spacer()
                 }
-                .padding(.leading)
-                .padding(.trailing)
             }
             .disabled(pageKey == .MobileGestalt && EligibilityManager.shared.aiEnabler == true)
             
-        }
-        .padding()
-        .background{
-            RoundedRectangle(cornerRadius: 25, style: .continuous)
-                .foregroundStyle(.regularMaterial)
-                .frame(width: 316)
-        }
-        .frame(width: 316)
+        
                 
             }
     }
