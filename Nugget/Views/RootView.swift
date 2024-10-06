@@ -7,17 +7,23 @@
 
 import SwiftUI
 
+
+
 struct RootView: View {
-    var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house")
-                }
-            ToolsView()
-                .tabItem {
-                    Label("Tools", systemImage: "wrench.and.screwdriver.fill")
-                }
+        var body: some View {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                ToolsView()
+                    .tabItem {
+                        Label("Tools", systemImage: "wrench.and.screwdriver.fill")
+                    }
+            }
         }
     }
+
+#Preview {
+    RootView()
 }

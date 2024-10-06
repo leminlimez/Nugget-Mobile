@@ -7,31 +7,34 @@
 
 import SwiftUI
 
-struct ModifyTweakViewModifier: ViewModifier {
+struct ModifyTweakViewModifier: View {
     let pageKey: TweakPage
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var applyHandler = ApplyHandler.shared
     
-    func body(content: Content) -> some View {
-        content
-            .disabled(!applyHandler.enabledTweaks.contains(pageKey))
-            .toolbar {
-                Button(action: {
-                    // enable modification
+    var body: some View {
+        
+            Button(action: {
+                // enable modification
+                withAnimation(.easeInOut) {
                     applyHandler.setTweakEnabled(pageKey, isEnabled: !applyHandler.isTweakEnabled(pageKey))
-                }) {
-                    HStack {
-                        Text("Modify")
-                        Image(systemName: applyHandler.isTweakEnabled(pageKey) ? "checkmark.seal" : "xmark.seal")
-                            .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .green : .red))
-                    }
                 }
-                .disabled(pageKey == .MobileGestalt && EligibilityManager.shared.aiEnabler == true)
+            }) {
+                HStack {
+                    Image(systemName: applyHandler.isTweakEnabled(pageKey) ? "checkmark.seal.fill" : "xmark.seal.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .systemGreen : .systemRed))
+                        .font(.system(size: 30))
+                    
+                    Text("Modify")
+                        .fontWeight(.bold)
+                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                    Spacer()
+                }
+            }
+            .disabled(pageKey == .MobileGestalt && EligibilityManager.shared.aiEnabler == true)
+            
+        
+                
             }
     }
-}
-
-extension View {
-    func tweakToggle(for page: TweakPage) -> some View {
-        modifier(ModifyTweakViewModifier(pageKey: page))
-    }
-}

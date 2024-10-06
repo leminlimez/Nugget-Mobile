@@ -10,7 +10,9 @@ import SwiftUI
 struct GestaltView: View {
     let gestaltManager = MobileGestaltManager.shared
     let userVersion = Version(string: UIDevice.current.systemVersion)
-    
+    @StateObject var applyHandler = ApplyHandler.shared
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     struct GestaltTweak: Identifiable {
         var id = UUID()
         var label: String
@@ -18,10 +20,16 @@ struct GestaltView: View {
         var values: [Any] = [1]
         var active: Bool = false
         var minVersion: Version = Version(string: "1.0")
+        var icon: String
+        var color: Color
+        var bgcircle: Bool
+        var divider: Bool = true
     }
     
     struct GestaltSection: Identifiable {
         var id = UUID()
+        var title: String?
+        var icon: String?
         var tweaks: [GestaltTweak]
     }
     
@@ -55,136 +63,311 @@ struct GestaltView: View {
     
     // list of mobile gestalt tweaks
     @State var gestaltTweaks: [GestaltSection] = [
-        .init(tweaks: [
-            .init(label: "Enable Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"]),
-            .init(label: "Enable Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
-            .init(label: "Enable Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
-            .init(label: "Enable Tap to Wake (iPhone SE)", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
-            .init(label: "Enable iPhone 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
-            .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0])
+        .init(title: "Buttons & Controls", icon: "button.vertical.left.press.fill", tweaks: [
+            .init(label: "Camera Control", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0"), icon: "camera.shutter.button.fill", color: .pink, bgcircle: true),
+            .init(label: "Action Button", keys: ["cT44WE1EohiwRzhsZ8xEsw"], icon: "button.vertical.left.press.fill", color: .orange, bgcircle: true, divider: false)
         ]),
-        .init(tweaks: [
-            .init(label: "Enable Stage Manager Supported (WARNING: risky on some devices, mainly phones)", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
-            .init(label: "Enable Medusa (iPad Multitasking) (WARNING: may be risky on phones)", keys: ["mG0AnH/Vy1veoqoLRAIgTA", "UCG5MkVahJxG1YULbbd5Bg", "ZYqko/XM5zD3XBfN5RmaXA", "nVh/gwNpy7Jv1NOk00CMrw", "uKc7FPnEO++lVhHWHFlGbQ"], values: [1, 1, 1, 1, 1]),
-            .init(label: "Allow iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]]),
-            .init(label: "Disable Region Restrictions (ie. Shutter Sound)", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"]),
-            .init(label: "Enable Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"]),
-            .init(label: "Toggle Action Button", keys: ["cT44WE1EohiwRzhsZ8xEsw"])
+        .init(title: "Newer iPhone Features", icon: "iphone.gen3", tweaks: [
+            .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0"), icon: "display", color: .teal, bgcircle: true),
+            .init(label: "Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"], icon: "apple.haptics.and.music.note", color: .blue, bgcircle: true),
+            .init(label: "Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"], icon: "bolt.badge.clock.fill", color: .green, bgcircle: true),
+            .init(label: "Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"], icon: "sos.circle.fill", color: .red, bgcircle: false),
+            .init(label: "Tap to Wake", keys: ["yZf3GTRMGTuwSV/lD7Cagw"], icon: "hand.rays", color: .orange, bgcircle: true, divider: false),
+            
+                
         ]),
-        .init(tweaks: [
-            .init(label: "Toggle Internal Storage (WARNING: risky for some devices, mainly iPads)", keys: ["LBJfwOEzExRxzlAnSuI7eg"]),
-            .init(label: "Set as Apple Internal Install (ie Metal HUD in any app)", keys: ["EqrsVvjcYDdxHBiQmGhAWw"]),
-            .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0"))
+        
+        .init(title: "iPadOS Features", icon: "ipad.landscape", tweaks: [
+            .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0], icon: "apps.iphone", color: .purple, bgcircle: true),
+            .init(label: "Stage Manager", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1], icon: "squares.leading.rectangle.fill", color: .yellow, bgcircle: true),
+            .init(label: "iPad Multitasking", keys: ["mG0AnH/Vy1veoqoLRAIgTA", "UCG5MkVahJxG1YULbbd5Bg", "ZYqko/XM5zD3XBfN5RmaXA", "nVh/gwNpy7Jv1NOk00CMrw", "uKc7FPnEO++lVhHWHFlGbQ"], values: [1, 1, 1, 1, 1], icon: "platter.2.filled.ipad", color: .blue, bgcircle: true),
+            .init(label: "iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]], icon: "apps.ipad.landscape", color: .green, bgcircle: true),
+            .init(label: "Remove Region Locks", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"], icon: "globe", color: .teal, bgcircle: true),
+            .init(label: "Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"], icon: "applepencil.and.scribble", color: .orange, bgcircle: true, divider: false),
+            
+        ]),
+        .init(title: "Apple Internal", icon: "apple.logo", tweaks: [
+            .init(label: "Internal Storage", keys: ["LBJfwOEzExRxzlAnSuI7eg"], icon: "internaldrive", color: .purple, bgcircle: true),
+            .init(label: "Set Internal Install", keys: ["EqrsVvjcYDdxHBiQmGhAWw"], icon: "arrow.down.circle.fill", color: .blue, bgcircle: false, divider: false),
+            
         ])
     ]
     
     var body: some View {
-        List {
-            Section {
-                // device subtype
-                HStack {
-                    Image(systemName: "ipodtouch")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.blue)
-                    
-                    
-                    Text("Gestures / Dynamic Island")
-                        .minimumScaleFactor(0.5)
-                    
-                    Spacer()
-                    
-                    Button(CurrentSubTypeDisplay, action: {
-                        showSubTypeChangerPopup()
-                    })
-                    .foregroundColor(.blue)
-                    .padding(.leading, 10)
-                }
-                
-                // rdar fix (change resolution)
-                if resMode > 0 {
-                    Toggle("\(resTitle) (modifies resolution)", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
-                        if nv {
-                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: resMode)
-                        } else {
-                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: 0)
-                        }
-                    })
-                }
-                
-                // device model name
+        GeometryReader { geo in
+            ScrollView {
+                Image(systemName: "platter.filled.top.and.arrow.up.iphone")
+                    .foregroundStyle(.blue)
+                    .font(.system(size: 50))
+                    .symbolRenderingMode(.hierarchical)
+                    .padding(.top)
+                Text("Mobile Gestalt")
+                    .font(.largeTitle.weight(.bold))
+                Text("Enable settings meant for newer devices, enable experimental features, and more.")
+                    .fontWeight(.bold)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom)
+                ModifyTweakViewModifier(pageKey: .MobileGestalt)
+                    .padding()
+                    .background{
+                        RoundedRectangle(cornerRadius: 25, style: .continuous)
+                            .foregroundStyle(.regularMaterial)
+                            .frame(width: abs(geo.size.width - 30))
+                    }
+                    .frame(width: abs(geo.size.width - 30))
+                    .padding(.bottom)
                 VStack {
-                    Toggle("Change Device Model Name", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
-                        if nv {
-                            if deviceModelName != "" {
-                                gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
+                    HStack {
+                        Image(systemName: "ipad.landscape.and.iphone")
+                            .font(.system(size: 20))
+                        Text("Device Model & Model Name")
+                            .bold()
+                        Spacer()
+                    }
+                    .padding(.leading, 20)
+                    VStack {
+                        
+                        
+                        // device subtype
+                        HStack {
+                            Image(systemName: "iphone.circle.fill")
+                                .font(.system(size: 30))
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundColor(.blue)
+                            
+                            if #available(iOS 17.0, *) {
+                                VStack {
+                                    Text("Model\n")
+                                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                                        .fontWeight(.bold)
+                                    +
+                                    Text("For Dynamic Island & Gestures")
+                                        .foregroundStyle(.gray)
+                                        .font(.system(size: 10))
+                                }
+                                .multilineTextAlignment(.leading)
+                            } else {
+                                VStack {
+                                    Text("Model\n")
+                                        .foregroundColor(colorScheme == .light ? .black : .white)
+                                        .fontWeight(.bold)
+                                    +
+                                    Text("For Dynamic Island & Gestures")
+                                        .foregroundColor(.gray)
+                                        .font(.footnote)
+                                }
+                                .multilineTextAlignment(.leading)
                             }
-                        } else {
-                            gestaltManager.removeGestaltValue(key: "ArtworkDeviceProductDescription")
+                            
+                            Spacer()
+                            
+                            Button {
+                                showSubTypeChangerPopup()
+                            } label: {
+                                HStack {
+                                    HStack(spacing: 0) {
+                                        if #available(iOS 17.0, *) {
+                                            Text(CurrentSubTypeDisplay)
+                                                .foregroundStyle(.gray)
+                                                .font(.footnote)
+                                        } else {
+                                            Text(CurrentSubTypeDisplay)
+                                                .foregroundColor(.secondary)
+                                                .font(.footnote)
+                                        }
+                                    }
+                                    .frame(maxWidth: 75)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    Image(systemName: "chevron.up.chevron.down")
+                                        .foregroundStyle(.gray)
+                                        .font(.caption)
+                                }
+                                
+                            }
                         }
-                    })
-                    TextField("Device Model Name", text: $deviceModelName).onChange(of: deviceModelName, perform: { nv in
-                        if deviceModelChanged {
-                            gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
-                        }
-                    })
-                }
-            }
-            // tweaks from list
-            ForEach($gestaltTweaks) { category in
-                Section {
-                    ForEach(category.tweaks) { tweak in
-                        if userVersion >= tweak.minVersion.wrappedValue {
-                            Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
+                        Divider()
+                        // rdar fix (change resolution)
+                        if resMode > 0 {
+                            SQ_Button(text: "\(resTitle) (modifies resolution)",
+                                      systemimage: "ant.circle.fill",
+                                      bgcircle: false,
+                                      tintcolor: .red,
+                                      randomColor: false,
+                                      needsDivider: true,
+                                      action: {},
+                                      toggleAction: {
+                                print("\(resTitle) (modifies resolution) toggled: \(modifyResolution)")
+                            },
+                                      isToggled: $modifyResolution,
+                                      important_bolded: false,
+                                      indexInput: nil,
+                                      bg_needed: false,
+                                      type: .toggle,
+                                      pickerOptions: [],
+                                      selectedOption: .constant(""))
+                            .onChange(of: modifyResolution, perform: { nv in
                                 if nv {
-                                    gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
+                                    gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: resMode)
                                 } else {
-                                    gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
+                                    gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: 0)
+                                }
+                            })
+                        }
+                        
+                        // device model name
+                        
+                        SQ_Button(text: "Change Model Name",
+                                  systemimage: "textformat.characters",
+                                  bgcircle: true,
+                                  tintcolor: .purple,
+                                  randomColor: false,
+                                  needsDivider: false,
+                                  action: {},
+                                  toggleAction: {
+                            print("Change Device Model Name toggled: \(deviceModelChanged)")
+                        },
+                                  isToggled: $deviceModelChanged,
+                                  important_bolded: false,
+                                  indexInput: nil,
+                                  bg_needed: false,
+                                  type: .toggle,
+                                  pickerOptions: [],
+                                  selectedOption: .constant(""))
+                        .onChange(of: deviceModelChanged, perform: { nv in
+                            if nv {
+                                if deviceModelName != "" {
+                                    gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
+                                }
+                            } else {
+                                gestaltManager.removeGestaltValue(key: "ArtworkDeviceProductDescription")
+                            }
+                        })
+                        if deviceModelChanged {
+                            TextField("Device Model Name", text: $deviceModelName).padding(.leading).padding(.trailing).onChange(of: deviceModelName, perform: { nv in
+                                if deviceModelChanged {
+                                    gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
                                 }
                             })
                         }
                     }
+                    .padding()
+                    .background{
+                        RoundedRectangle(cornerRadius: 25, style: .continuous)
+                            .foregroundStyle(.regularMaterial)
+                            .frame(width: abs(geo.size.width - 30))
+                    }
+                    .frame(width: abs(geo.size.width - 30))
+                    
+                    
+                    // tweaks from list
+                    ForEach($gestaltTweaks) { category in
+                        if category.icon.wrappedValue != nil && category.title.wrappedValue != nil {
+                            HStack {
+                                Image(systemName: category.icon.wrappedValue ?? "questionmark.square.dashed")
+                                    .font(.system(size: 20))
+                                Text(category.title.wrappedValue ?? "Add A Title and Icon")
+                                    .bold()
+                                Spacer()
+                            }
+                            .padding(.leading, 20)
+                        }
+                        VStack {
+                            ForEach(category.tweaks) { tweak in
+                                if userVersion >= tweak.minVersion.wrappedValue {
+                                    SQ_Button(text: tweak.label.wrappedValue,
+                                              systemimage: tweak.icon.wrappedValue,
+                                              bgcircle: tweak.bgcircle.wrappedValue,
+                                              tintcolor: tweak.color.wrappedValue,
+                                              randomColor: false,
+                                              needsDivider: tweak.divider.wrappedValue,
+                                              action: {},
+                                              toggleAction: {
+                                        print("\(tweak.label.wrappedValue) toggled: \(tweak.active.wrappedValue)")
+                                    },
+                                              isToggled: tweak.active,
+                                              important_bolded: false,
+                                              indexInput: nil,
+                                              bg_needed: false,
+                                              type: .toggle,
+                                              pickerOptions: [],
+                                              selectedOption: .constant(""),
+                                              description: tweak.label.wrappedValue == "Tap to Wake" ? "For iPhone SE" : tweak.label.wrappedValue == "Stage Manager" ? "Risky on iPhones" : tweak.label.wrappedValue == "Medusa (iPad Multitasking)" ? "Risky on iPhones" : tweak.label.wrappedValue == "Internal Storage" ? "Risky on iPads" : tweak.label.wrappedValue == "iPad Multitasking" ? "ONLY enable on iPhone" : nil)
+                                    .onChange(of: tweak.active.wrappedValue, perform: { nv in
+                                        if nv {
+                                            gestaltManager.setGestaltValues(keys: tweak.keys.wrappedValue, values: tweak.values.wrappedValue)
+                                        } else {
+                                            gestaltManager.removeGestaltValues(keys: tweak.keys.wrappedValue)
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                        .padding()
+                        .background{
+                            RoundedRectangle(cornerRadius: 25, style: .continuous)
+                                .foregroundStyle(.regularMaterial)
+                                .frame(width: abs(geo.size.width - 30))
+                        }
+                        .frame(width: abs(geo.size.width - 30))
+                    }
                 }
+                .disabled(!applyHandler.enabledTweaks.contains(.MobileGestalt))
+                Color.clear.frame(height: 30)
             }
-        }
-        .tweakToggle(for: .MobileGestalt)
-        .navigationTitle("Mobile Gestalt")
-        .navigationViewStyle(.stack)
-        .onAppear {
-            // get the base device subtype
-            for (i, deviceSubType) in deviceSubTypes.enumerated() {
-                if deviceSubType.key == -1 {
-                    deviceSubTypes[i].key = gestaltManager.deviceSubType
-                    break
-                }
-            }
-            // load enabled gestalt tweaks
-            let enabledTweaks = gestaltManager.getEnabledTweaks()
-            // first, the dynamic island
-            if let subtype = enabledTweaks["ArtworkDeviceSubType"] as? Int {
-                CurrentSubType = subtype
-                for deviceSubType in deviceSubTypes {
-                    if deviceSubType.key == subtype {
-                        CurrentSubTypeDisplay = deviceSubType.title
-                        break
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(.stack)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.left.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                            Text("Tweaks")
+                                .fontWeight(.bold)
+                        }
                     }
                 }
             }
-            // second, the resolution
-            if let resChange = enabledTweaks["IOMobileGraphicsFamily"] as? Bool {
-                modifyResolution = resChange
-            }
-            // next, the device model name
-            if let modelName = enabledTweaks["ArtworkDeviceProductDescription"] as? String {
-                deviceModelName = modelName
-                deviceModelChanged = true
-            }
-            // finally, do the other values
-            for (i, category) in gestaltTweaks.enumerated() {
-                for (j, gestaltTweak) in category.tweaks.enumerated() {
-                    if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
-                        gestaltTweaks[i].tweaks[j].active = true
+            .onAppear {
+                // get the base device subtype
+                for (i, deviceSubType) in deviceSubTypes.enumerated() {
+                    if deviceSubType.key == -1 {
+                        deviceSubTypes[i].key = gestaltManager.deviceSubType
+                        break
+                    }
+                }
+                // load enabled gestalt tweaks
+                let enabledTweaks = gestaltManager.getEnabledTweaks()
+                // first, the dynamic island
+                if let subtype = enabledTweaks["ArtworkDeviceSubType"] as? Int {
+                    CurrentSubType = subtype
+                    for deviceSubType in deviceSubTypes {
+                        if deviceSubType.key == subtype {
+                            CurrentSubTypeDisplay = deviceSubType.title
+                            break
+                        }
+                    }
+                }
+                // second, the resolution
+                if let resChange = enabledTweaks["IOMobileGraphicsFamily"] as? Bool {
+                    modifyResolution = resChange
+                }
+                // next, the device model name
+                if let modelName = enabledTweaks["ArtworkDeviceProductDescription"] as? String {
+                    deviceModelName = modelName
+                    deviceModelChanged = true
+                }
+                // finally, do the other values
+                for (i, category) in gestaltTweaks.enumerated() {
+                    for (j, gestaltTweak) in category.tweaks.enumerated() {
+                        if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
+                            gestaltTweaks[i].tweaks[j].active = true
+                        }
                     }
                 }
             }

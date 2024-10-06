@@ -1,0 +1,39 @@
+# How to Install Apple Intelligence With Nugget IPA
+
+**Requirements:**
+
+- A PC/Mac
+- Nugget IPA installed
+- An iPhone running iOS 18.1 Developer Beta 1-4 (**Beta 5 WILL NOT WORK**)
+- Make sure your language is set to English (US) and your region is set to United States
+
+---
+
+### ⚠️ **Warning**:
+
+- **Face ID may stop working**, and **this may brick your phone**. I take no responsibility if either occurs.
+- With **Apple Intelligence enabled**, Face ID will not work. You must choose between **Apple Intelligence** or **Face ID**.
+
+> I am using an iPhone 15 with iOS 18.1 Beta 4.
+
+---
+
+### **Steps to Install Apple Intelligence**:
+
+1. **Enable WireGuard** with the SideStore preset and open Nugget IPA.
+2. **Ensure your Pairing File is added**.
+3. Navigate to **Tools -> Eligibility**, press **Modify**, and enable the **Phone Spoofing** and **Apple Intelligence** options.
+4. Return to the main menu and press **Apply Tweak**—your phone will restart.
+5. After the phone restarts, go to **Settings -> Apple Intelligence & Siri** and press **Join Waitlist**.
+6. Close the **Settings** app from multitasking and wait for 10 minutes.
+7. Open **Settings** again, go to **General -> iPhone Storage**, scroll to the bottom, and find the iOS section. If it says **2.56GB** next to Apple Intelligence, the download is complete. Return to the **Apple Intelligence & Siri** tab to finish setting it up.
+
+### 🎉 Viola! You’re done.
+
+---
+
+If Siri says it’s not done downloading, restart your phone and wait 10-15 minutes. That fixed the issue for me!
+
+---
+
+*Credits to @icarusms9211 on Discord for this guide.*

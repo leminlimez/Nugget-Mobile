@@ -1,7 +1,31 @@
 {
   "images" : [
     {
-      "filename" : "icon.png",
+      "filename" : "Nugget 2.0 - Variant 1.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Nugget 2.0 - Variant 4.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "Nugget 2.0 - Variant 5.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

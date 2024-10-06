@@ -10,285 +10,608 @@ import UniformTypeIdentifiers
 
 struct HomeView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-    
+
+    @Environment(\.colorScheme) var colorScheme
+
     @State var showRevertPage = false
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
     @State var lastError: String?
     @State var path = NavigationPath()
-    
-    // Prefs
+    @State var minimuxerReady = false
+
     @AppStorage("AutoReboot") var autoReboot: Bool = true
     @AppStorage("PairingFile") var pairingFile: String?
     @AppStorage("SkipSetup") var skipSetup: Bool = true
-    
+
     var body: some View {
+        
         NavigationStack(path: $path) {
-            List {
-                // MARK: App Version
-                Section {
+            GeometryReader { geo in
+                ScrollView {
+                    Image("nuggetlogo")
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .padding(.top)
+                    Text("Nugget (SQ214)")
+                        .font(.largeTitle.weight(.bold))
                     
-                } header: {
-                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
-                }
-                .listStyle(InsetGroupedListStyle())
-                
-                // MARK: Tweak Options
-                Section {
-                    VStack {
-                        // apply all tweaks button
-                        HStack {
-                            Button("Apply Tweaks") {
-                                applyChanges(reverting: false)
-                            }
-                            .buttonStyle(TintedButton(color: .blue, fullwidth: true))
-                            Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies all selected tweaks.", comment: "apply tweaks info"))
-                            } label: {
-                                Image(systemName: "info")
-                            }
-                            .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                        }
-                        // remove all tweaks button
-                        HStack {
-                            Button("Remove All Tweaks") {
-                                showRevertPage.toggle()
-                            }
-                            .buttonStyle(TintedButton(color: .red, fullwidth: true))
-                            .sheet(isPresented: $showRevertPage, content: {
-                                RevertTweaksPopoverView(revertFunction: applyChanges(reverting:))
-                            })
-                            Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Removes and reverts all tweaks, including mobilegestalt.", comment: "remove tweaks info"))
-                            } label: {
-                                Image(systemName: "info")
-                            }
-                            .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                        }
-                        // select pairing file button
-                        if pairingFile == nil {
-                            HStack {
-                                Button("Select Pairing File") {
-                                    showPairingFileImporter.toggle()
-                                }
-                                .buttonStyle(TintedButton(color: .green, fullwidth: true))
-                                Button {
-                                    UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
-                                } label: {
-                                    Image(systemName: "info")
-                                }
-                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                            }
-                        } else {
-                            Button("Reset pairing file") {
-                                pairingFile = nil
-                            }
-                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
-                        }
-                    }
-                    .listRowInsets(EdgeInsets())
-                    // auto reboot option
+                    Text("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "Beta \(buildNumber)" : "Release"))")
+                        .foregroundStyle(.secondary)
+                        .bold()
+                    
                     HStack {
-                        Toggle(isOn: $autoReboot) {
-                            Text("Auto reboot after apply")
-                                .minimumScaleFactor(0.5)
-                        }
+                        Image(systemName: "switch.2")
+                            .font(.system(size: 20))
+                        Text("Tweak Options")
+                            .bold()
+                        Spacer()
                     }
-                    // skip setup
-                    Toggle(isOn: $skipSetup) {
-                        HStack {
-                            Text("Traditional Skip Setup")
-                                .minimumScaleFactor(0.5)
-                            Spacer()
-                            Button {
-                                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Applies Cowabunga Lite's Skip Setup method to skip the setup for non-exploit files.\n\nThis may cause issues for some people, so turn it off if you use configuration profiles.\n\nThis will not be applied if you are only applying exploit files, as it will use the SparseRestore method to skip setup.", comment: "skip setup info"))
-                            } label: {
-                                Image(systemName: "info.circle")
-                            }
-                            .padding(.horizontal)
-                        }
-                    }
-                } header: {
-                    Label("Tweak Options", systemImage: "hammer")
-                }
-                .listStyle(InsetGroupedListStyle())
-                .listRowInsets(EdgeInsets())
-                .padding()
-                .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!], onCompletion: { result in
-                                switch result {
-                                case .success(let url):
-                                    do {
-                                        pairingFile = try String(contentsOf: url)
-                                        startMinimuxer()
-                                    } catch {
-                                        lastError = error.localizedDescription
-                                        showErrorAlert.toggle()
-                                    }
-                                case .failure(let error):
-                                    lastError = error.localizedDescription
-                                    showErrorAlert.toggle()
+                    .padding(.leading, 15)
+                    .padding(.top)
+                    
+                    Section {
+                        VStack {
+                            SQ_Button(text: "Apply Tweaks", systemimage: "hammer.circle.fill", bgcircle: false, tintcolor: .blue, randomColor: false, needsDivider: true, action: { applyChanges(reverting: false) }, toggleAction: nil, isToggled: .constant(false), important_bolded: false, indexInput: nil, bg_needed: false, type: .button, pickerOptions: [], NavigationDestination: nil, selectedOption: .constant(""), infoAlert: true, infoAlertText: "Applies all selected tweaks.")
+                            
+                            SQ_Button(text: "Remove All Tweaks", systemimage: "minus.circle.fill", bgcircle: false, tintcolor: .red, randomColor: false, needsDivider: true, action: { showRevertPage.toggle() }, toggleAction: nil, isToggled: .constant(false), important_bolded: false, indexInput: nil, bg_needed: false, type: .button, pickerOptions: [], NavigationDestination: nil, selectedOption: .constant(""), infoAlert: true, infoAlertText: "Removes all tweaks and reverts the device to its original state, including resetting the mobilegestalt plist.")
+                                .sheet(isPresented: $showRevertPage) {
+                                    RevertTweaksPopoverView(revertFunction: applyChanges(reverting:))
                                 }
-                            })
-                            .alert("Error", isPresented: $showErrorAlert) {
-                                Button("OK") {}
-                            } message: {
-                                Text(lastError ?? "???")
+                            
+                            let pairingFileButtonImage = pairingFile == nil ? "document.circle.fill" : "arrow.uturn.left.circle.fill"
+                            let pairingFileButtonText = pairingFile == nil ? "Select Pairing File" : "Reset Pairing File"
+                            let pairingFileButtonAction = pairingFile == nil ? { showPairingFileImporter.toggle() } : { pairingFile = nil }
+                            let pairingFileButtonTintColor = pairingFile == nil ? Color.green : Color.orange
+                            let pairingFileButtonHelpAlert = pairingFile == nil
+                            let pairingFileButtonInfoAlertText = pairingFile == nil ?  "Select a pairing file. Tap \"Help\" for more info." : ""
+                            
+                            SQ_Button(text: pairingFileButtonText, systemimage: pairingFileButtonImage, bgcircle: false, tintcolor: pairingFileButtonTintColor, randomColor: false, needsDivider: false, action: pairingFileButtonAction, toggleAction: nil, isToggled: .constant(false), important_bolded: false, indexInput: nil, bg_needed: false, type: .button, pickerOptions: [], NavigationDestination: nil, selectedOption: .constant(""), helpAlert: pairingFileButtonHelpAlert, helpAlertLink: "https://docs.sidestore.io/docs/getting-started/pairing-file", infoAlertText: pairingFileButtonInfoAlertText)
+                        }
+                        .padding()
+                        .background {
+                            RoundedRectangle(cornerRadius: 25, style: .continuous)
+                                .foregroundStyle(.regularMaterial)
+                                .frame(width: abs(geo.size.width - 30))
+                        }
+                        .frame(width: abs(geo.size.width - 30))
+                        
+                        VStack {
+                            SQ_Button(text: "Auto reboot after apply", systemimage: "restart.circle.fill", bgcircle: false, tintcolor: .green, randomColor: false, needsDivider: true, action: {}, toggleAction: nil, isToggled: $autoReboot, important_bolded: false, indexInput: nil, bg_needed: false, type: .toggle, pickerOptions: [], NavigationDestination: nil, selectedOption: .constant(""), infoAlert: true, infoAlertText: "Automatically restarts your device after applying changes.")
+                            
+                            SQ_Button(text: "Traditional Skip Setup", systemimage: "arrow.left.arrow.right.circle.fill", bgcircle: false, tintcolor: .green, randomColor: false, needsDivider: false, action: {}, toggleAction: nil, isToggled: $skipSetup, important_bolded: false, indexInput: nil, bg_needed: false, type: .toggle, pickerOptions: [], NavigationDestination: nil, selectedOption: .constant(""), infoAlert: true, infoAlertText: "Applies Cowabunga Lite's Skip Setup method.")
+                        }
+                        .padding()
+                        .background {
+                            RoundedRectangle(cornerRadius: 25, style: .continuous)
+                                .foregroundStyle(.regularMaterial)
+                                .frame(width: abs(geo.size.width - 30))
+                        }
+                        .frame(width: abs(geo.size.width - 30))
+                    }
+                    .listStyle(.insetGrouped)
+                    .listRowInsets(EdgeInsets())
+                    .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!]) { result in
+                        switch result {
+                        case .success(let url):
+                            if let pairingFileData = try? String(contentsOf: url) {
+                                pairingFile = pairingFileData
+                                startMinimuxer()
+                            } else {
+                                handlePairingFileError("Failed to read pairing file contents.")
                             }
-                
-                // MARK: App Credits
-                Section {
-                    // app credits
-                    LinkCell(imageName: "leminlimez", url: "https://x.com/leminlimez", title: "leminlimez", contribution: NSLocalizedString("Main Developer", comment: "leminlimez's contribution"), circle: true)
-                    LinkCell(imageName: "khanhduytran", url: "https://github.com/khanhduytran0/SparseBox", title: "khanhduytran0", contribution: "SparseBox", circle: true)
-                    LinkCell(imageName: "jjtech", url: "https://github.com/JJTech0130/TrollRestore", title: "JJTech0130", contribution: "Sparserestore", circle: true)
-                    LinkCell(imageName: "disfordottie", url: "https://x.com/disfordottie", title: "disfordottie", contribution: "Some Global Flag Features", circle: true)
-                    LinkCell(imageName: "f1shy-dev", url: "https://gist.github.com/f1shy-dev/23b4a78dc283edd30ae2b2e6429129b5#file-eligibility-plist", title: "f1shy-dev", contribution: "AI Enabler", circle: true)
-                    LinkCell(imageName: "app.gift", url: "https://sidestore.io/", title: "SideStore", contribution: "em_proxy and minimuxer", systemImage: true, circle: true)
-                    LinkCell(imageName: "cable.connector", url: "https://libimobiledevice.org", title: "libimobiledevice", contribution: "Restore Library", systemImage: true, circle: true)
-                } header: {
-                    Label("Credits", systemImage: "wrench.and.screwdriver")
+                        case .failure(let error):
+                            handlePairingFileError(error.localizedDescription)
+                        }
+                    }
+                    
+                    
+                    // MARK: App Credits
+                    HStack {
+                        Image(systemName: "person.2.fill")
+                            .font(.system(size: 20))
+                        Text("Credits & Contributions")
+                            .bold()
+                        Spacer()
+                    }
+                    .padding(.leading, 15)
+                    VStack {
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://github.com/Singapore214")!)
+                        } label: {
+                            HStack {
+                                Image("LeminLimez")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("leminlimez\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Main Logic")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("leminlimez4\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Main Logic")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                            
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://github.com/Singapore214")!)
+                        } label: {
+                            HStack {
+                                Image("sq214")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("Singapore214\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("UI Design & Logic Updates")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("Singapore214\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("UI Design & Logic Updates")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://discord.com")!)
+                        } label: {
+                            HStack {
+                                Image("fun")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("long\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Idea Giver")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("long\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Idea Giver")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                            }
+                            Spacer()
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://www.reddit.com/user/Timi25062010/")!)
+                        } label: {
+                            HStack {
+                                Image("BZBSpieler3")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("BZBSpieler3\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Icon Design")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("BZBSpieler3\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Icon Design")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://github.com/khanhduytran0/SparseBox")!)
+                        } label: {
+                            HStack {
+                                Image("khanhduytran")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("khanhduytran\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("SparseBox")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("khanhduytran\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("SparseBox")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://github.com/JJTech0130/TrollRestore")!)
+                        } label: {
+                            HStack {
+                                Image("jjtech")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("JJTech0130\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Sparserestore")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("JJTech0130\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Sparserestore")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://x.com/disfordottie")!)
+                        } label: {
+                            HStack {
+                                Image("disfordottie")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("disfordottie\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Some Global Flag Features")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("disfordottie\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Some Global Flag Features")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                            
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://gist.github.com/f1shy-dev/23b4a78dc283edd30ae2b2e6429129b5#file-eligibility-plist")!)
+                        } label: {
+                            HStack {
+                                Image("f1shy-dev")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("f1shy-dev\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("AI Enabler")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("f1shy-dev\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("AI Enabler")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://sidestore.io/")!)
+                        } label: {
+                            HStack {
+                                Image("SideStore")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("SideStore\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("em_proxy and minimuxer")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("SideStore\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("em_proxy and minimuxer")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                        }
+                        Divider()
+                        Button {
+                            UIApplication.shared.open(URL(string: "https://libimobiledevice.org")!)
+                        } label: {
+                            HStack {
+                                Image("libimobile")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                if #available(iOS 17.0, *) {
+                                    VStack {
+                                        Text("libimobiledevice\n")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Restore Library")
+                                            .foregroundStyle(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                } else {
+                                    VStack {
+                                        Text("libimobiledevice\n")
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .fontWeight(.bold)
+                                        +
+                                        Text("Restore Library")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .multilineTextAlignment(.leading)
+                                }
+                                Spacer()
+                            }
+                            
+                        }
+                    }
+                    .padding()
+                    .background{
+                        RoundedRectangle(cornerRadius: 25, style: .continuous)
+                            .foregroundStyle(.regularMaterial)
+                            .frame(width: abs(geo.size.width - 30))
+                    }
+                    .frame(width: abs(geo.size.width - 30))
+                    .padding(.bottom)
+                    
                 }
-            }
-            .onOpenURL(perform: { url in
-                // for opening the mobiledevicepairing file
-                if url.pathExtension.lowercased() == "mobiledevicepairing" {
-                    do {
-                        pairingFile = try String(contentsOf: url)
-                        startMinimuxer()
-                    } catch {
-                        lastError = error.localizedDescription
-                        showErrorAlert.toggle()
+                .overlay(alignment: .top) {
+                    VariableBlurView()
+                        .frame(height: getStatusBarHeight())
+                        .edgesIgnoringSafeArea(.top)
+                }
+                .onOpenURL { url in
+                    if url.pathExtension.lowercased() == "mobiledevicepairing" {
+                        do {
+                            pairingFile = try String(contentsOf: url)
+                            startMinimuxer()
+                        } catch {
+                            lastError = error.localizedDescription
+                            showErrorAlert.toggle()
+                        }
                     }
                 }
-            })
-            .onAppear {
-                _ = start_emotional_damage("127.0.0.1:51820")
-                if let altPairingFile = Bundle.main.object(forInfoDictionaryKey: "ALTPairingFile") as? String, altPairingFile.count > 5000, pairingFile == nil {
-                    pairingFile = altPairingFile
-                } else if pairingFile == nil, FileManager.default.fileExists(atPath: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing").path) {
-                    pairingFile = try? String(contentsOf: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing"))
+                .onAppear {
+                    _ = start_emotional_damage("127.0.0.1:51820")
+                    if let altPairingFile = Bundle.main.object(forInfoDictionaryKey: "ALTPairingFile") as? String, altPairingFile.count > 5000, pairingFile == nil {
+                        pairingFile = altPairingFile
+                    } else if pairingFile == nil, FileManager.default.fileExists(atPath: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing").path) {
+                        pairingFile = try? String(contentsOf: URL.documents.appendingPathComponent("pairingfile.mobiledevicepairing"))
+                    }
+                    startMinimuxer()
                 }
-                startMinimuxer()
-            }
-            .navigationTitle("Nugget")
-            .navigationDestination(for: String.self) { view in
-                if view == "ApplyChanges" {
-                    LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
-                } else if view == "RevertChanges" {
-                    LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup)
+                .navigationDestination(for: String.self) { view in
+                    if view == "ApplyChanges" {
+                        LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
+                    } else if view == "RevertChanges" {
+                        LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup)
+                    }
                 }
-            }
-            .alert("Error", isPresented: $showErrorAlert) {
-                Button("OK") {}
-            } message: {
-                Text(lastError ?? "???")
+                .alert("Error", isPresented: $showErrorAlert) {
+                    Button("OK") {}
+                } message: {
+                    Text(lastError ?? "???")
+                }
             }
         }
     }
-    
+
     init() {
-        // Fix file picker
         if let fixMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, Selector(("fix_initForOpeningContentTypes:asCopy:"))), let origMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.init(forOpeningContentTypes:asCopy:))) {
             method_exchangeImplementations(origMethod, fixMethod)
         }
     }
-    
+
     func applyChanges(reverting: Bool) {
-        if ready() {
-            if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
-                // if there are no enabled tweaks then tell the user
-                UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
-            } else if ApplyHandler.shared.isExploitOnly() || skipSetup {
-                path.append(reverting ? "RevertChanges" : "ApplyChanges")
-            } else {
-                // if applying non-exploit files, warn about setup
-                UIApplication.shared.confirmAlert(title: "Warning!", body: "You are applying non-exploit related files. This will make the setup screen appear. Click Cancel if you do not wish to proceed.\n\nWhen setting up, you MUST click \"Do not transfer apps & data\".\n\nIf you see a screen that says \"iPhone Partially Set Up\", DO NOT tap the big blue button. You must click \"Continue with Partial Setup\".", onOK: {
-                    path.append(reverting ? "RevertChanges" : "ApplyChanges")
-                }, noCancel: false)
-            }
-        } else if pairingFile == nil {
-            lastError = "Please select your pairing file to continue."
-            showErrorAlert.toggle()
-        } else {
-            lastError = "minimuxer is not ready. Ensure you have WiFi and WireGuard VPN set up."
-            showErrorAlert.toggle()
-        }
-    }
-    
-    struct LinkCell: View {
-        var imageName: String
-        var url: String
-        var title: String
-        var contribution: String
-        var systemImage: Bool = false
-        var circle: Bool = false
-        
-        var body: some View {
-            HStack(alignment: .center) {
-                Group {
-                    if systemImage {
-                        Image(systemName: imageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } else {
-                        if imageName != "" {
-                            Image(imageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        }
-                    }
-                }
-                .cornerRadius(circle ? .infinity : 0)
-                .frame(width: 24, height: 24)
-                
-                VStack {
-                    HStack {
-                        Button(action: {
-                            if url != "" {
-                                UIApplication.shared.open(URL(string: url)!)
-                            }
-                        }) {
-                            Text(title)
-                                .fontWeight(.bold)
-                        }
-                        .padding(.horizontal, 6)
-                        Spacer()
-                    }
-                    HStack {
-                        Text(contribution)
-                            .padding(.horizontal, 6)
-                            .font(.footnote)
-                        Spacer()
-                    }
-                }
-            }
-            .foregroundColor(.blue)
-        }
-    }
-    
-    func startMinimuxer() {
         guard pairingFile != nil else {
+            UIApplication.shared.alert(body: "Please add a pairing file.")
             return
         }
-        target_minimuxer_address()
-        do {
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].absoluteString
-            try start(pairingFile!, documentsDirectory)
-        } catch {
-            lastError = error.localizedDescription
-            showErrorAlert.toggle()
+
+        guard minimuxerReady else {
+            lastError = "minimuxer is not ready. Ensure you have WiFi and a working VPN connection if necessary, then try selecting your pairing file again."
+            showErrorAlert = true
+            return
+        }
+
+        if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
+            UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
+            return
+        }
+
+
+        if ApplyHandler.shared.isExploitOnly() || skipSetup {
+            path.append(reverting ? "RevertChanges" : "ApplyChanges")
+        } else {
+            UIApplication.shared.confirmAlert(title: "Warning!", body: "You are applying non-exploit related files. This will make the setup screen appear. Click Cancel if you do not wish to proceed.\n\nWhen setting up, you MUST click \"Do not transfer apps & data\".\n\nIf you see a screen that says \"iPhone Partially Set Up\", DO NOT tap the big blue button. You must click \"Continue with Partial Setup\".", onOK: {
+                path.append(reverting ? "RevertChanges" : "ApplyChanges")
+            }, noCancel: false)
         }
     }
-    
-    public func withArrayOfCStrings<R>(
-        _ args: [String],
-        _ body: ([UnsafeMutablePointer<CChar>?]) -> R
-    ) -> R {
+
+
+
+    func getStatusBarHeight() -> CGFloat {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        return windowScene?.statusBarManager?.statusBarFrame.height ?? 44
+    }
+
+    func startMinimuxer() {
+        guard pairingFile != nil else { return }
+
+        // 1. Dispatch to a background thread to avoid blocking the UI
+        DispatchQueue.global(qos: .userInitiated).async {
+            target_minimuxer_address() // Call this on the background thread
+
+            var success = false
+            do {
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].absoluteString
+                try start(pairingFile!, documentsDirectory)
+                success = true
+
+            } catch {
+                print("Error starting minimuxer: \(error)")
+            }
+
+            
+            DispatchQueue.main.async {
+                minimuxerReady = success
+                if !success {
+                    lastError = "Failed to start minimuxer. Check your network connection, VPN, and pairing file."
+                    showErrorAlert = true
+                }
+            }
+        }
+    }
+
+
+
+
+    public func withArrayOfCStrings<R>(_ args: [String], _ body: ([UnsafeMutablePointer<CChar>?]) -> R) -> R {
         var cStrings = args.map { strdup($0) }
         cStrings.append(nil)
-        defer {
-            cStrings.forEach { free($0) }
-        }
+        defer { cStrings.forEach { free($0) } }
         return body(cStrings)
+    }
+    
+    private func handlePairingFileError(_ errorMessage: String) {
+        lastError = errorMessage
+        showErrorAlert = true
     }
 }

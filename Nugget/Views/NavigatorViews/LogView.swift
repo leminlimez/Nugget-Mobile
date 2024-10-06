@@ -16,6 +16,10 @@ struct LogView: View {
     
     @State var log: String = ""
     @State var ran = false
+    @State private var selectedUDID: String?
+    @State private var showDevicePicker = false
+    @State private var deviceList: [String] = []
+
     var body: some View {
         NavigationView {
             ScrollViewReader { proxy in
@@ -41,49 +45,71 @@ struct LogView: View {
                     
                     DispatchQueue.global(qos: .background).async {
                         print("APPLYING")
-                        // get the device and create a directory for the backup files
-                        let deviceList = MobileDevice.deviceList()
-                        var udid: String
-                        guard deviceList.count == 1 else {
-                            print("Invalid device count: \(deviceList.count)")
-                            return
-                        }
-                        
-                        udid = deviceList.first!
-                        var succeeded: Bool = false
-                        if resetting {
-                            succeeded = ApplyHandler.shared.reset(udid: udid)
-                        } else {
-                            succeeded = ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup)
-                        }
-                        if succeeded && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
-                            if autoReboot {
-                                print("Rebooting device...")
-                                MobileDevice.rebootDevice(udid: udid)
-                            } else {
-                                UIApplication.shared.alert(title: "Success!", body: "Please restart your device to see changes.")
+                        self.deviceList = MobileDevice.deviceList()
+
+                        if deviceList.isEmpty {
+                            DispatchQueue.main.async {
+                                UIApplication.shared.alert(body: "No devices connected.")
                             }
-                        /* Error Dialogs Below */
-                        } else if log.contains("Find My") {
-                            UIApplication.shared.alert(body: "Find My must be disabled in order to use this tool.\n\nDisable Find My from Settings (Settings -> [Your Name] -> Find My) and then try again.")
-                        } else if log.contains("Could not receive from mobilebackup2") {
-                            UIApplication.shared.alert(body: "Failed to receive requests from mobilebackup2. Please restart the app and try again.")
+                            return
+                        } else if deviceList.count > 1 {
+                            DispatchQueue.main.async {
+                                self.showDevicePicker = true
+                            }
+                        } else {
+                            let udid = deviceList.first!
+                            applyOrRevert(udid: udid)
                         }
                     }
                 }
             }
+            .sheet(isPresented: $showDevicePicker) {
+                VStack {
+                    Picker("Select Device", selection: $selectedUDID) {
+                        ForEach(deviceList, id: \.self) { udid in
+                            Text(udid).tag(udid as String?)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+
+                    Button("Apply/Revert") {
+                        guard let chosenUDID = selectedUDID else {
+                            showDevicePicker = false
+                            return
+                        }
+                        showDevicePicker = false
+                        applyOrRevert(udid: chosenUDID)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Log output")
         }
-        .navigationTitle("Log output")
     }
-    
+
+    func applyOrRevert(udid: String) {
+        let succeeded = resetting ? ApplyHandler.shared.reset(udid: udid) : ApplyHandler.shared.apply(udid: udid, skipSetup: skipSetup)
+
+        if succeeded && (log.contains("Restore Successful") || log.contains("crash_on_purpose")) {
+            if autoReboot {
+                print("Rebooting device...")
+                MobileDevice.rebootDevice(udid: udid)
+            } else {
+                UIApplication.shared.alert(title: "Success!", body: "Restart your device to see changes.")
+            }
+        } else if log.contains("Find My") {
+            UIApplication.shared.alert(body: "Disable Find My to use this tool.")
+        } else if log.contains("Could not receive from mobilebackup2") {
+            UIApplication.shared.alert(body: "Error: mobilebackup2. Restart the app.")
+        }
+    }
+
     init(resetting: Bool, autoReboot: Bool, skipSetup: Bool) {
         self.resetting = resetting
         self.autoReboot = autoReboot
         self.skipSetup = skipSetup
-        setvbuf(stdout, nil, _IOLBF, 0) // make stdout line-buffered
-        setvbuf(stderr, nil, _IONBF, 0) // make stderr unbuffered
-        
-        // create the pipe and redirect stdout and stderr
+        setvbuf(stdout, nil, _IOLBF, 0)
+        setvbuf(stderr, nil, _IONBF, 0)
         dup2(logPipe.fileHandleForWriting.fileDescriptor, fileno(stdout))
         dup2(logPipe.fileHandleForWriting.fileDescriptor, fileno(stderr))
     }

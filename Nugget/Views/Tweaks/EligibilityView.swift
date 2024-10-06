@@ -9,67 +9,92 @@ import SwiftUI
 
 struct EligibilityView: View {
     @StateObject var manager = EligibilityManager.shared
-    
+    @Environment(\.dismiss) var dismiss
+    @StateObject var applyHandler = ApplyHandler.shared
     @State var euEnabler: Bool = false
     
     @State var aiEnabler: Bool = false
     @State var changeDeviceModel: Bool = false
     
     var body: some View {
-        List {
-            // MARK: EU Enabler
-//            Section {
-//                Toggle(isOn: $euEnabler) {
-//                    Text("Enable EU Sideloading")
-//                }.onChange(of: euEnabler) { nv in
-//                    manager.euEnabler = nv
-//                }
-//            } header: {
-//                Text("EU Enabler")
-//            }
-            
-            // MARK: AI Enabler
-            if #available(iOS 18.1, *) {
-                Section {
-                    Toggle(isOn: $aiEnabler) {
+        GeometryReader { geo in
+            ScrollView {
+                Image(systemName: "mappin")
+                    .foregroundStyle(.green)
+                    .font(.system(size: 50))
+                    .symbolRenderingMode(.hierarchical)
+                    .padding(.top)
+                Text("Eligibility")
+                    .font(.largeTitle.weight(.bold))
+                Text("Use EU Enabler to spoof your devices region to be in Europe for Sideloading apps.")
+                    .fontWeight(.bold)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom)
+                ModifyTweakViewModifier(pageKey: .Eligibility)
+                    .padding()
+                    .background{
+                        RoundedRectangle(cornerRadius: 25, style: .continuous)
+                            .foregroundStyle(.regularMaterial)
+                            .frame(width: abs(geo.size.width - 30))
+                    }
+                    .frame(width: abs(geo.size.width - 30))
+                    .padding(.bottom)
+                // MARK: EU Enabler
+                VStack {
+                    SQ_Button(text: "EU Enabler",
+                              systemimage: "globe.europe.africa",
+                              bgcircle: true,
+                              tintcolor: .blue,
+                              randomColor: false,
+                              needsDivider: false,
+                              action: {},
+                              toggleAction: {
+                        print("EU Enabler toggled: \(euEnabler)")
+                    },
+                              isToggled: $euEnabler,
+                              important_bolded: false,
+                              indexInput: nil,
+                              bg_needed: false,
+                              type: .toggle,
+                              pickerOptions: [],
+                              selectedOption: .constant(""))
+                    .onChange(of: euEnabler) { nv in
+                        manager.euEnabler = nv
+                    }
+                }
+                .padding()
+                .background{
+                    RoundedRectangle(cornerRadius: 25, style: .continuous)
+                        .foregroundStyle(.regularMaterial)
+                        .frame(width: abs(geo.size.width - 30))
+                }
+                .frame(width: abs(geo.size.width - 30))
+                .disabled(!applyHandler.enabledTweaks.contains(.Eligibility))
+                
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(.stack)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
                         HStack {
-                            Text("Enable Apple Intelligence")
-                            Spacer()
-                            Button(action: {
-                                showInfoAlert(NSLocalizedString("Enables Apple Intelligence on unsupported devices. It may take a long time to download, be patient and check [Settings] -> General -> iPhone/iPad Storage -> iOS -> Apple Intelligence to see if it is downloading.\n\nIf it doesn't apply, try applying again.", comment: "AI info popup"))
-                            }) {
-                                Image(systemName: "info.circle")
-                            }
-                        }
-                    }.onChange(of: aiEnabler) { nv in
-                        manager.toggleAI(nv)
-                    }
-                    if aiEnabler {
-                        Toggle(isOn: $changeDeviceModel) {
-                            HStack {
-                                Text("Spoof Device Model")
-                                Spacer()
-                                Button(action: {
-                                    showInfoAlert(NSLocalizedString("Spoofs your device model to iPhone 16 (or iPad Pro M4), allowing you to download the AI models.\n\nTurn this on to download the models, then turn this off and reapply after the models are downloading.\n\nNote: While this is on, it breaks Face ID. Reverting the file will fix it.", comment: "Device model changer info popup"))
-                                }) {
-                                    Image(systemName: "info.circle")
-                                }
-                            }
-                        }.onChange(of: changeDeviceModel) { nv in
-                            manager.setDeviceModelCode(nv)
+                            Image(systemName: "arrow.left.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                            Text("Tweaks")
+                                .fontWeight(.bold)
                         }
                     }
-                } header: {
-                    Text("AI Enabler")
                 }
             }
-        }
-        .tweakToggle(for: .Eligibility)
-        .navigationTitle("Eligibility")
-        .onAppear {
-            euEnabler = manager.euEnabler
-            aiEnabler = manager.aiEnabler
-            changeDeviceModel = manager.spoofingDevice
+            .onAppear {
+                euEnabler = manager.euEnabler
+                aiEnabler = manager.aiEnabler
+                changeDeviceModel = manager.spoofingDevice
+            }
         }
     }
     
