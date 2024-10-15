@@ -89,16 +89,27 @@ class ApplyHandler: ObservableObject {
             }
         case .SkipSetup:
             // Apply the skip setup file
-            var skipSetupData: Data = Data()
+            var cloudConfigData: Data = Data()
+            var purpleBuddyData: Data = Data()
             if !resetting {
-                let plist: [String: Any] = [
+                let cloudConfigPlist: [String: Any] = [
                     "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "Android", "AppleID", "IntendedUser", "TOS", "Siri", "ScreenTime", "Diagnostics", "SoftwareUpdate", "Passcode", "Biometric", "Payment", "Zoom", "DisplayTone", "MessagingActivationUsingPhoneNumber", "HomeButtonSensitivity", "CloudStorage", "ScreenSaver", "TapToSetup", "Keyboard", "PreferredLanguage", "SpokenLanguage", "WatchMigration", "OnBoarding", "TVProviderSignIn", "TVHomeScreenSync", "Privacy", "TVRoom", "iMessageAndFaceTime", "AppStore", "Safety", "Multitasking", "ActionButton", "TermsOfAddress", "AccessibilityAppearance", "Welcome", "Appearance", "RestoreCompleted", "UpdateCompleted"],
-                    "CloudConfigurationUIComplete": true
+                    "CloudConfigurationUIComplete": true,
+                    "IsSupervised": false
                 ]
-                skipSetupData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+                cloudConfigData = try PropertyListSerialization.data(fromPropertyList: cloudConfigPlist, format: .xml, options: 0)
+                let purpleBuddyPlist: [String: Any] = [
+                    "SetupDone": true,
+                    "SetupFinishedAllSteps": true,
+                    "UserChoseLanguage": true
+                ]
+                purpleBuddyData = try PropertyListSerialization.data(fromPropertyList: purpleBuddyPlist, format: .xml, options: 0)
             }
             if resetting || !self.isExploitOnly() {
-                files.append(FileToRestore(contents: skipSetupData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"))
+                files.append(FileToRestore(contents: cloudConfigData, path: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/SharedDeviceConfiguration.plist"))
+                if !self.isExploitOnly() {
+                    files.append(FileToRestore(contents: purpleBuddyData, path: "ManagedPreferencesDomain/mobile/com.apple.purplebuddy.plist"))
+                }
             }
         }
     }
