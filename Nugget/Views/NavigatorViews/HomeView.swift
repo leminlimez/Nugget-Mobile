@@ -200,7 +200,7 @@ struct HomeView: View {
             if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
                 // if there are no enabled tweaks then tell the user
                 UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
-            } else if ApplyHandler.shared.isExploitOnly() || skipSetup {
+            } else if ApplyHandler.shared.isExploitOnly() {
                 path.append(reverting ? "RevertChanges" : "ApplyChanges")
             } else if !ApplyHandler.shared.trollstore {
                 // if applying non-exploit files, warn about setup

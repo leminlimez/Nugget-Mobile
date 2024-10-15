@@ -69,7 +69,6 @@ class RestoreManager {
             }
             full_path += path_items[i]
             if i >= startIdx {
-                print(domain, full_path)
                 if i < path_items.count - 1 {
                     last_path = full_path
                     // it is a directory

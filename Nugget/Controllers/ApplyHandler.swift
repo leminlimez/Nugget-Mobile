@@ -103,10 +103,15 @@ class ApplyHandler: ObservableObject {
         }
     }
     
-    func convertToDomain(path: String) -> String {
+    func convertToDomain(path: String) -> String? {
         // if it doesn't start with a / then it is already a domain
         if !path.starts(with: "/") {
             return path
+        }
+        // if mobile gestalt then use new style
+        if path.contains("com.apple.MobileGestalt.plist") {
+            let newDomain = "SysSharedContainerDomain-" + "../" + "Shared/"
+            return path.replacingOccurrences(of: "/var/containers/Shared/SystemGroup/", with: newDomain)
         }
         let mappings: [String: String] = [
             "/var/Managed Preferences": "ManagedPreferencesDomain",
@@ -124,14 +129,14 @@ class ApplyHandler: ObservableObject {
             }
         }
         // no changes, return original path
-        return path
+        return nil
     }
     
     func isExploitPatched() -> Bool {
+        if #available(iOS 18.2, *) {
+            return true
+        }
         if #available(iOS 18.1, *) {
-            if #available(iOS 18.2, *) {
-                return true
-            }
             // get the build number
             var osVersionString = [CChar](repeating: 0, count: 16)
             var osVersionStringLen = size_t(osVersionString.count - 1)
@@ -185,8 +190,13 @@ class ApplyHandler: ObservableObject {
                     // convert to domains
                     var newFilesToRestore: [FileToRestore] = []
                     for file in filesToRestore {
-                        newFilesToRestore.append(FileToRestore(contents: file.contents, path: self.convertToDomain(path: file.path), owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                        if let newPath = self.convertToDomain(path: file.path) {
+                            newFilesToRestore.append(FileToRestore(contents: file.contents, path: newPath, owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                            print(newPath)
+                        }
                     }
+                    print()
+                    print()
                     RestoreManager.shared.restoreFiles(newFilesToRestore, udid: udid)
                 } else {
                     RestoreManager.shared.restoreFiles(filesToRestore, udid: udid)
@@ -216,7 +226,9 @@ class ApplyHandler: ObservableObject {
                     // convert to domains
                     var newFilesToRestore: [FileToRestore] = []
                     for file in filesToRestore {
-                        newFilesToRestore.append(FileToRestore(contents: file.contents, path: self.convertToDomain(path: file.path), owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                        if let newPath = self.convertToDomain(path: file.path) {
+                            newFilesToRestore.append(FileToRestore(contents: file.contents, path: newPath, owner: file.owner, group: file.group, usesInodes: file.usesInodes))
+                        }
                     }
                     RestoreManager.shared.restoreFiles(newFilesToRestore, udid: udid)
                 } else {
