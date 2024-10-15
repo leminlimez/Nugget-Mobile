@@ -108,11 +108,6 @@ class ApplyHandler: ObservableObject {
         if !path.starts(with: "/") {
             return path
         }
-        // if mobile gestalt then use new style
-        if path.contains("com.apple.MobileGestalt.plist") {
-            let newDomain = "SysSharedContainerDomain-" + "../" + "Shared/"
-            return path.replacingOccurrences(of: "/var/containers/Shared/SystemGroup/", with: newDomain)
-        }
         let mappings: [String: String] = [
             "/var/Managed Preferences": "ManagedPreferencesDomain",
             "/var/root": "RootDomain",
@@ -120,8 +115,8 @@ class ApplyHandler: ObservableObject {
             "/var/MobileDevice": "MobileDeviceDomain",
             "/var/mobile": "HomeDomain",
             "/var/db": "DatabaseDomain",
-            "/var/containers/Shared/SystemGroup/": "SysSharedContainerDomain-",
-            "/var/containers/Data/SystemGroup/": "SysContainerDomain-"
+            "/var/containers/Shared/SystemGroup": "SysSharedContainerDomain-.",
+            "/var/containers/Data/SystemGroup": "SysContainerDomain-."
         ]
         for (rootPath, domain) in mappings {
             if path.starts(with: rootPath) {
