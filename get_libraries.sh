@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [ ! -d "lib" ]; then
+    mkdir lib
+fi
+
 cd lib
 
 extract_deb() {
