@@ -1,9 +1,9 @@
 ![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
 
 # Nugget (mobile)
-Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4.
+Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4 with partial support for iOS 18.1 beta 5-6.
 
-Sparserestore was patched in iOS 18.1 beta 5. Please do not make issues about this, it will not be fixed.
+This will not work on iOS 18.1 beta 7 or newer. Please do not make issues about this, it will not be fixed. You will have to use the [pc version of Nugget](https://github.com/leminlimez/Nugget) unless a fix comes in the future.
 
 A `.mobiledevicepairing` file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
 

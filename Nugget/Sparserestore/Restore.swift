@@ -58,7 +58,6 @@ class RestoreManager {
         // add the domain if needed
         if startIdx == 0 {
             list.append(Directory(path: "", domain: domain))
-            print(domain)
             startIdx = 1
         }
         last_domain = domain
@@ -70,7 +69,6 @@ class RestoreManager {
             }
             full_path += path_items[i]
             if i >= startIdx {
-                print(domain, full_path)
                 if i < path_items.count - 1 {
                     last_path = full_path
                     // it is a directory
@@ -81,7 +79,27 @@ class RestoreManager {
                 }
             }
         }
-        print()
+    }
+    
+    func tsRestoreFiles(_ files: [FileToRestore]) {
+        for file in files {
+            do {
+                // if it is a domain, convert it to a path
+                var filePath = file.path
+                if file.path.starts(with: "HomeDomain/") {
+                    filePath = file.path.replacingOccurrences(of: "HomeDomain/", with: "/var/mobile/")
+                } // TODO: Add more domains
+                
+                if file.contents == Data() {
+                    // if empty data, remove the file
+                    try FileManager.default.removeItem(at: URL(fileURLWithPath: filePath))
+                } else {
+                    try file.contents.write(to: URL(fileURLWithPath: filePath))
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func restoreFiles(_ files: [FileToRestore], udid: String) {
@@ -110,7 +128,9 @@ class RestoreManager {
             var last_path: String = ""
             var last_domain: String = ""
             var exploit_only = true
+            print("Files: [")
             for (_, file) in sortedFiles.enumerated() {
+                print(file.path + ",")
                 // for non exploit domains, the path will not start with /
                 if file.path.starts(with: "/") {
                     // file utilizes exploit
@@ -126,6 +146,7 @@ class RestoreManager {
             if exploit_only {
                 backupFiles.append(ConcreteFile(path: "", domain: "SysContainerDomain-../../../../../../../../crash_on_purpose", contents: Data(), owner: 501, group: 501))
             }
+            print("]")
             
             // create backup
             let mbdb = Backup(files: backupFiles)
