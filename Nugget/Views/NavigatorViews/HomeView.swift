@@ -66,24 +66,26 @@ struct HomeView: View {
                             .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                         }
                         // select pairing file button
-                        if pairingFile == nil {
-                            HStack {
-                                Button("Select Pairing File") {
-                                    showPairingFileImporter.toggle()
+                        if !ApplyHandler.shared.trollstore {
+                                if pairingFile == nil {
+                                HStack {
+                                    Button("Select Pairing File") {
+                                        showPairingFileImporter.toggle()
+                                    }
+                                    .buttonStyle(TintedButton(color: .green, fullwidth: true))
+                                    Button {
+                                        UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
+                                    } label: {
+                                        Image(systemName: "info")
+                                    }
+                                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                                }
+                            } else {
+                                Button("Reset pairing file") {
+                                    pairingFile = nil
                                 }
                                 .buttonStyle(TintedButton(color: .green, fullwidth: true))
-                                Button {
-                                    UIApplication.shared.helpAlert(title: NSLocalizedString("Info", comment: "info header"), body: NSLocalizedString("Select a pairing file in order to restore the device. One can be gotten from apps like AltStore or SideStore. Tap \"Help\" for more info.", comment: "pairing file selector info"), link: "https://docs.sidestore.io/docs/getting-started/pairing-file")
-                                } label: {
-                                    Image(systemName: "info")
-                                }
-                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                             }
-                        } else {
-                            Button("Reset pairing file") {
-                                pairingFile = nil
-                            }
-                            .buttonStyle(TintedButton(color: .green, fullwidth: true))
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -194,13 +196,13 @@ struct HomeView: View {
     }
     
     func applyChanges(reverting: Bool) {
-        if ready() {
+        if ApplyHandler.shared.trollstore || ready() {
             if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
                 // if there are no enabled tweaks then tell the user
                 UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
-            } else if ApplyHandler.shared.isExploitOnly() || skipSetup {
+            } else if ApplyHandler.shared.isExploitOnly() {
                 path.append(reverting ? "RevertChanges" : "ApplyChanges")
-            } else {
+            } else if !ApplyHandler.shared.trollstore {
                 // if applying non-exploit files, warn about setup
                 UIApplication.shared.confirmAlert(title: "Warning!", body: "You are applying non-exploit related files. This will make the setup screen appear. Click Cancel if you do not wish to proceed.\n\nWhen setting up, you MUST click \"Do not transfer apps & data\".\n\nIf you see a screen that says \"iPhone Partially Set Up\", DO NOT tap the big blue button. You must click \"Continue with Partial Setup\".", onOK: {
                     path.append(reverting ? "RevertChanges" : "ApplyChanges")
