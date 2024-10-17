@@ -3,6 +3,6 @@ packages/
 .DS_Store
 /Resources/Frameworks
 /Resources/*.dylib
-/lib
+/lib/*.a
 pairing/
 build/
