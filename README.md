@@ -1,9 +1,9 @@
 ![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
 
 # Nugget (mobile)
-Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.1 beta 4 with partial support for iOS 18.1 beta 5-6.
+Unlock your device's full potential! Should work on all versions iOS 16.0 - 18.2 developer beta 2 (public beta 1).
 
-This will not work on iOS 18.1 beta 7 or newer. Please do not make issues about this, it will not be fixed. You will have to use the [pc version of Nugget](https://github.com/leminlimez/Nugget) unless a fix comes in the future.
+This will not work on iOS 18.2 beta 2 or newer. Please do not make issues about this, it will not be fixed. You will have to use the [pc version of Nugget](https://github.com/leminlimez/Nugget) unless a fix comes in the future.
 
 A `.mobiledevicepairing` file and wireguard are required in order to use this. Read the [sections](#getting-your-mobiledevicepairing-file) below to see how to get those.
 
@@ -49,6 +49,6 @@ If not even that works, the only solution I know is to wipe the device (not idea
 - khanhduytran for [Sparsebox](https://github.com/khanhduytran0/SparseBox)
 - [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
 - [disfordottie](https://x.com/disfordottie) for some global flag features
-- f1shy-dev for [AI Enabler](https://gist.github.com/f1shy-dev/23b4a78dc283edd30ae2b2e6429129b5#file-eligibility-plist)
+- f1shy-dev for the old [AI Enabler](https://gist.github.com/f1shy-dev/23b4a78dc283edd30ae2b2e6429129b5#file-eligibility-plist)
 - [SideStore](https://sidestore.io/) for em_proxy and minimuxer
 - [libimobiledevice](https://libimobiledevice.org) for the restore library

@@ -94,8 +94,12 @@ class ApplyHandler: ObservableObject {
             if !resetting {
                 let cloudConfigPlist: [String: Any] = [
                     "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "Android", "AppleID", "IntendedUser", "TOS", "Siri", "ScreenTime", "Diagnostics", "SoftwareUpdate", "Passcode", "Biometric", "Payment", "Zoom", "DisplayTone", "MessagingActivationUsingPhoneNumber", "HomeButtonSensitivity", "CloudStorage", "ScreenSaver", "TapToSetup", "Keyboard", "PreferredLanguage", "SpokenLanguage", "WatchMigration", "OnBoarding", "TVProviderSignIn", "TVHomeScreenSync", "Privacy", "TVRoom", "iMessageAndFaceTime", "AppStore", "Safety", "Multitasking", "ActionButton", "TermsOfAddress", "AccessibilityAppearance", "Welcome", "Appearance", "RestoreCompleted", "UpdateCompleted"],
+                    "AllowPairing": true,
+                    "ConfigurationWasApplied": true,
                     "CloudConfigurationUIComplete": true,
-                    "IsSupervised": false
+                    "ConfigurationSource": 0,
+                    "PostSetupProfileWasInstalled": true,
+                    "IsSupervised": false,
                 ]
                 cloudConfigData = try PropertyListSerialization.data(fromPropertyList: cloudConfigPlist, format: .xml, options: 0)
                 let purpleBuddyPlist: [String: Any] = [
@@ -119,6 +123,14 @@ class ApplyHandler: ObservableObject {
         if !path.starts(with: "/") {
             return path
         }
+        // just make the Sys Containers to use the regular way (won't work for mga)
+        var sysSharedContainer = "SysSharedContainerDomain-"
+        var sysContainer = "SysContainerDomain-"
+        if !isFullyPatched() {
+            sysSharedContainer += "."
+            sysContainer += "."
+        }
+        
         let mappings: [String: String] = [
             "/var/Managed Preferences": "ManagedPreferencesDomain",
             "/var/root": "RootDomain",
@@ -126,8 +138,8 @@ class ApplyHandler: ObservableObject {
             "/var/MobileDevice": "MobileDeviceDomain",
             "/var/mobile": "HomeDomain",
             "/var/db": "DatabaseDomain",
-            "/var/containers/Shared/SystemGroup": "SysSharedContainerDomain-.",
-            "/var/containers/Data/SystemGroup": "SysContainerDomain-."
+            "/var/containers/Shared/SystemGroup/": sysSharedContainer,
+            "/var/containers/Data/SystemGroup/": sysContainer
         ]
         for (rootPath, domain) in mappings {
             if path.starts(with: rootPath) {
@@ -136,6 +148,32 @@ class ApplyHandler: ObservableObject {
         }
         // no changes, return original path
         return nil
+    }
+    
+    func isFullyPatched() -> Bool {
+        if #available(iOS 18.2, *) {
+            // get the build number
+            var osVersionString = [CChar](repeating: 0, count: 16)
+            var osVersionStringLen = size_t(osVersionString.count - 1)
+
+            let result = sysctlbyname("kern.osversion", &osVersionString, &osVersionStringLen, nil, 0)
+
+            if result == 0 {
+                // Convert C array to String
+                if let build = String(validatingUTF8: osVersionString) {
+                    // check build number for iOS 18.2 dev beta 1-2, return false if user is on that
+                    if build == "22C5109p" || build == "22C5125e" {
+                        return false
+                    }
+                } else {
+                    print("Failed to convert build number to String")
+                }
+            } else {
+                print("sysctlbyname failed with error: \(String(cString: strerror(errno)))")
+            }
+            return true
+        }
+        return false
     }
     
     func isExploitPatched() -> Bool {
